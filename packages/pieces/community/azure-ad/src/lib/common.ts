@@ -202,7 +202,7 @@ export function flattenGroup(obj: Record<string, unknown>): Record<string, unkno
  *
  * Microsoft Graph change notifications (webhooks) cannot be used here because Graph
  * requires the notification URL to respond 200 OK to a synchronous validation request
- * during `POST /subscriptions`. In Activepieces, `onEnable` runs *before* the flow's
+ * during `POST /subscriptions`. In JRNYFLW, `onEnable` runs *before* the flow's
  * status is saved as ENABLED, so the webhook endpoint returns 404 for the validation
  * probe and subscription creation fails. Delta queries avoid this entirely.
  *

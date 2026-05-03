@@ -11,7 +11,7 @@ export class AutomationsPage extends BasePage {
   async waitFor() {
     await this.page.waitForURL('**/automations**');
     await Promise.race([
-      this.page.waitForSelector('text="Get started with Activepieces"'),
+      this.page.waitForSelector('text="Get started with JRNYFLW"'),
       this.page.waitForSelector('button:has-text("Create New")'),
     ]);
   }

@@ -150,7 +150,7 @@ async function createNotificationSetting({
       destination: url,
       subscribed_events: subscribedEvents,
       active: true,
-      description:"Activepieces"
+      description:"JRNYFLW"
     },
   });
 

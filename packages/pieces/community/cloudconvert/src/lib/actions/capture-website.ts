@@ -186,7 +186,7 @@ const captureWebsiteProps = () => ({
   }),
   store_file: Property.Checkbox({
     displayName: 'Store File',
-    description: 'Download and store the captured file in Activepieces',
+    description: 'Download and store the captured file in JRNYFLW',
     required: false,
     defaultValue: true,
   }),

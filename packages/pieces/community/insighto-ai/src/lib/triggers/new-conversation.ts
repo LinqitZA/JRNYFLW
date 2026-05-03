@@ -62,7 +62,7 @@ export const newConversation = createTrigger({
         queryParams: { api_key: apiKey },
         body: {
           endpoint: webhookUrl,
-          name: 'Activepieces Conversation Webhook',
+          name: 'JRNYFLW Conversation Webhook',
           enabled: true,
         },
         headers: {

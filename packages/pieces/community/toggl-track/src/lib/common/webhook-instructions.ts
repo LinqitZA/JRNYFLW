@@ -22,7 +22,7 @@ Before you can set up the webhook in Toggl Track, you must **publish this flow i
 - Click **"Create Webhook"** or **"Create your first webhook"**
 
 ### Step 3: Configure the Webhook
-1. **Name**: Enter a descriptive name (e.g., "Activepieces ${triggerName}")
+1. **Name**: Enter a descriptive name (e.g., "JRNYFLW ${triggerName}")
 2. **Events**: Select **"${eventName}"** from the events dropdown
 3. **URL Endpoint**: Paste this webhook URL:
 \`\`\`text

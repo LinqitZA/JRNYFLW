@@ -24,5 +24,5 @@
   "New Message": "Новое сообщение",
   "Triggers when a new message is received": "Триггеры при получении нового сообщения",
   "Markdown": "Markdown",
-  "\n- Create Line bot account from Developer Console\n- Go to the \"Messaging API\" section.\n- In the webhook settings, paste this URL: \n  `{{webhookUrl}}`\n- Publish Activepieces flow first then click \"Verify\" button\n": "\n- Создать учетную запись линейного бота от Developer Console\n- Перейдите в раздел \"Messaging API\".\n- В настройках webhook, вставьте этот URL: \n  `{{webhookUrl}}`\n- Опубликовать поток Activepieces затем нажмите кнопку \"Verify\"\n"
+  "\n- Create Line bot account from Developer Console\n- Go to the \"Messaging API\" section.\n- In the webhook settings, paste this URL: \n  `{{webhookUrl}}`\n- Publish JRNYFLW flow first then click \"Verify\" button\n": "\n- Создать учетную запись линейного бота от Developer Console\n- Перейдите в раздел \"Messaging API\".\n- В настройках webhook, вставьте этот URL: \n  `{{webhookUrl}}`\n- Опубликовать поток JRNYFLW затем нажмите кнопку \"Verify\"\n"
 }

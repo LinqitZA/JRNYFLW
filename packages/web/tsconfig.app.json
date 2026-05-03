@@ -19,7 +19,7 @@
         "../../packages/pieces/framework/src"
       ],
       "ee-embed-sdk": [
-        "../../packages/ee/embed-sdk/src"
+        "../../packages/extras/embed-sdk/src"
       ],
       "@activepieces/piece-ai": [
         "../../packages/pieces/community/ai/src"

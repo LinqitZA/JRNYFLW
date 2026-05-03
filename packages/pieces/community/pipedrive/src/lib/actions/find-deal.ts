@@ -34,7 +34,7 @@ export const findDealAction = createAction({
 			method: HttpMethod.POST,
 			resourceUri: '/v1/filters',
 			body: {
-				name: `Activepieces Find Deal Filter`,
+				name: `JRNYFLW Find Deal Filter`,
 				type: 'deals',
 				conditions: {
 					glue: 'and',

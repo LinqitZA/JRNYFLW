@@ -17,8 +17,8 @@ import { FastifyBaseLogger } from 'fastify'
 import cron from 'node-cron'
 import { In } from 'typeorm'
 import { repoFactory } from '../core/db/repo-factory'
-import { openRouterApi } from '../ee/platform/platform-plan/openrouter/openrouter-api'
-import { platformPlanService } from '../ee/platform/platform-plan/platform-plan.service'
+import { openRouterApi } from '../extras/platform/platform-plan/openrouter/openrouter-api'
+import { platformPlanService } from '../extras/platform/platform-plan/platform-plan.service'
 import { flagService } from '../flags/flag.service'
 import { encryptUtils } from '../helper/encryption'
 import { rejectedPromiseHandler } from '../helper/promise-handler'
@@ -51,7 +51,7 @@ export const aiProviderService = (log: FastifyBaseLogger) => ({
                 auth: await encryptUtils.encryptObject({}),
                 config: {},
                 provider: AIProviderName.ACTIVEPIECES,
-                displayName: 'Activepieces',
+                displayName: 'JRNYFLW',
                 platformId,
             })
         }
@@ -247,7 +247,7 @@ export const aiProviderService = (log: FastifyBaseLogger) => ({
                 auth: await encryptUtils.encryptObject({}),
                 config: {},
                 provider: AIProviderName.ACTIVEPIECES,
-                displayName: 'Activepieces',
+                displayName: 'JRNYFLW',
                 platformId,
             })
         }
@@ -305,7 +305,7 @@ async function enrichWithKeysIfNeeded(aiProvider: AIProviderSchema, platformId: 
         id: aiProvider.id,
         platformId,
         provider: AIProviderName.ACTIVEPIECES,
-        displayName: 'Activepieces',
+        displayName: 'JRNYFLW',
         config: {},
         auth: await encryptUtils.encryptObject(rawAuth),
     })

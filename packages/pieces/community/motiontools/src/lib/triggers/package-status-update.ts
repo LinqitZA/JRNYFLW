@@ -15,8 +15,8 @@ export const packageStatusUpdate = createTrigger({
                 
                 1. Open Motiontools → Settings → Advanced → Webhooks
                 2. Click **Create webhook**
-                3. Name: e.g., Activepieces Booking Stop Status Update
-                4. Endpoint URL: paste the Activepieces webhook URL below:
+                3. Name: e.g., JRNYFLW Booking Stop Status Update
+                4. Endpoint URL: paste the JRNYFLW webhook URL below:
                 
                 \`\`\`text
                             {{webhookUrl}}

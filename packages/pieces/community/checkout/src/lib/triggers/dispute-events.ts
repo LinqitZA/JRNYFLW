@@ -112,7 +112,7 @@ export const disputeEventsTrigger = createTrigger({
           'Content-Type': 'application/json',
         },
         body: {
-          name: 'Activepieces Dispute Events Workflow',
+          name: 'JRNYFLW Dispute Events Workflow',
           active: true,
           conditions: [
             {

@@ -2,7 +2,7 @@ import { ActivepiecesError, ErrorCode, isNil, Principal, PrincipalForType, Princ
 import { FastifyBaseLogger } from 'fastify'
 import { Socket } from 'socket.io'
 import { accessTokenManager } from '../authentication/lib/access-token-manager'
-import { projectMemberService } from '../ee/projects/project-members/project-member.service'
+import { projectMemberService } from '../extras/projects/project-members/project-member.service'
 import { rejectedPromiseHandler } from '../helper/promise-handler'
 import { app } from '../server'
 

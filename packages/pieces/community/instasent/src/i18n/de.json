@@ -5,7 +5,7 @@
   "Your Instasent Project ID": "Ihre Instasent Project ID",
   "Your Instasent Datasource ID": "Ihre Instasent Datasource-ID",
   "Your Instasent API Bearer Token": "Dein Instasent API Bären-Token",
-  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an Activepieces data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Erhalte deine Authentifizierungsdaten\n1. Gehe zu https://dashboard.instasent.com\n2. Zugriff auf dein Projekt\n3. Erstellen Sie eine Activepieces Datenquelle\n4. Kopieren Sie die Auth Parameter und fügen Sie sie in die Felder unten\n ein",
+  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an JRNYFLW data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Erhalte deine Authentifizierungsdaten\n1. Gehe zu https://dashboard.instasent.com\n2. Zugriff auf dein Projekt\n3. Erstellen Sie eine JRNYFLW Datenquelle\n4. Kopieren Sie die Auth Parameter und fügen Sie sie in die Felder unten\n ein",
   "Add/Update contact": "Kontakt hinzufügen/aktualisieren",
   "Delete Contact": "Kontakt löschen",
   "Add Event": "Neuer Termin",

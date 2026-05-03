@@ -14,7 +14,7 @@ export const newOrUpdatedAccountTrigger = createTrigger({
 	async onEnable(context) {
 		const client = makeClient(context.auth.props);
 		const res = await client.subscribeWebhook({
-			name: `Activepieces New Account Hook`,
+			name: `JRNYFLW New Account Hook`,
 			url: context.webhookUrl,
 			events: ['account_add', 'account_update'],
 			sources: WEBHOOK_SOURCES,

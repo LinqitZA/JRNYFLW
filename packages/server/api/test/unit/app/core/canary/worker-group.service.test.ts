@@ -5,7 +5,7 @@ const mockFind = vi.fn()
 const mockFindOne = vi.fn()
 const mockUpdate = vi.fn()
 
-vi.mock('../../../../../src/app/ee/platform/platform-plan/platform-plan.service', () => ({
+vi.mock('../../../../../src/app/extras/platform/platform-plan/platform-plan.service', () => ({
     platformPlanRepo: () => ({
         find: mockFind,
         findOne: mockFindOne,
@@ -37,10 +37,10 @@ const mockLog: FastifyBaseLogger = {
     level: 'info',
 } as unknown as FastifyBaseLogger
 
-type WorkerGroupService = ReturnType<typeof import('../../../../../src/app/ee/platform/platform-plan/worker-group.service').workerGroupService>
+type WorkerGroupService = ReturnType<typeof import('../../../../../src/app/extras/platform/platform-plan/worker-group.service').workerGroupService>
 
 async function loadService(): Promise<WorkerGroupService> {
-    const mod = await import('../../../../../src/app/ee/platform/platform-plan/worker-group.service')
+    const mod = await import('../../../../../src/app/extras/platform/platform-plan/worker-group.service')
     return mod.workerGroupService(mockLog)
 }
 

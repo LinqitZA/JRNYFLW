@@ -16,7 +16,7 @@ export const dumplingAuth = PieceAuth.SecretText({
 					token: auth,
 				},
 				body: {
-					query: 'Activepieces',
+					query: 'JRNYFLW',
 				},
 			});
 

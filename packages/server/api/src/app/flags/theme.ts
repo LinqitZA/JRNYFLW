@@ -64,9 +64,9 @@ export function generateTheme({
 }
 
 export const defaultTheme = generateTheme({
-    primaryColor: '#6e41e2',
-    websiteName: 'Activepieces',
-    fullLogoUrl: 'https://cdn.activepieces.com/brand/full-logo.png',
-    favIconUrl: 'https://cdn.activepieces.com/brand/logo.svg',
-    logoIconUrl: 'https://cdn.activepieces.com/brand/logo.svg',
+    primaryColor: '#007BA7',
+    websiteName: 'JRNYFLW',
+    fullLogoUrl: '/assets/brand/jrnyflw-full-logo.svg',
+    favIconUrl: '/assets/brand/jrnyflw-mark.svg',
+    logoIconUrl: '/assets/brand/jrnyflw-mark.svg',
 })

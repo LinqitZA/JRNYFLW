@@ -5,7 +5,7 @@
   "Your Instasent Project ID": "Instasent Project ID",
   "Your Instasent Datasource ID": "Instasent Datasource ID",
   "Your Instasent API Bearer Token": "あなたのInstasent APIベアラートトークン",
-  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an Activepieces data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an Activepieces data source\n4. Copy the auth parameters and paste them in the fields below\n",
+  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an JRNYFLW data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an JRNYFLW data source\n4. Copy the auth parameters and paste them in the fields below\n",
   "Add/Update contact": "連絡先の追加/更新",
   "Delete Contact": "連絡先を削除",
   "Add Event": "イベントを追加",

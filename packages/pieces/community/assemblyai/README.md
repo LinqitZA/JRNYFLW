@@ -1,4 +1,4 @@
-# AssemblyAI piece for Activepieces
+# AssemblyAI piece for JRNYFLW
 
 ## Building
 

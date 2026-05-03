@@ -85,7 +85,7 @@ async function createEnhancedLinkEmbed(url: string, agent: any): Promise<any> {
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; Activepieces-Bot/1.0)',
+        'User-Agent': 'Mozilla/5.0 (compatible; JRNYFLW-Bot/1.0)',
       },
     });
     

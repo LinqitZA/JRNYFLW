@@ -11,8 +11,11 @@ import customHtmlPlugin from './vite-plugins/html-plugin';
 export default defineConfig(({ command, mode }) => {
   const isDev = command === 'serve' || mode === 'development';
 
-  const AP_TITLE = 'Activepieces';
-  const AP_FAVICON = 'https://activepieces.com/favicon.ico';
+  const AP_TITLE = 'JRNYFLW';
+  const AP_FAVICON = '/assets/brand/jrnyflw-mark.svg';
+
+  const apiPort = process.env.AP_PORT ?? '3000';
+  const apiTarget = `http://127.0.0.1:${apiPort}`;
 
   return {
     root: __dirname,
@@ -21,7 +24,7 @@ export default defineConfig(({ command, mode }) => {
       // allowedHosts: ['wozcsvaint.loclx.io'],
       proxy: {
         '/api': {
-          target: 'http://127.0.0.1:3000',
+          target: apiTarget,
           secure: false,
           changeOrigin: true,
           headers: {
@@ -30,33 +33,33 @@ export default defineConfig(({ command, mode }) => {
           ws: true,
         },
         '^/mcp$': {
-          target: 'http://127.0.0.1:3000',
+          target: apiTarget,
           secure: false,
           changeOrigin: true,
           rewrite: (p: string) => p,
         },
         '/.well-known': {
-          target: 'http://127.0.0.1:3000',
+          target: apiTarget,
           secure: false,
           changeOrigin: true,
         },
         '/register': {
-          target: 'http://127.0.0.1:3000',
+          target: apiTarget,
           secure: false,
           changeOrigin: true,
         },
         '/authorize': {
-          target: 'http://127.0.0.1:3000',
+          target: apiTarget,
           secure: false,
           changeOrigin: true,
         },
         '/token': {
-          target: 'http://127.0.0.1:3000',
+          target: apiTarget,
           secure: false,
           changeOrigin: true,
         },
         '/revoke': {
-          target: 'http://127.0.0.1:3000',
+          target: apiTarget,
           secure: false,
           changeOrigin: true,
         },

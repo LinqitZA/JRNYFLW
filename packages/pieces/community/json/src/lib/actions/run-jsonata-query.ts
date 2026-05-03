@@ -29,7 +29,7 @@ export const runJsonataQuery = createAction({
       const result = await expression.evaluate(parsedJson);
 
       // JSONata returns `undefined` if a query yields no matches. 
-      // We convert this to `null` so Activepieces receives valid, serializable JSON.
+      // We convert this to `null` so JRNYFLW receives valid, serializable JSON.
       return result === undefined ? null : result;
     } catch (error) {
       const message = error instanceof Error ? error.message : JSON.stringify(error);

@@ -43,7 +43,7 @@ export const startTimeEntry = createAction({
         description,
         start: new Date().toISOString(),
         duration: -1,
-        created_with: 'Activepieces',
+        created_with: 'JRNYFLW',
         billable,
         ...(project_id && { project_id }),
         ...(task_id && { task_id }),

@@ -43,13 +43,13 @@ const ApiKeysPage = () => {
       locked={!platform.plan.apiKeysEnabled}
       lockTitle={t('Enable API Keys')}
       lockDescription={t(
-        'Create and manage API keys to access Activepieces APIs.',
+        'Create and manage API keys to access JRNYFLW APIs.',
       )}
       lockVideoUrl="https://cdn.activepieces.com/videos/showcase/api-keys.mp4"
     >
       <CenteredPage
         title={t('API Keys')}
-        description={t('Manage API keys to access Activepieces APIs.')}
+        description={t('Manage API keys to access JRNYFLW APIs.')}
         actions={
           <NewApiKeyDialog onCreate={() => refetch()}>
             <AnimatedIconButton icon={PlusIcon} iconSize={16} size="sm">

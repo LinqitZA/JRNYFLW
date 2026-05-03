@@ -2,7 +2,7 @@
   "Self-hosted Git service": "Self-gehoste Git service",
   "Base URL": "Basis URL",
   "Enter your Gitea instance URL (e.g., https://gitea.com)": "Voer uw Gitea-installatie URL in (bijv. https://gitea.com)",
-  "To connect Gitea, create an OAuth2 application in your Gitea instance: **Settings → Applications → Manage OAuth2 Applications → Create Application**. Set the redirect URI to the one provided by Activepieces, then copy the Client ID and Client Secret here.": "Om verbinding te maken met Gitea, maak een OAuth2 applicatie aan in je Gitea instantie: **Instellingen → Applicaties → Beheren OAuth2 Applicaties → Aanmaken**. Stel de omleidings-URI in naar degene die de Activepieces aanbiedt en kopieer hier de client-ID en clientgeheim",
+  "To connect Gitea, create an OAuth2 application in your Gitea instance: **Settings → Applications → Manage OAuth2 Applications → Create Application**. Set the redirect URI to the one provided by JRNYFLW, then copy the Client ID and Client Secret here.": "Om verbinding te maken met Gitea, maak een OAuth2 applicatie aan in je Gitea instantie: **Instellingen → Applicaties → Beheren OAuth2 Applicaties → Aanmaken**. Stel de omleidings-URI in naar degene die de JRNYFLW aanbiedt en kopieer hier de client-ID en clientgeheim",
   "Create Issue": "Probleem aanmaken",
   "Add Comment to Issue/PR": "Opmerking toevoegen aan probleem/PR",
   "Update Repository": "Repository bijwerken",

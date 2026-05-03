@@ -35,7 +35,7 @@ workerCommand.addCommand(generateWorkerTokenCommand)
 
 const program = new Command();
 
-program.version('0.0.1').description('Activepieces CLI');
+program.version('0.0.1').description('JRNYFLW CLI');
 
 program.addCommand(pieceCommand);
 program.addCommand(actionCommand);

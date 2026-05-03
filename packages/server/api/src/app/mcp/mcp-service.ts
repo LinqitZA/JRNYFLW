@@ -3,7 +3,7 @@ import { McpServer, ResourceTemplate } from '@modelcontextprotocol/sdk/server/mc
 import { FastifyBaseLogger } from 'fastify'
 import { z } from 'zod'
 import { repoFactory } from '../core/db/repo-factory'
-import { getPrincipalRoleOrThrow } from '../ee/authentication/project-role/rbac-middleware'
+import { getPrincipalRoleOrThrow } from '../extras/authentication/project-role/rbac-middleware'
 import { flowService } from '../flows/flow/flow.service'
 import { rejectedPromiseHandler } from '../helper/promise-handler'
 import { system } from '../helper/system/system'
@@ -14,7 +14,7 @@ import { activepiecesTools, ALL_CONTROLLABLE_TOOL_NAMES, LOCKED_TOOL_NAMES } fro
 
 const EDITION_REQUIRES_RBAC = [ApEdition.CLOUD, ApEdition.ENTERPRISE].includes(system.getEdition())
 
-const MCP_SERVER_INSTRUCTIONS = `## Activepieces MCP Server
+const MCP_SERVER_INSTRUCTIONS = `## JRNYFLW MCP Server
 
 ### Workflow
 1. Discover: ap_list_pieces, ap_list_connections, ap_list_ai_models
@@ -80,11 +80,11 @@ export const mcpServerService = (log: FastifyBaseLogger) => {
             const permissionChecker = await resolvePermissionChecker({ userId, projectId: mcp.projectId, log })
 
             const server = new McpServer({
-                name: 'Activepieces',
-                title: 'Activepieces',
+                name: 'JRNYFLW',
+                title: 'JRNYFLW',
                 version: '1.0.0',
                 websiteUrl: 'https://activepieces.com',
-                description: 'Automation and workflow MCP server by Activepieces',
+                description: 'Automation and workflow MCP server by JRNYFLW',
                 icons: [
                     {
                         src: 'https://cdn.activepieces.com/brand/logo.svg',

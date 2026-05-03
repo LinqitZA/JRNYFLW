@@ -128,7 +128,7 @@ export const cashfreePaymentsAuth = PieceAuth.CustomAuth({
 This connector requires Cashfree API credentials (Client ID and Client Secret). Important: each Cashfree product is a separate product and requires its own credentials. For example, the Payments API and the Payouts API each need their own Client ID / Client Secret pairs.
 
 Create two connections (recommended)
-- For clarity and security we recommend creating two separate Activepieces connections:
+- For clarity and security we recommend creating two separate JRNYFLW connections:
   1. **Payments connection** — use the Payments API Client ID / Client Secret. Use this connection for payments-related actions (create order, payment links, refunds, etc.).
   2. **Payouts connection** — use the Payouts API Client ID / Client Secret. Use this connection for Cashgram and other payouts-related actions.
 

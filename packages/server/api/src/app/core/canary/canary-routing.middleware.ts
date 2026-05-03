@@ -1,7 +1,7 @@
 import '@fastify/reply-from'
 import { isNil, PrincipalType, tryCatch } from '@activepieces/shared'
 import { FastifyBaseLogger, FastifyReply, FastifyRequest } from 'fastify'
-import { workerGroupService } from '../../ee/platform/platform-plan/worker-group.service'
+import { workerGroupService } from '../../extras/platform/platform-plan/worker-group.service'
 import { flowExecutionCache } from '../../flows/flow/flow-execution-cache'
 import { system } from '../../helper/system/system'
 import { AppSystemProp } from '../../helper/system/system-props'

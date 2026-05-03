@@ -144,7 +144,7 @@ export const documentUpdated = createTrigger({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: `Activepieces Document Updated`,
+        name: `JRNYFLW Document Updated`,
         url: context.webhookUrl,
         active: true,
         triggers: ['document_updated'],

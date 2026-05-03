@@ -40,7 +40,7 @@ export const newCapturedForm = createTrigger({
         queryParams: { api_key: apiKey },
         body: {
           endpoint: webhookUrl,
-          name: 'Activepieces Captured Form Webhook',
+          name: 'JRNYFLW Captured Form Webhook',
           enabled: true,
         },
         headers: {

@@ -45,7 +45,7 @@ export const incomingCallCompleted = createTrigger({
       url: context.webhookUrl,
       events: ['call.completed'],
       resourceIds: phoneNumbers ? [phoneNumbers as string] : ['*'],
-      label: 'Activepieces Incoming Call Completed Trigger',
+      label: 'JRNYFLW Incoming Call Completed Trigger',
       status: 'enabled',
     };
 

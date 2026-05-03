@@ -44,7 +44,7 @@ export function createEnvelopeEventTrigger({
         context.propsValue.accountId,
         {
           connectCustomConfiguration: {
-            name: `Activepieces - ${displayName}`,
+            name: `JRNYFLW - ${displayName}`,
             urlToPublishTo: context.webhookUrl,
             events: [docusignEvent],
             allowEnvelopePublish: 'true',

@@ -70,7 +70,7 @@ export const newChannelMessageTrigger = createTrigger({
 			user: {
 				'@odata.type': '#microsoft.graph.teamworkUserIdentity',
 				id: '90b3720d-f459-42c1-a02e-a1ecb068',
-				displayName: 'Activepieces',
+				displayName: 'JRNYFLW',
 				userIdentityType: 'aadUser',
 				tenantId: '9b37335a-d996-4a8d-9ae4-a3a04c94',
 			},

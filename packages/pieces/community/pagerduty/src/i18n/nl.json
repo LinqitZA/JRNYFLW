@@ -1,6 +1,6 @@
 {
   "Incident management workflows for PagerDuty REST API v2.": "Incident beheer werkstromen voor PagerDuty REST API v2.",
-  "PagerDuty REST API token from Integrations > API Access Keys. Activepieces sends it as Authorization: Token token=<API_KEY>.": "PagerDuty REST API-token van integraties > API Access Keys. Activepieces sturen het als Authorization: Token token=<API_KEY>.",
+  "PagerDuty REST API token from Integrations > API Access Keys. JRNYFLW sends it as Authorization: Token token=<API_KEY>.": "PagerDuty REST API-token van integraties > API Access Keys. JRNYFLW sturen het als Authorization: Token token=<API_KEY>.",
   "Create Incident": "Incident aanmaken",
   "List Incidents": "Incidenten lijst",
   "Get Incident": "Verkrijg Incident",

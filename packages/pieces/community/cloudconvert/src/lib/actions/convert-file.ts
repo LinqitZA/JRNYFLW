@@ -53,7 +53,7 @@ export const convertFile = createAction({
                     throw new Error('Stored File ID is required when using stored file import method');
                 }
                 if (!context.server?.apiUrl) {
-                    throw new Error('Server API URL is not available. Please check your Activepieces server configuration.');
+                    throw new Error('Server API URL is not available. Please check your JRNYFLW server configuration.');
                 }
                 const baseUrl = context.server.apiUrl.replace(/\/$/, '');
                 const fileUrl = `${baseUrl}/v1/step-files/${stored_file_id}`;

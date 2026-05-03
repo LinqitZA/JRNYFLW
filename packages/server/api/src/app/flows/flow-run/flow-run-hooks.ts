@@ -2,7 +2,7 @@ import { ApEdition, FlowRun, FlowTriggerType, isFailedState, isFlowRunStateTermi
 import dayjs from 'dayjs'
 import { FastifyBaseLogger } from 'fastify'
 import { websocketService } from '../../core/websockets.service'
-import { alertsService } from '../../ee/alerts/alerts-service'
+import { alertsService } from '../../extras/alerts/alerts-service'
 import { system } from '../../helper/system/system'
 import { flowVersionService } from '../flow-version/flow-version.service'
 

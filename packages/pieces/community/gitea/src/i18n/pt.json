@@ -2,7 +2,7 @@
   "Self-hosted Git service": "Serviço Git auto-hospedado",
   "Base URL": "URL Base",
   "Enter your Gitea instance URL (e.g., https://gitea.com)": "Digite sua URL de instância do Gitea (ex: https://gitea.com)",
-  "To connect Gitea, create an OAuth2 application in your Gitea instance: **Settings → Applications → Manage OAuth2 Applications → Create Application**. Set the redirect URI to the one provided by Activepieces, then copy the Client ID and Client Secret here.": "Para conectar o Gitea, crie uma aplicação OAuth2 em sua instância do Gitea: **Configurações → Aplicativos → Gerenciar Aplicativos OAuth2 → Criar aplicativo**. Definir o URI de redirecionamento fornecido por Activepieces e, em seguida, copiar o ID do Cliente e o Segredo do Cliente aqui.",
+  "To connect Gitea, create an OAuth2 application in your Gitea instance: **Settings → Applications → Manage OAuth2 Applications → Create Application**. Set the redirect URI to the one provided by JRNYFLW, then copy the Client ID and Client Secret here.": "Para conectar o Gitea, crie uma aplicação OAuth2 em sua instância do Gitea: **Configurações → Aplicativos → Gerenciar Aplicativos OAuth2 → Criar aplicativo**. Definir o URI de redirecionamento fornecido por JRNYFLW e, em seguida, copiar o ID do Cliente e o Segredo do Cliente aqui.",
   "Create Issue": "Criar issue",
   "Add Comment to Issue/PR": "Adicionar Comentário a Issue/PR",
   "Update Repository": "Atualizar repositório",

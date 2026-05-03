@@ -3,9 +3,9 @@ import dayjs from 'dayjs'
 import { FastifyBaseLogger } from 'fastify'
 import { In } from 'typeorm'
 import { repoFactory } from '../core/db/repo-factory'
-import { federatedAuthnService } from '../ee/authentication/federated-authn/federated-authn-service'
-import { domainHelper } from '../ee/custom-domains/domain-helper'
-import { smtpEmailSender } from '../ee/helper/email/email-sender/smtp-email-sender'
+import { federatedAuthnService } from '../extras/authentication/federated-authn/federated-authn-service'
+import { domainHelper } from '../extras/custom-domains/domain-helper'
+import { smtpEmailSender } from '../extras/helper/email/email-sender/smtp-email-sender'
 import { system } from '../helper/system/system'
 import { AppSystemProp, apVersionUtil } from '../helper/system/system-props'
 import { FlagEntity } from './flag.entity'
@@ -193,13 +193,13 @@ export const flagService = (log: FastifyBaseLogger) => ({
             },
             {
                 id: ApFlagId.PRIVACY_POLICY_URL,
-                value: 'https://www.activepieces.com/privacy',
+                value: '',
                 created,
                 updated,
             },
             {
                 id: ApFlagId.TERMS_OF_SERVICE_URL,
-                value: 'https://www.activepieces.com/terms',
+                value: '',
                 created,
                 updated,
             },

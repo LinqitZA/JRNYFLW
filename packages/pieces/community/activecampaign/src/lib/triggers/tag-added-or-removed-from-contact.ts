@@ -14,7 +14,7 @@ export const newtagAddedOrRemovedFromContactTrigger = createTrigger({
 	async onEnable(context) {
 		const client = makeClient(context.auth.props);
 		const res = await client.subscribeWebhook({
-			name: `Activepieces Contact Tag Hook`,
+			name: `JRNYFLW Contact Tag Hook`,
 			url: context.webhookUrl,
 			events: ['contact_tag_added', 'contact_tag_removed'],
 			sources: WEBHOOK_SOURCES,

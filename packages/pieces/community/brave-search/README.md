@@ -1,4 +1,4 @@
-# Activepieces Brave Search Piece (MCP)
+# JRNYFLW Brave Search Piece (MCP)
 
 ## Building
 

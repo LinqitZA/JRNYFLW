@@ -47,7 +47,7 @@ export const companyRemoved = createTrigger({
 
     const webhook = await folkClient.createWebhook({
       apiKey: context.auth,
-      name: `Activepieces Company Removed - ${Date.now()}`,
+      name: `JRNYFLW Company Removed - ${Date.now()}`,
       targetUrl: context.webhookUrl,
       subscribedEvents,
     });

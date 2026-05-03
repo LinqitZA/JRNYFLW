@@ -41,7 +41,7 @@ export function createQawafelEventTrigger({
         body: {
           url: context.webhookUrl,
           event,
-          description: 'Activepieces webhook subscription',
+          description: 'JRNYFLW webhook subscription',
         },
       });
       await context.store.put<QawafelWebhookStoredHandle>(webhookKey, {

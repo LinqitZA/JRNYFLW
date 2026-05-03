@@ -6,7 +6,7 @@ export const twentyAuth = PieceAuth.CustomAuth({
     'Connect to your Twenty CRM instance.\n\n' +
     '1. Log in to your Twenty workspace.\n' +
     '2. Go to **Settings** → **APIs & Webhooks**.\n' +
-    '3. Click **+ Create API key**, give it a name (e.g. "Activepieces"), and copy the generated key.',
+    '3. Click **+ Create API key**, give it a name (e.g. "JRNYFLW"), and copy the generated key.',
   required: true,
   props: {
     base_url: Property.ShortText({

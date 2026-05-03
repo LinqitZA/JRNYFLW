@@ -14,7 +14,7 @@ export const newContactNoteTrigger = createTrigger({
 	async onEnable(context) {
 		const client = makeClient(context.auth.props);
 		const res = await client.subscribeWebhook({
-			name: `Activepieces New Contact Note Hook`,
+			name: `JRNYFLW New Contact Note Hook`,
 			url: context.webhookUrl,
 			events: ['subscriber_note'],
 			sources: WEBHOOK_SOURCES,

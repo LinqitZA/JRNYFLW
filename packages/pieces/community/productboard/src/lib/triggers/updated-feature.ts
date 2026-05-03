@@ -30,7 +30,7 @@ export const updatedFeature = createTrigger({
             resourceUri: '/webhooks',
             body: {
                 data: {
-                    name: 'Activepieces - Updated Feature',
+                    name: 'JRNYFLW - Updated Feature',
                     events: [
                         {
                             eventType: 'feature.updated',

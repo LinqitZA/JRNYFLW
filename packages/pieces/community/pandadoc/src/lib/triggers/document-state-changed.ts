@@ -62,7 +62,7 @@ export const documentStateChanged = createTrigger({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: `Activepieces Document State Changed`,
+        name: `JRNYFLW Document State Changed`,
         url: context.webhookUrl,
         active: true,
         triggers: ['document_state_changed'],

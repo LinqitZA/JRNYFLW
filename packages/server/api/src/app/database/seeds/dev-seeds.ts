@@ -32,14 +32,14 @@ const setDevDataSeededFlag = async (): Promise<void> => {
 }
 
 const seedDevUser = async (): Promise<void> => {
-    const DEV_EMAIL = 'dev@ap.com'
-    const DEV_PASSWORD = '12345678'
+    const ADMIN_EMAIL = 'admin@jrny.test'
+    const ADMIN_PASSWORD = 'Admin123!@#'
 
 
     const response = await authenticationService(log).signUp({
-        email: DEV_EMAIL,
-        password: DEV_PASSWORD,
-        firstName: 'Dev',
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
+        firstName: 'Admin',
         lastName: 'User',
         trackEvents: false,
         platformId: null,
@@ -49,11 +49,11 @@ const seedDevUser = async (): Promise<void> => {
 
     await platformService(log).createPlatformWithProject({
         identityId: response.id,
-        name: 'dev\'s Platform',
+        name: 'JRNYFLW',
         invalidatePreviousTokens: true,
     })
 
-    log.info({ email: DEV_EMAIL, password: DEV_PASSWORD }, '[devSeeds#seedDevUser] Dev user and platform created')
+    log.info({ email: ADMIN_EMAIL }, '[devSeeds#seedDevUser] Admin user and platform created')
 }
 const seedDevData = async (): Promise<void> => {
     if (currentEnvIsNotDev()) {

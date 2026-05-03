@@ -11,7 +11,7 @@ import { ActivepiecesError,
 } from '@activepieces/shared'
 import { AxiosError } from 'axios'
 import { FastifyBaseLogger } from 'fastify'
-import { secretManagersService } from '../../../../ee/secret-managers/secret-managers.service'
+import { secretManagersService } from '../../../../extras/secret-managers/secret-managers.service'
 import {
     ClaimOAuth2Request,
     OAuth2Service,

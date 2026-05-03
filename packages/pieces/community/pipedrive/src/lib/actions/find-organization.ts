@@ -35,7 +35,7 @@ export const findOrganizationAction = createAction({
 			method: HttpMethod.POST,
 			resourceUri: '/v1/filters',
 			body: {
-				name: 'Activepieces Find Organization Filter',
+				name: 'JRNYFLW Find Organization Filter',
 				type: 'org',
 				conditions: {
 					glue: 'and',

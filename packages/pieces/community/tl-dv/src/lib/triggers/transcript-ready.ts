@@ -57,7 +57,7 @@ The webhook will trigger whenever a meeting transcript is generated.
     executedAt: '2024-01-15T10:35:00Z',
   },
   async onEnable(context) {
-    // Webhook URL is automatically provided by Activepieces
+    // Webhook URL is automatically provided by JRNYFLW
     // User needs to manually configure the webhook in tl;dv dashboard
   },
   async onDisable(context) {

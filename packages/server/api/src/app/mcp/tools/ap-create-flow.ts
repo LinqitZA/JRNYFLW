@@ -8,7 +8,7 @@ export const apCreateFlowTool = (mcp: McpServer, log: FastifyBaseLogger): McpToo
     return {
         title: 'ap_create_flow',
         permission: Permission.WRITE_FLOW,
-        description: 'Create a new flow in Activepieces',
+        description: 'Create a new flow in JRNYFLW',
         inputSchema: {
             flowName: z.string().describe('The name of the flow'),
         },

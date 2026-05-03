@@ -65,7 +65,7 @@ export const sendEvent = createAction({
       url: sendUrl,
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0 (compatible; Activepieces/1.0)',
+        'User-Agent': 'Mozilla/5.0 (compatible; JRNYFLW/1.0)',
       },
       body: {
         type: 'event',

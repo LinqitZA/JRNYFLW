@@ -3,7 +3,7 @@ import { OutsetaClient } from './common/client';
 
 export const outsetaAuth = PieceAuth.CustomAuth({
   displayName: 'Outseta Admin API',
-  description: `Connect Activepieces to your Outseta account using the Admin API.
+  description: `Connect JRNYFLW to your Outseta account using the Admin API.
 
 **To get your credentials:**
 1. Log in to your Outseta account

@@ -217,7 +217,7 @@ export function getSESErrorMessage(
 }
 
 /**
- * Dropdown option type for Activepieces
+ * Dropdown option type for JRNYFLW
  */
 export interface DropdownOption {
   label: string;

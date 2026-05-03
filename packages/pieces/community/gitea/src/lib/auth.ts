@@ -1,7 +1,7 @@
 import { PieceAuth, Property } from '@activepieces/pieces-framework';
 
 export const giteaAuth = PieceAuth.OAuth2({
-  description: 'To connect Gitea, create an OAuth2 application in your Gitea instance: **Settings → Applications → Manage OAuth2 Applications → Create Application**. Set the redirect URI to the one provided by Activepieces, then copy the Client ID and Client Secret here.',
+  description: 'To connect Gitea, create an OAuth2 application in your Gitea instance: **Settings → Applications → Manage OAuth2 Applications → Create Application**. Set the redirect URI to the one provided by JRNYFLW, then copy the Client ID and Client Secret here.',
   props: {
     baseUrl: Property.ShortText({
       displayName: 'Base URL',

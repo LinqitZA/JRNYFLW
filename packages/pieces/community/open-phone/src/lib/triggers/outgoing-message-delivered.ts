@@ -41,7 +41,7 @@ export const outgoingMessageDelivered = createTrigger({
       url: context.webhookUrl,
       events: ['message.delivered'],
       resourceIds: phoneNumbers ? [phoneNumbers as string] : ['*'],
-      label: 'Activepieces Outgoing Message Delivered Trigger',
+      label: 'JRNYFLW Outgoing Message Delivered Trigger',
       status: 'enabled',
     };
 

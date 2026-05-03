@@ -1,6 +1,6 @@
-# Enrich Layer Piece for Activepieces
+# Enrich Layer Piece for JRNYFLW
 
-The Enrich Layer piece provides professional network data enrichment capabilities within Activepieces workflows. Enrich company profiles, look up person data, find work emails, search employees, and more.
+The Enrich Layer piece provides professional network data enrichment capabilities within JRNYFLW workflows. Enrich company profiles, look up person data, find work emails, search employees, and more.
 
 ## Authentication
 
@@ -74,7 +74,7 @@ A **Custom API Call** action is also included for advanced use cases not covered
 
 ## Development
 
-This piece is built with TypeScript and follows Activepieces piece conventions.
+This piece is built with TypeScript and follows JRNYFLW piece conventions.
 
 ```bash
 # Install dependencies (from the activepieces monorepo root)

@@ -20,9 +20,9 @@ export const aiProviders: Record<AIProviderName, AIProviderStrategy<AIProviderAu
     [AIProviderName.BEDROCK]: bedrockProvider,
     [AIProviderName.ACTIVEPIECES]: {
         ...openRouterProvider,
-        name: 'Activepieces',
+        name: 'JRNYFLW',
         async validateConnection(_authConfig, _config, _log): Promise<void> {
-            // Activepieces provider is managed internally, no external validation needed
+            // JRNYFLW provider is managed internally, no external validation needed
         },
     },
 }

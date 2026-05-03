@@ -63,7 +63,7 @@ export const orderStatusChanged = createTrigger({
       body: {
         url: context.webhookUrl,
         event,
-        description: `Activepieces — order status ${event}`,
+        description: `JRNYFLW — order status ${event}`,
       },
     });
     await context.store.put(

@@ -3,7 +3,7 @@
   "Instance URL": "Aanleg URL",
   "API Key": "API Sleutel",
   "The URL of your Twenty instance (e.g. https://app.twenty.com).": "De URL van uw Twenty instance (bijv. https://app.twenty.com).",
-  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"Activepieces\"), and copy the generated key.": "Maak verbinding met de Twintig CRM-instantie.\n\n1. Log in op uw Twenty workspace.\n2. Ga naar **Instellingen** → **API's & Webhooks**.\n3. Klik **+ API-sleutel maken**, geef het een naam (bijv. \"Activepieces\"), en kopieer de gegenereerde sleutel.",
+  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"JRNYFLW\"), and copy the generated key.": "Maak verbinding met de Twintig CRM-instantie.\n\n1. Log in op uw Twenty workspace.\n2. Ga naar **Instellingen** → **API's & Webhooks**.\n3. Klik **+ API-sleutel maken**, geef het een naam (bijv. \"JRNYFLW\"), en kopieer de gegenereerde sleutel.",
   "Create Contact": "Contactpersoon aanmaken",
   "Create Company": "Bedrijf aanmaken",
   "Create Opportunity": "Verkoopkans creëren",

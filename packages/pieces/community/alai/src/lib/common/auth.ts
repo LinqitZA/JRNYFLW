@@ -6,7 +6,7 @@ Follow these steps to get your Alai API Key:
 
 1. Go to [**https://getalai.com/api**](https://getalai.com/api) and sign up or log in.
 2. Navigate to the **API Keys** section.
-3. Click **Create API Key** and give it a name (e.g., "Activepieces").
+3. Click **Create API Key** and give it a name (e.g., "JRNYFLW").
 4. Copy the key and paste it below.
 `;
 

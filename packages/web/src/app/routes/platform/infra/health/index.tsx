@@ -79,7 +79,7 @@ export default function SettingsHealthPage() {
                 'The server has sufficient disk space. At least 30GB of disk space is required for optimal operation.',
               )
             : t(
-                'Insufficient disk space. A minimum of 30GB is required for Activepieces to function properly.',
+                'Insufficient disk space. A minimum of 30GB is required for JRNYFLW to function properly.',
               )}
         </span>
       ),
@@ -114,10 +114,10 @@ export default function SettingsHealthPage() {
         <span>
           {systemHealth?.cpu
             ? t(
-                'The server has enough CPU resources. At least 1 CPU core is required to run Activepieces.',
+                'The server has enough CPU resources. At least 1 CPU core is required to run JRNYFLW.',
               )
             : t(
-                'Not enough CPU resources. At least 1 CPU core is necessary to operate Activepieces.',
+                'Not enough CPU resources. At least 1 CPU core is necessary to operate JRNYFLW.',
               )}
         </span>
       ),

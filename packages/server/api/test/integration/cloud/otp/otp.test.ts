@@ -4,7 +4,7 @@ import { FastifyBaseLogger, FastifyInstance } from 'fastify'
 import { StatusCodes } from 'http-status-codes'
 import { Mock } from 'vitest'
 import { databaseConnection } from '../../../../src/app/database/database-connection'
-import * as emailServiceFile from '../../../../src/app/ee/helper/email/email-service'
+import * as emailServiceFile from '../../../../src/app/extras/helper/email/email-service'
 import { db } from '../../../helpers/db'
 import { mockAndSaveBasicSetup } from '../../../helpers/mocks'
 

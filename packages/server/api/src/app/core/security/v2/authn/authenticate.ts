@@ -2,7 +2,7 @@ import { ActivepiecesError, ErrorCode, isNil, Principal, PrincipalType } from '@
 import { FastifyBaseLogger } from 'fastify'
 import { nanoid } from 'nanoid'
 import { accessTokenManager } from '../../../../authentication/lib/access-token-manager'
-import { apiKeyService } from '../../../../ee/api-keys/api-key-service'
+import { apiKeyService } from '../../../../extras/api-keys/api-key-service'
 
 export const authenticateOrThrow = async (log: FastifyBaseLogger, rawToken: string | null): Promise<Principal> => {
     if (!isNil(rawToken) && rawToken.startsWith('Bearer sk-')) {

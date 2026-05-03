@@ -41,8 +41,8 @@ This piece uses **Service Account Authentication** for secure access to Google V
    - Choose **JSON** format
    - Click "Create" - this will download a JSON file
 
-5. **Add the Key to Activepieces**
-   - In Activepieces, paste the entire JSON content from the downloaded file into the "Service Account JSON Key" field
+5. **Add the Key to JRNYFLW**
+   - In JRNYFLW, paste the entire JSON content from the downloaded file into the "Service Account JSON Key" field
    - The piece will validate the credentials automatically
 
 ## Actions

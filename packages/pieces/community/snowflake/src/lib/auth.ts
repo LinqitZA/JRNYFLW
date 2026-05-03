@@ -58,7 +58,7 @@ CREATE SECURITY INTEGRATION "activepieces"
   OAUTH_USE_SECONDARY_ROLES = IMPLICIT;
 \`\`\`
 
-> Replace the redirect URI with the one shown on your Activepieces OAuth connection page.
+> Replace the redirect URI with the one shown on your JRNYFLW OAuth connection page.
 >
 > \`OAUTH_USE_SECONDARY_ROLES = IMPLICIT\` lets the access token use any role granted to the user. Without it, the token is bound to the user's default Snowflake role and the **Default Role** field below will be ignored.
 
@@ -85,7 +85,7 @@ Copy the **Account Identifier** (e.g. \`xy12345.us-east-1\` or \`orgname-account
 
 ### Step 4 — Connect
 
-Enter the **Client ID** and **Client Secret** in the Activepieces OAuth2 settings for this connection, fill in the **Account Identifier** below, then click **Connect**.`,
+Enter the **Client ID** and **Client Secret** in the JRNYFLW OAuth2 settings for this connection, fill in the **Account Identifier** below, then click **Connect**.`,
   authUrl: 'https://{account}.snowflakecomputing.com/oauth/authorize',
   tokenUrl: 'https://{account}.snowflakecomputing.com/oauth/token-request',
   scope: ['refresh_token'],

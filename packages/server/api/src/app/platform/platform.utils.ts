@@ -1,6 +1,6 @@
 import { ApEdition, isNil, PlatformId, PlatformWithoutSensitiveData, PrincipalType } from '@activepieces/shared'
 import { FastifyRequest } from 'fastify'
-import { customDomainService } from '../ee/custom-domains/custom-domain.service'
+import { customDomainService } from '../extras/custom-domains/custom-domain.service'
 import { system } from '../helper/system/system'
 import { platformService } from './platform.service'
 

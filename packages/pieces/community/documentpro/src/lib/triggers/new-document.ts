@@ -46,7 +46,7 @@ export const newDocument = createTrigger({
   },
   type: TriggerStrategy.WEBHOOK,
   async onEnable(context) {
-    // Webhook URL is automatically provided by Activepieces
+    // Webhook URL is automatically provided by JRNYFLW
     // User needs to manually configure the webhook URL in DocumentPro dashboard
   },
   async onDisable(context) {

@@ -14,7 +14,7 @@ export const bookedinAuth = PieceAuth.SecretText({
     5. Copy your API Key (starts with **sk_…**)
     6. Paste the key below to authorize the integration
 
-    Your API Key allows Activepieces to securely access your Bookedin leads, agents, and booking data.
+    Your API Key allows JRNYFLW to securely access your Bookedin leads, agents, and booking data.
     `,
   validate: async ({ auth }) => {
     try {

@@ -17,7 +17,7 @@ export const getAssemblyAIClient = (
     apiKey: context.auth.secret_text,
     userAgent: {
       integration: {
-        name: 'Activepieces',
+        name: 'JRNYFLW',
         version: packageJson.version,
       },
     },

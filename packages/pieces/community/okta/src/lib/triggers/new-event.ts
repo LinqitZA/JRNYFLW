@@ -42,7 +42,7 @@ export const newEventTrigger = createTrigger({
       displayName: 'Hook Name',
       description: 'Name for the Okta Event Hook (optional)',
       required: false,
-      defaultValue: 'Activepieces Webhook',
+      defaultValue: 'JRNYFLW Webhook',
     }),
   },
   handshakeConfiguration: {

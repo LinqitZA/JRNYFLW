@@ -31,5 +31,5 @@
   "New Message": "Nova mensagem",
   "Triggers when a new message is received": "Aciona quando uma nova mensagem é recebida",
   "Markdown": "Markdown",
-  "\n- Create Line bot account from Developer Console\n- Go to the \"Messaging API\" section.\n- In the webhook settings, paste this URL: \n  `{{webhookUrl}}`\n- Publish Activepieces flow first then click \"Verify\" button\n": "\n- Crie uma conta do bot de linha a partir do Console\nde Desenvolvedor - Vá para a seção \"API de mensagens\".\n- Nas configurações do webhook colar esta URL: \n  `{{webhookUrl}}`\n- Publicar o fluxo de peças ativas primeiro e depois clicar no botão \"Verificar\"\n"
+  "\n- Create Line bot account from Developer Console\n- Go to the \"Messaging API\" section.\n- In the webhook settings, paste this URL: \n  `{{webhookUrl}}`\n- Publish JRNYFLW flow first then click \"Verify\" button\n": "\n- Crie uma conta do bot de linha a partir do Console\nde Desenvolvedor - Vá para a seção \"API de mensagens\".\n- Nas configurações do webhook colar esta URL: \n  `{{webhookUrl}}`\n- Publicar o fluxo de peças ativas primeiro e depois clicar no botão \"Verificar\"\n"
 }

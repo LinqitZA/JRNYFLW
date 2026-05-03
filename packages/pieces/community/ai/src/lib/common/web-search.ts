@@ -24,7 +24,7 @@ function buildWebSearchOptionsProps(provider: string, params?: { showIncludeSour
       required: false,
       defaultValue: 5,
       description: isOpenRouterProvider
-        ? 'For OpenRouter/Activepieces, this maps to OpenRouter web plugin max_results (1-10). Default is 5.'
+        ? 'For OpenRouter/JRNYFLW, this maps to OpenRouter web plugin max_results (1-10). Default is 5.'
         : 'Maximum number of searches to use. Default is 5.',
     }),
   };

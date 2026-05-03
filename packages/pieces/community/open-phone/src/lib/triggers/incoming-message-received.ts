@@ -40,7 +40,7 @@ export const incomingMessageReceived = createTrigger({
       url: context.webhookUrl,
       events: ['message.received'],
       resourceIds: phoneNumbers ? [phoneNumbers as string] : ['*'],
-      label: 'Activepieces Incoming Message Received Trigger',
+      label: 'JRNYFLW Incoming Message Received Trigger',
       status: 'enabled',
     };
 

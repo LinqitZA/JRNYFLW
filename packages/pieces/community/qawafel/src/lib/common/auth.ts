@@ -10,7 +10,7 @@ const markdownDescription = `
 
 1. Sign in to your [Qawafel dashboard](https://qawafel.sa).
 2. Open **Settings → Developers → API Keys**.
-3. Click **Create API Key**, give it a name (e.g. "Activepieces") and copy the key.
+3. Click **Create API Key**, give it a name (e.g. "JRNYFLW") and copy the key.
 4. Paste the key below. Keep it secret — anyone with the key can read and write your Qawafel data.
 
 **Environment:**

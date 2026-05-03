@@ -10,7 +10,7 @@ export const extractionFailed = createTrigger({
   props: {
     webhookInstructions: Property.MarkDown({
       value: `
-To use this trigger, you need to manually set up a single webhook endpoint in your Extracta.ai account. This endpoint will receive all events, and Activepieces will filter for the correct one.
+To use this trigger, you need to manually set up a single webhook endpoint in your Extracta.ai account. This endpoint will receive all events, and JRNYFLW will filter for the correct one.
 
 1.  **Login** to your Extracta.ai dashboard.
 2.  Navigate to the **API** section from the side menu.
@@ -22,7 +22,7 @@ To use this trigger, you need to manually set up a single webhook endpoint in yo
     \`\`\`
 6.  Click **Save**.
 
-This single webhook will now send all events to Activepieces. This trigger will only activate for the **'extraction.failed'** event.
+This single webhook will now send all events to JRNYFLW. This trigger will only activate for the **'extraction.failed'** event.
       `,
     }),
   },

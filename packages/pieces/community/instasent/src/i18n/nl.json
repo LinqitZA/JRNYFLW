@@ -5,7 +5,7 @@
   "Your Instasent Project ID": "Uw Instasent Project ID",
   "Your Instasent Datasource ID": "Uw Instasent dataource-ID",
   "Your Instasent API Bearer Token": "Je Instasent API Bearer Token",
-  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an Activepieces data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Verkrijg je autorisatiegegevens\n1. Ga naar https://dashboard.instasent.com\n2. Toegang tot je project\n3. Maak een Activepieces gegevensbron\n4. Kopieer de authenticatieparameters en plak ze in de onderstaande velden\n",
+  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an JRNYFLW data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Verkrijg je autorisatiegegevens\n1. Ga naar https://dashboard.instasent.com\n2. Toegang tot je project\n3. Maak een JRNYFLW gegevensbron\n4. Kopieer de authenticatieparameters en plak ze in de onderstaande velden\n",
   "Add/Update contact": "Contactpersoon toevoegen/bijwerken",
   "Delete Contact": "Contactpersoon verwijderen",
   "Add Event": "Afspraak toevoegen",

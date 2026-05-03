@@ -9,7 +9,7 @@ To obtain your Smartsheet access token:
 3. Select **Personal Settings** from the dropdown menu.
 4. In the left panel, click **API Access**.
 5. Click **Generate new access token**.
-6. Enter a name for your token (e.g., "Activepieces Integration").
+6. Enter a name for your token (e.g., "JRNYFLW Integration").
 7. Click **OK** to generate the token..
 8. Copy the access token and paste it into the connection field.
 `;

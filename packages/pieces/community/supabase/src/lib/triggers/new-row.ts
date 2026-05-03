@@ -27,7 +27,7 @@ export const newRow = createTrigger({
 1. **Go to your Supabase Dashboard** → Database → Webhooks
 2. **Click "Create a new hook"**
 3. **Configure the webhook:**
-   - **Name**: Give it a descriptive name (e.g., "Activepieces New Row")
+   - **Name**: Give it a descriptive name (e.g., "JRNYFLW New Row")
    - **Table**: Select the table you want to monitor
    - **Events**: Check "Insert" 
    - **Type**: HTTP Request

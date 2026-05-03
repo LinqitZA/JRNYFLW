@@ -46,7 +46,7 @@ export function formatError(e: unknown): string {
 //         Authorization: `Bearer ${apiKey}`,
 //       },
 //       body: {
-//         name: `Activepieces - New Lead (${new Date().toISOString()})`,
+//         name: `JRNYFLW - New Lead (${new Date().toISOString()})`,
 //         url: webhookUrl,
 //         eventTypes: ['LEAD_CREATED'],
 //         maxRetries: 3,

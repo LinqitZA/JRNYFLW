@@ -62,7 +62,7 @@ export const housecallPro = createPiece({
   minimumSupportedRelease: '0.36.1',
   logoUrl: "https://cdn.activepieces.com/pieces/housecall-pro.png",
   categories: [PieceCategory.SALES_AND_CRM],
-  authors: ["Activepieces"],
+  authors: ["JRNYFLW"],
   actions: [
     // Customer actions
     createCustomer,

@@ -3,7 +3,7 @@
   "Instance URL": "Instância URL",
   "API Key": "Chave de API",
   "The URL of your Twenty instance (e.g. https://app.twenty.com).": "A URL da sua instância de Vinte (por exemplo, https://app.twenty.com).",
-  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"Activepieces\"), and copy the generated key.": "Conecte-se à sua instância de Vinte CRM.\n\n1. Faça login no seu espaço de trabalho de Vinte.\n2. Vá para **Configurações** → **APIs e Webhooks**.\n3. Clique em **+ Criar chave de API**, dê um nome a ela (por exemplo, \"Activepieces\") e copie a chave gerada.",
+  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"JRNYFLW\"), and copy the generated key.": "Conecte-se à sua instância de Vinte CRM.\n\n1. Faça login no seu espaço de trabalho de Vinte.\n2. Vá para **Configurações** → **APIs e Webhooks**.\n3. Clique em **+ Criar chave de API**, dê um nome a ela (por exemplo, \"JRNYFLW\") e copie a chave gerada.",
   "Create Contact": "Criar contato",
   "Create Company": "Criar Empresa",
   "Create Opportunity": "Criar Oportunidade",

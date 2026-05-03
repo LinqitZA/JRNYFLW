@@ -1,10 +1,10 @@
 # pieces-medullar
 
-Library of [Activepieces](https://www.activepieces.com/) for [Medullar Solutions](https://www.medullar.com)
+Library of [JRNYFLW](https://www.activepieces.com/) for [Medullar Solutions](https://www.medullar.com)
 
 ## Overview
 
-`pieces-medullar` is a library designed to integrate Medullar Solutions with the Activepieces framework, enabling seamless automation and extensibility.
+`pieces-medullar` is a library designed to integrate Medullar Solutions with the JRNYFLW framework, enabling seamless automation and extensibility.
 
 ## Features
 

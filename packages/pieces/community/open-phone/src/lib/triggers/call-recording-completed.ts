@@ -41,7 +41,7 @@ export const callRecordingCompleted = createTrigger({
       url: context.webhookUrl,
       events: ['call.recording.completed'],
       resourceIds: phoneNumbers ? [phoneNumbers as string] : ['*'],
-      label: 'Activepieces Call Recording Completed Trigger',
+      label: 'JRNYFLW Call Recording Completed Trigger',
       status: 'enabled',
     };
 

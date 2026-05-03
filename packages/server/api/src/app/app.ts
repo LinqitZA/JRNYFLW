@@ -19,42 +19,42 @@ import { rateLimitModule } from './core/security/rate-limit'
 import { authenticationMiddleware } from './core/security/v2/authn/authentication-middleware'
 import { authorizationMiddleware } from './core/security/v2/authz/authorization-middleware'
 import { distributedLock, redisConnections } from './database/redis-connections'
-import { alertsModule } from './ee/alerts/alerts-module'
-import { apiKeyModule } from './ee/api-keys/api-key-module'
-import { platformOAuth2Service } from './ee/app-connections/platform-oauth2-service'
-import { appCredentialModule } from './ee/app-credentials/app-credentials.module'
-import { appSumoModule } from './ee/appsumo/appsumo.module'
-import { auditEventModule } from './ee/audit-logs/audit-event-module'
-import { enterpriseLocalAuthnModule } from './ee/authentication/enterprise-local-authn/enterprise-local-authn-module'
-import { federatedAuthModule } from './ee/authentication/federated-authn/federated-authn-module'
-import { otpModule } from './ee/authentication/otp/otp-module'
-import { rbacMiddleware } from './ee/authentication/project-role/rbac-middleware'
-import { authnSsoSamlModule } from './ee/authentication/saml-authn/authn-sso-saml-module'
-import { connectionKeyModule } from './ee/connection-keys/connection-key.module'
-import { customDomainModule } from './ee/custom-domains/custom-domain.module'
-import { domainHelper } from './ee/custom-domains/domain-helper'
-import { enterpriseFlagsHooks } from './ee/flags/enterprise-flags.hooks'
-import { globalConnectionModule } from './ee/global-connections/global-connection-module'
-import { licenseKeysModule } from './ee/license-keys/license-keys-module'
-import { managedAuthnModule } from './ee/managed-authn/managed-authn-module'
-import { oauthAppModule } from './ee/oauth-apps/oauth-app.module'
-import { platformPieceModule } from './ee/pieces/platform-piece-module'
-import { adminPlatformModule } from './ee/platform/admin/admin-platform.controller'
-import { adminPlatformTemplatesCloudModule } from './ee/platform/admin/templates/admin-platform-templates-cloud.module'
-import { platformAiCreditsService } from './ee/platform/platform-plan/platform-ai-credits.service'
-import { platformPlanModule } from './ee/platform/platform-plan/platform-plan.module'
-import { platformWebhooksModule } from './ee/platform-webhooks/platform-webhooks.module'
-import { projectEnterpriseHooks } from './ee/projects/ee-project-hooks'
-import { platformProjectBackgroundJobs } from './ee/projects/platform-project-jobs'
-import { platformProjectModule } from './ee/projects/platform-project-module'
-import { projectMemberModule } from './ee/projects/project-members/project-member.module'
-import { gitRepoModule } from './ee/projects/project-release/git-sync/git-sync.module'
-import { projectReleaseModule } from './ee/projects/project-release/project-release.module'
-import { projectRoleModule } from './ee/projects/project-role/project-role.module'
-import { scimModule } from './ee/scim/scim-module'
-import { secretManagersModule } from './ee/secret-managers/secret-managers.module'
-import { signingKeyModule } from './ee/signing-key/signing-key-module'
-import { userModule } from './ee/users/user.module'
+import { alertsModule } from './extras/alerts/alerts-module'
+import { apiKeyModule } from './extras/api-keys/api-key-module'
+import { platformOAuth2Service } from './extras/app-connections/platform-oauth2-service'
+import { appCredentialModule } from './extras/app-credentials/app-credentials.module'
+import { appSumoModule } from './extras/appsumo/appsumo.module'
+import { auditEventModule } from './extras/audit-logs/audit-event-module'
+import { enterpriseLocalAuthnModule } from './extras/authentication/enterprise-local-authn/enterprise-local-authn-module'
+import { federatedAuthModule } from './extras/authentication/federated-authn/federated-authn-module'
+import { otpModule } from './extras/authentication/otp/otp-module'
+import { rbacMiddleware } from './extras/authentication/project-role/rbac-middleware'
+import { authnSsoSamlModule } from './extras/authentication/saml-authn/authn-sso-saml-module'
+import { connectionKeyModule } from './extras/connection-keys/connection-key.module'
+import { customDomainModule } from './extras/custom-domains/custom-domain.module'
+import { domainHelper } from './extras/custom-domains/domain-helper'
+import { enterpriseFlagsHooks } from './extras/flags/enterprise-flags.hooks'
+import { globalConnectionModule } from './extras/global-connections/global-connection-module'
+import { licenseKeysModule } from './extras/license-keys/license-keys-module'
+import { managedAuthnModule } from './extras/managed-authn/managed-authn-module'
+import { oauthAppModule } from './extras/oauth-apps/oauth-app.module'
+import { platformPieceModule } from './extras/pieces/platform-piece-module'
+import { adminPlatformModule } from './extras/platform/admin/admin-platform.controller'
+import { adminPlatformTemplatesCloudModule } from './extras/platform/admin/templates/admin-platform-templates-cloud.module'
+import { platformAiCreditsService } from './extras/platform/platform-plan/platform-ai-credits.service'
+import { platformPlanModule } from './extras/platform/platform-plan/platform-plan.module'
+import { platformWebhooksModule } from './extras/platform-webhooks/platform-webhooks.module'
+import { projectEnterpriseHooks } from './extras/projects/ee-project-hooks'
+import { platformProjectBackgroundJobs } from './extras/projects/platform-project-jobs'
+import { platformProjectModule } from './extras/projects/platform-project-module'
+import { projectMemberModule } from './extras/projects/project-members/project-member.module'
+import { gitRepoModule } from './extras/projects/project-release/git-sync/git-sync.module'
+import { projectReleaseModule } from './extras/projects/project-release/project-release.module'
+import { projectRoleModule } from './extras/projects/project-role/project-role.module'
+import { scimModule } from './extras/scim/scim-module'
+import { secretManagersModule } from './extras/secret-managers/secret-managers.module'
+import { signingKeyModule } from './extras/signing-key/signing-key-module'
+import { userModule } from './extras/users/user.module'
 import { fileModule } from './file/file.module'
 import { flagModule } from './flags/flag.module'
 import { flagHooks } from './flags/flags.hooks'
@@ -108,7 +108,7 @@ export const setupApp = async (app: FastifyInstance): Promise<FastifyInstance> =
         openapi: {
             servers: [
                 {
-                    url: 'https://cloud.activepieces.com/api',
+                    url: 'http://localhost:3000/api',
                     description: 'Production Server',
                 },
             ],
@@ -156,11 +156,11 @@ export const setupApp = async (app: FastifyInstance): Promise<FastifyInstance> =
                 },
             },
             info: {
-                title: 'Activepieces Documentation',
+                title: 'JRNYFLW Documentation',
                 version: '0.0.0',
             },
             externalDocs: {
-                url: 'https://www.activepieces.com/docs',
+                url: '',
                 description: 'Find more info here',
             },
         },
@@ -259,7 +259,7 @@ export const setupApp = async (app: FastifyInstance): Promise<FastifyInstance> =
     const edition = system.getEdition()
     app.log.info({
         edition,
-    }, 'Activepieces Edition')
+    }, 'JRNYFLW Edition')
     switch (edition) {
         case ApEdition.CLOUD:
             await app.register(adminPlatformModule)

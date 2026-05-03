@@ -1,6 +1,6 @@
-# NinjaPipe Activepieces Piece
+# NinjaPipe JRNYFLW Piece
 
-Activepieces piece for the NinjaPipe CRM.
+JRNYFLW piece for the NinjaPipe CRM.
 
 ## Piece contents
 

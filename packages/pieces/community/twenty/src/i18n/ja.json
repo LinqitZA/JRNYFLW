@@ -3,7 +3,7 @@
   "Instance URL": "インスタンス URL",
   "API Key": "API キー",
   "The URL of your Twenty instance (e.g. https://app.twenty.com).": "Twenty instance（例：https://app.20y.com）のURL。",
-  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"Activepieces\"), and copy the generated key.": "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"Activepieces\"), and copy the generated key.",
+  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"JRNYFLW\"), and copy the generated key.": "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"JRNYFLW\"), and copy the generated key.",
   "Create Contact": "連絡先を作成",
   "Create Company": "所属を作成",
   "Create Opportunity": "案件を作成",

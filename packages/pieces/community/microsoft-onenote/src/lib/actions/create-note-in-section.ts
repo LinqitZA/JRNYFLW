@@ -84,7 +84,7 @@ export const createNoteInSection = createAction({
 </head>
 <body>
 	<h1>${title}</h1>
-	${content || '<p>New note created via Activepieces</p>'}
+	${content || '<p>New note created via JRNYFLW</p>'}
 </body>
 </html>`;
 

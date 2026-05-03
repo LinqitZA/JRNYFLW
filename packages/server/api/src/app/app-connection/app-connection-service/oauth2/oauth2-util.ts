@@ -15,7 +15,7 @@ import { ActivepiecesError,
 import { isAxiosError } from 'axios'
 import { FastifyBaseLogger } from 'fastify'
 import { nanoid } from 'nanoid'
-import { secretManagersService } from '../../../ee/secret-managers/secret-managers.service'
+import { secretManagersService } from '../../../extras/secret-managers/secret-managers.service'
 import { pieceMetadataService } from '../../../pieces/metadata/piece-metadata-service'
 
 export const oauth2Util = (log: FastifyBaseLogger) => ({

@@ -81,7 +81,7 @@ export const companyUpdated = createTrigger({
 
     const webhook = await folkClient.createWebhook({
       apiKey: context.auth,
-      name: `Activepieces Company Updated - ${Date.now()}`,
+      name: `JRNYFLW Company Updated - ${Date.now()}`,
       targetUrl: context.webhookUrl,
       subscribedEvents,
     });

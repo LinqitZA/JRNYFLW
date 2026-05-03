@@ -1,6 +1,6 @@
 # @activepieces/piece-vercel
 
-Bounded MVP Vercel piece for Activepieces community pieces.
+Bounded MVP Vercel piece for JRNYFLW community pieces.
 
 ## Included actions
 

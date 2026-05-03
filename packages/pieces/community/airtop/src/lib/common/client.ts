@@ -69,7 +69,7 @@ export async function airtopApiCall<T extends HttpMessageBody>({
 		headers: {
 			Authorization: `Bearer ${apiKey}`,
 			'Content-Type': 'application/json',
-			'User-Agent': 'Activepieces-Airtop-Integration',
+			'User-Agent': 'JRNYFLW-Airtop-Integration',
 		},
 		queryParams: qs,
 		body,

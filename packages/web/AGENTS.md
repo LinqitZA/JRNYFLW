@@ -1,6 +1,6 @@
 # Web Frontend
 
-You are working in the Activepieces web application (`packages/web`).
+You are working in the JRNYFLW web application (`packages/web`).
 
 ## Tech Stack
 

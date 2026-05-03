@@ -133,7 +133,7 @@ export const documentCompleted = createTrigger({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: `Activepieces Document Completed`,
+        name: `JRNYFLW Document Completed`,
         url: context.webhookUrl,
         active: true,
         triggers: ['document_state_changed', 'recipient_completed'],

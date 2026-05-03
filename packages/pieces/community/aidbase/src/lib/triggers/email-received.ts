@@ -33,7 +33,7 @@ export const emailReceived = createTrigger({
     return;
   },
 
-  // onDisable is not needed because the webhook is managed outside of Activepieces.
+  // onDisable is not needed because the webhook is managed outside of JRNYFLW.
   async onDisable(context) {
     return;
   },

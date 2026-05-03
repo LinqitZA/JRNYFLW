@@ -115,7 +115,7 @@ export const ConfigureSamlDialog = ({
               markdown={t(
                 `
 **Setup Instructions**:
-Please check the following documentation: [SAML SSO](https://activepieces.com/docs/security/sso)
+Configure SAML SSO in your IdP using the values below.
 
 **Single sign-on URL**:
 \`\`\`text
@@ -123,7 +123,7 @@ Please check the following documentation: [SAML SSO](https://activepieces.com/do
 \`\`\`
 **Audience URI (SP Entity ID)**:
 \`\`\`text
-Activepieces
+JRNYFLW
 \`\`\`
 `,
                 { samlAcs: samlAcs ?? '' },

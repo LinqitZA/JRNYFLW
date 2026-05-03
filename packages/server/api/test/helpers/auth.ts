@@ -4,7 +4,7 @@ import jwt, { Algorithm, JwtPayload, SignOptions } from 'jsonwebtoken'
 import {
     ExternalPrincipal,
     ExternalTokenPayload,
-} from '../../src/app/ee/managed-authn/lib/external-token-extractor'
+} from '../../src/app/extras/managed-authn/lib/external-token-extractor'
 
 const generateToken = ({
     payload,

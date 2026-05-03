@@ -6,7 +6,7 @@
   "Your Instasent Project ID": "Ваш экспресс-ID проекта",
   "Your Instasent Datasource ID": "Ваш мгновенный идентификатор",
   "Your Instasent API Bearer Token": "Токен Instasent API Bearer",
-  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an Activepieces data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Получите ваши данные авторизации\n1. Перейдите на https://dashboard.instasent.com\n2. Получите доступ к вашему проекту\n3. Создайте источник данных Activepieces\n4. Скопируйте параметры авторизации и вставьте их в поля ниже\n",
+  "\n## Obtain your auth data\n1. Go to https://dashboard.instasent.com\n2. Access to your project\n3. Create an JRNYFLW data source\n4. Copy the auth parameters and paste them in the fields below\n": "\n## Получите ваши данные авторизации\n1. Перейдите на https://dashboard.instasent.com\n2. Получите доступ к вашему проекту\n3. Создайте источник данных JRNYFLW\n4. Скопируйте параметры авторизации и вставьте их в поля ниже\n",
   "Add/Update contact": "Добавить/Обновить контакт",
   "Delete Contact": "Удалить контакт",
   "Add Event": "Добавить событие",

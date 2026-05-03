@@ -83,7 +83,7 @@ export const createPage = createAction({
 </head>
 <body>
 	<h1>${title}</h1>
-	${content || '<p>New page created via Activepieces</p>'}
+	${content || '<p>New page created via JRNYFLW</p>'}
 </body>
 </html>`;
 

@@ -147,7 +147,7 @@ async function diagnoseMissingTriggerInputs({ pieceName, pieceVersion, triggerNa
         }
         const { parts, missing, uiRequired, hasAuth } = mcpUtils.diagnosePieceProps({ props: trigger.props, input, pieceAuth: piece.auth, requireAuth: trigger.requireAuth, componentType: 'trigger' })
         if (missing.length === 0 && uiRequired.length === 0 && !hasAuth) {
-            return 'All inputs are provided but the trigger may need sample data. Ask the user to send a test event or configure the trigger in the Activepieces UI.'
+            return 'All inputs are provided but the trigger may need sample data. Ask the user to send a test event or configure the trigger in the JRNYFLW UI.'
         }
         return parts.join(' ')
     }

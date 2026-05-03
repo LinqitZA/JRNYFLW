@@ -48,7 +48,7 @@ The webhook will trigger whenever a document is merged.
     merged_at: '2024-01-15T10:30:00Z',
   },
   async onEnable(context) {
-    // Webhook URL is automatically provided by Activepieces
+    // Webhook URL is automatically provided by JRNYFLW
     // User needs to manually configure the webhook URL in DocuMerge dashboard
   },
   async onDisable(context) {

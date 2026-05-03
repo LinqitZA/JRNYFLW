@@ -48,7 +48,7 @@ The webhook will trigger whenever a route merge is completed.
     merged_at: '2024-01-15T14:45:00Z',
   },
   async onEnable(context) {
-    // Webhook URL is automatically provided by Activepieces
+    // Webhook URL is automatically provided by JRNYFLW
     // User needs to manually configure the webhook URL in DocuMerge dashboard
   },
   async onDisable(context) {

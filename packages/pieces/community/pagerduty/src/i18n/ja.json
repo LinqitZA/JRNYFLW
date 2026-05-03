@@ -1,6 +1,6 @@
 {
   "Incident management workflows for PagerDuty REST API v2.": "PagerDuty REST API v2のインシデント管理ワークフロー。",
-  "PagerDuty REST API token from Integrations > API Access Keys. Activepieces sends it as Authorization: Token token=<API_KEY>.": "PagerDuty REST API トークン from Integrations > API Access Keys. Activepieces sent it as Authorization: Token token=<API_KEY>.",
+  "PagerDuty REST API token from Integrations > API Access Keys. JRNYFLW sends it as Authorization: Token token=<API_KEY>.": "PagerDuty REST API トークン from Integrations > API Access Keys. JRNYFLW sent it as Authorization: Token token=<API_KEY>.",
   "Create Incident": "インシデントの作成",
   "List Incidents": "インシデント一覧",
   "Get Incident": "インシデントを取得",

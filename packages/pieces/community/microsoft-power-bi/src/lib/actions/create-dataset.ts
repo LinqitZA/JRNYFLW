@@ -25,7 +25,7 @@ export const createDatasetAction = createAction({
             displayName: 'Dataset Name',
             description: 'Name of the dataset to create',
             required: true,
-            defaultValue: 'ActivepiecesDataset'
+            defaultValue: 'JRNYFLWDataset'
         }),
         mode: Property.StaticDropdown({
             displayName: 'Dataset Mode',

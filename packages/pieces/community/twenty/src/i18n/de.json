@@ -3,7 +3,7 @@
   "Instance URL": "Instanz URL",
   "API Key": "API-Schlüssel",
   "The URL of your Twenty instance (e.g. https://app.twenty.com).": "Die URL Ihrer zwanzig Instanz (z.B. https://app.twenty.com).",
-  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"Activepieces\"), and copy the generated key.": "Verbinden Sie sich mit Ihrer Twenty CRM Instanz.\n\n1. Melden Sie sich in Ihrem zwanzigsten Arbeitsbereich an.\n2. Gehen Sie zu **Einstellungen** → **APIs & Webhooks**.\n3. Klicken Sie auf **+ API-Schlüssel erstellen**, geben Sie ihm einen Namen (z.B. \"Activepieces\") und kopieren Sie den generierten Schlüssel.",
+  "Connect to your Twenty CRM instance.\n\n1. Log in to your Twenty workspace.\n2. Go to **Settings** → **APIs & Webhooks**.\n3. Click **+ Create API key**, give it a name (e.g. \"JRNYFLW\"), and copy the generated key.": "Verbinden Sie sich mit Ihrer Twenty CRM Instanz.\n\n1. Melden Sie sich in Ihrem zwanzigsten Arbeitsbereich an.\n2. Gehen Sie zu **Einstellungen** → **APIs & Webhooks**.\n3. Klicken Sie auf **+ API-Schlüssel erstellen**, geben Sie ihm einen Namen (z.B. \"JRNYFLW\") und kopieren Sie den generierten Schlüssel.",
   "Create Contact": "Kontakt erstellen",
   "Create Company": "Firma erstellen",
   "Create Opportunity": "Verkaufschance erstellen",

@@ -43,7 +43,7 @@ export const personCustomFieldUpdated = createTrigger({
 
     const webhook = await folkClient.createWebhook({
       apiKey: context.auth,
-      name: `Activepieces Person Groups Updated - ${Date.now()}`,
+      name: `JRNYFLW Person Groups Updated - ${Date.now()}`,
       targetUrl: context.webhookUrl,
       subscribedEvents,
     });

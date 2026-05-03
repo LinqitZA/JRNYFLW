@@ -1,7 +1,7 @@
 import { PieceAuth, Property } from '@activepieces/pieces-framework';
 
 const markdown = `
-Activepieces Platform API is available under the Platform Edition.
+JRNYFLW Platform API is available under the Platform Edition.
 (https://www.activepieces.com/docs/admin-console/overview)
 
 **Note**: The API Key is available in the Platform Dashboard.

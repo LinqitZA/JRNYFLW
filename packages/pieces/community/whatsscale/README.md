@@ -1,6 +1,6 @@
 # WhatsScale
 
-WhatsApp automation for Activepieces — send messages, manage contacts, and automate workflows through WhatsApp.
+WhatsApp automation for JRNYFLW — send messages, manage contacts, and automate workflows through WhatsApp.
 
 ## Authentication
 
@@ -84,7 +84,7 @@ WhatsScale uses API key authentication. Get your key from [whatsscale.com/dashbo
 ## Architecture
 
 ```
-Activepieces Flow
+JRNYFLW Flow
        │
        ▼
 proxy.whatsscale.com

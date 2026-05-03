@@ -398,16 +398,16 @@ export async function getEditableFieldsWithLabels(
 }
 
 /**
- * Builds Activepieces Property objects for dynamic form generation
+ * Builds JRNYFLW Property objects for dynamic form generation
  *
  * This is the main function that combines all the field discovery and
  * configuration to create the actual form properties that users will
- * see in the Activepieces interface.
+ * see in the JRNYFLW interface.
  *
  * @param auth - Drupal authentication credentials
  * @param entityType - Selected entity type from dropdown
  * @param isCreateAction - Whether this is for creating (true) or updating (false)
- * @returns Dynamic properties object for Activepieces form
+ * @returns Dynamic properties object for JRNYFLW form
  */
 export async function buildFieldProperties(
   auth: DrupalAuthType,

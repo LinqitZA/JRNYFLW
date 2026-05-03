@@ -135,7 +135,7 @@ export const newActionOnTicket = createTrigger({
         },
         body: {
           webhook: {
-            name: `Activepieces Ticket Action Webhook - ${Date.now()}`,
+            name: `JRNYFLW Ticket Action Webhook - ${Date.now()}`,
             endpoint: context.webhookUrl,
             http_method: 'POST',
             request_format: 'json',

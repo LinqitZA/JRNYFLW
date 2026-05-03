@@ -5,7 +5,7 @@ import { PAGERDUTY_API_BASE_URL, pagerDutyHeaders } from './common/client';
 export const pagerDutyAuth = PieceAuth.SecretText({
   displayName: 'PagerDuty API Key',
   description:
-    'PagerDuty REST API token from Integrations > API Access Keys. Activepieces sends it as Authorization: Token token=<API_KEY>.',
+    'PagerDuty REST API token from Integrations > API Access Keys. JRNYFLW sends it as Authorization: Token token=<API_KEY>.',
   required: true,
   validate: async ({ auth }) => {
     try {

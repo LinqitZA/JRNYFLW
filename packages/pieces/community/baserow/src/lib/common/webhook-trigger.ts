@@ -61,7 +61,7 @@ export function createWebhookTriggerHooks({
         tableId: context.propsValue.table_id,
         url: context.webhookUrl,
         events,
-        name: `Activepieces – ${storeKey}`,
+        name: `JRNYFLW – ${storeKey}`,
       });
       await context.store.put(storeKey, { webhookId: webhook.id });
     },

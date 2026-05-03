@@ -52,7 +52,7 @@ export const mollieNewInvoice = createTrigger({
     const webhookUrl = context.webhookUrl;
 
     const webhookData = {
-      name: 'Activepieces Invoice Webhook',
+      name: 'JRNYFLW Invoice Webhook',
       url: webhookUrl,
       eventTypes: 'sales-invoice.created',
     };

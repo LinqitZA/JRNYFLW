@@ -1,4 +1,4 @@
-//Client ==> Activepieces
+//Client ==> JRNYFLW
 //Vendor ==> Customers using our embed sdk
 export enum ActivepiecesClientEventName {
   CLIENT_INIT = 'CLIENT_INIT',
@@ -57,7 +57,7 @@ export interface ActivepiecesNewConnectionDialogClosed {
   type: ActivepiecesClientEventName.CLIENT_NEW_CONNECTION_DIALOG_CLOSED;
   data: { connection?: { id: string; name: string } };
 }
-export interface ActivepiecesBuilderHomeButtonClicked {
+export interface JrnyflwBuilderHomeButtonClicked {
   type: ActivepiecesClientEventName.CLIENT_BUILDER_HOME_BUTTON_CLICKED;
   data: {
     route: string;
@@ -163,7 +163,7 @@ type ConfigureParams = {
 }
 
 type RequestMethod = Required<Parameters<typeof fetch>>[1]['method'];
-class ActivepiecesEmbedded {
+class JrnyflwEmbedded {
   readonly _sdkVersion = "0.9.0";
   //used for  Automatically Sync URL feature i.e /org/1234
   _prefix = '/';
@@ -440,7 +440,7 @@ class ActivepiecesEmbedded {
   };
 
   private _checkForBuilderHomeButtonClicked = (source: Window) => {
-    window.addEventListener('message', (event: MessageEvent<ActivepiecesBuilderHomeButtonClicked>) => {
+    window.addEventListener('message', (event: MessageEvent<JrnyflwBuilderHomeButtonClicked>) => {
       if (event.data.type === ActivepiecesClientEventName.CLIENT_BUILDER_HOME_BUTTON_CLICKED && event.source === source) {
         this._embeddingState?.builder?.homeButtonClickedHandler?.(event.data.data);
       }
@@ -452,7 +452,7 @@ class ActivepiecesEmbedded {
   }
 
   //used for  Automatically Sync URL feature 
-  extractActivepiecesRouteFromUrl({ vendorUrl }: { vendorUrl: string }) {
+  extractJrnyflwRouteFromUrl({ vendorUrl }: { vendorUrl: string }) {
     return this._extractRouteAfterPrefix(vendorUrl, this._removeTrailingSlashes(this._parentOrigin) + this._prefix);
   }
 
@@ -549,7 +549,7 @@ class ActivepiecesEmbedded {
   
   private _errorCreator(message: string,...args:any[]): never {
     this._logger().error(message,...args)
-    throw new Error(`Activepieces: ${message}`,);
+    throw new Error(`JRNYFLW: ${message}`,);
   }
   private _removeEmbedding(target:HTMLIFrameElement | Window) {
     if (target) {
@@ -566,13 +566,13 @@ class ActivepiecesEmbedded {
   private _logger() {
     return{
       log: (message: string, ...args: any[]) => {
-        console.log(`Activepieces: ${message}`, ...args)
+        console.log(`JRNYFLW: ${message}`, ...args)
       },
       error: (message: string, ...args: any[]) => {
-        console.error(`Activepieces: ${message}`, ...args)
+        console.error(`JRNYFLW: ${message}`, ...args)
       },
       warn: (message: string, ...args: any[]) => {
-        console.warn(`Activepieces: ${message}`, ...args)
+        console.warn(`JRNYFLW: ${message}`, ...args)
       }
     }
   }
@@ -619,5 +619,5 @@ class ActivepiecesEmbedded {
 }
 
 
-(window as any).activepieces = new ActivepiecesEmbedded();
-(window as any).ActivepiecesEmbedded = ActivepiecesEmbedded;
+(window as any).jrnyflw = new JrnyflwEmbedded();
+(window as any).JrnyflwEmbedded = JrnyflwEmbedded;

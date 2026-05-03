@@ -174,7 +174,7 @@ const assertUrlIsExternal = (url: string) => {
         throw new ActivepiecesError({
             code: ErrorCode.VALIDATION,
             params: {
-                message: 'Activepieces URL is not allowed to avoid recursive calls',
+                message: 'JRNYFLW URL is not allowed to avoid recursive calls',
             },
         })
     }

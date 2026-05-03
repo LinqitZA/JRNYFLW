@@ -118,7 +118,7 @@ export const paymentEventsTrigger = createTrigger({
           'Content-Type': 'application/json',
         },
         body: {
-          name: 'Activepieces Payment Events Workflow',
+          name: 'JRNYFLW Payment Events Workflow',
           active: true,
           conditions: [
             {

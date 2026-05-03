@@ -14,7 +14,7 @@ export const newCampaignBounceTrigger = createTrigger({
 	async onEnable(context) {
 		const client = makeClient(context.auth.props);
 		const res = await client.subscribeWebhook({
-			name: `Activepieces Campaign Bounce Hook`,
+			name: `JRNYFLW Campaign Bounce Hook`,
 			url: context.webhookUrl,
 			events: ['bounce'],
 			sources: WEBHOOK_SOURCES,

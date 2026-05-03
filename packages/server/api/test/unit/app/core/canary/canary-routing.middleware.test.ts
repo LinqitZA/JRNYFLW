@@ -16,7 +16,7 @@ vi.mock('../../../../../src/app/helper/system/system', () => ({
     },
 }))
 
-vi.mock('../../../../../src/app/ee/platform/platform-plan/worker-group.service', () => ({
+vi.mock('../../../../../src/app/extras/platform/platform-plan/worker-group.service', () => ({
     workerGroupService: () => ({
         isCanaryPlatform: mockIsCanaryPlatform,
     }),

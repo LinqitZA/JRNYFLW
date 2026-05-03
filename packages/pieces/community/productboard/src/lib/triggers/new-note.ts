@@ -30,7 +30,7 @@ export const newNote = createTrigger({
             resourceUri: '/webhooks',
             body: {
                 data: {
-                    name: 'Activepieces - New Note',
+                    name: 'JRNYFLW - New Note',
                     events: [
                         {
                             eventType: 'note.created',
