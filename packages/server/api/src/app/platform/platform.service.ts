@@ -98,12 +98,16 @@ export const platformService = (log: FastifyBaseLogger) => ({
             platformId: null,
         })
         const platform = await this.create({ ownerId: newUser.id, name })
-        const defaultProject = await projectService(log).create({
-            displayName: `${name}'s Project`,
-            ownerId: newUser.id,
-            platformId: platform.id,
-            type: ProjectType.PERSONAL,
-        })
+        const environments = ['JRNY Live', 'JRNY Test', 'JRNY Dev'] as const
+        const projects = await Promise.all(environments.map((displayName) =>
+            projectService(log).create({
+                displayName,
+                ownerId: newUser.id,
+                platformId: platform.id,
+                type: ProjectType.PERSONAL,
+            }),
+        ))
+        const devProject = projects[environments.indexOf('JRNY Dev')]
         if (invalidatePreviousTokens) {
             await userIdentityRepository().update(identityId, {
                 tokenVersion: nanoid(),
@@ -112,7 +116,7 @@ export const platformService = (log: FastifyBaseLogger) => ({
         return authenticationUtils(log).getProjectAndToken({
             userId: newUser.id,
             platformId: platform.id,
-            projectId: defaultProject.id,
+            projectId: devProject.id,
         })
     },
     async getAll(): Promise<Platform[]> {

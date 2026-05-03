@@ -130,21 +130,10 @@ function SidebarMenuVariant({
   );
 }
 
-export function CreateProjectButton({
-  variant,
-  projects,
-  onCreate,
-}: {
+export function CreateProjectButton(_props: {
   variant: 'icon' | 'full' | 'sidebar-menu';
   projects: Pick<ProjectWithLimits, 'type'>[];
   onCreate?: (project: ProjectWithLimits) => void;
 }) {
-  const disabled = useIsCreateProjectDisabled({ projects });
-  if (variant === 'icon') {
-    return <IconVariant disabled={disabled} onCreate={onCreate} />;
-  }
-  if (variant === 'sidebar-menu') {
-    return <SidebarMenuVariant disabled={disabled} onCreate={onCreate} />;
-  }
-  return <FullVariant disabled={disabled} />;
+  return null;
 }

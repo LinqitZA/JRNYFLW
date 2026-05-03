@@ -3,9 +3,6 @@ import React, { Suspense } from 'react';
 import { PageTitle } from '@/app/components/page-title';
 import { RouteLoadingBar } from '@/components/custom/route-loading-bar';
 
-import { ProjectDashboardLayout } from '../components/project-layout';
-import { TemplateDetailsWrapper } from '../guards/template-details-wrapper';
-
 import NotFoundPage from './404-page';
 import AuthenticatePage from './authenticate';
 import { EmbedPage } from './embed';
@@ -18,9 +15,6 @@ const ChatPage = React.lazy(() =>
 );
 const FormPage = React.lazy(() =>
   import('./forms').then((m) => ({ default: m.FormPage })),
-);
-const TemplatesPage = React.lazy(() =>
-  import('./templates').then((m) => ({ default: m.TemplatesPage })),
 );
 
 function SuspenseWrapper({ children }: { children: React.ReactNode }) {
@@ -39,22 +33,6 @@ export const publicRoutes = [
   {
     path: '/authenticate',
     element: <AuthenticatePage />,
-  },
-  {
-    path: '/templates',
-    element: (
-      <ProjectDashboardLayout>
-        <PageTitle title="Templates">
-          <SuspenseWrapper>
-            <TemplatesPage />
-          </SuspenseWrapper>
-        </PageTitle>
-      </ProjectDashboardLayout>
-    ),
-  },
-  {
-    path: '/templates/:templateId',
-    element: <TemplateDetailsWrapper />,
   },
   {
     path: '/forms/:flowId',

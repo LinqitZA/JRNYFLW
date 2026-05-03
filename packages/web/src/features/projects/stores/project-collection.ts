@@ -221,9 +221,7 @@ export const projectCollectionUtils = {
 };
 
 export const getProjectName = (project: ProjectWithLimits): string => {
-  return project.type === ProjectType.PERSONAL
-    ? 'Personal Project'
-    : project.displayName;
+  return project.displayName;
 };
 export const projectHooks = {
   useProjectsForPlatforms: () => {

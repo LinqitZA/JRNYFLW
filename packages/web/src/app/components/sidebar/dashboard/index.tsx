@@ -4,7 +4,6 @@ import {
   PlatformRole,
   ProjectType,
   TeamProjectsLimit,
-  TemplateTelemetryEventType,
 } from '@activepieces/shared';
 import { t } from 'i18next';
 import { Search } from 'lucide-react';
@@ -14,7 +13,6 @@ import { useDebounce } from 'use-debounce';
 
 import { SearchInput } from '@/components/custom/search-input';
 import { ChartLineIcon } from '@/components/icons/chart-line';
-import { CompassIcon } from '@/components/icons/compass';
 import { ShieldIcon } from '@/components/icons/shield';
 import { TrophyIcon } from '@/components/icons/trophy';
 import { useEmbedding } from '@/components/providers/embed-provider';
@@ -41,7 +39,6 @@ import {
   projectCollectionUtils,
   getProjectName,
 } from '@/features/projects';
-import { templatesTelemetryApi } from '@/features/templates';
 import { useIsPlatformAdmin } from '@/hooks/authorization-hooks';
 import { platformHooks } from '@/hooks/platform-hooks';
 import { userHooks } from '@/hooks/user-hooks';
@@ -139,34 +136,6 @@ export function ProjectDashboardSidebar({
     }
     return true;
   };
-  const handleExploreClick = useCallback(() => {
-    templatesTelemetryApi.sendEvent({
-      eventType: TemplateTelemetryEventType.EXPLORE_VIEW,
-      userId: currentUser?.id,
-    });
-  }, []);
-
-  const exploreLink: SidebarItemType = {
-    type: 'link',
-    to: '/templates',
-    label: t('Explore'),
-    show: true,
-    icon: CompassIcon,
-    hasPermission: true,
-    isSubItem: false,
-    onClick: () => {
-      handleExploreClick();
-      const page = STATIC_PAGES.find((p) => p.href === '/templates');
-      if (page)
-        recordAccess({
-          id: page.id,
-          type: 'page',
-          label: page.label,
-          href: page.href,
-        });
-    },
-  };
-
   const impactLink: SidebarItemType = {
     type: 'link',
     to: '/impact',
@@ -207,7 +176,7 @@ export function ProjectDashboardSidebar({
     },
   };
 
-  const items = [exploreLink, impactLink, leaderboardLink].filter(
+  const items = [impactLink, leaderboardLink].filter(
     permissionFilter,
   );
 

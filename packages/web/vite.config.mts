@@ -1,12 +1,15 @@
 /// <reference types='vitest' />
 import path from 'path';
 
+import dotenv from 'dotenv';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import checker from 'vite-plugin-checker';
 import tailwindcss from '@tailwindcss/vite';
 import customHtmlPlugin from './vite-plugins/html-plugin';
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env.dev') });
 
 export default defineConfig(({ command, mode }) => {
   const isDev = command === 'serve' || mode === 'development';
@@ -21,7 +24,7 @@ export default defineConfig(({ command, mode }) => {
     root: __dirname,
     cacheDir: '../../node_modules/.vite/packages/web',
     server: {
-      // allowedHosts: ['wozcsvaint.loclx.io'],
+      allowedHosts: ['dev.sideswipe.home'],
       proxy: {
         '/api': {
           target: apiTarget,

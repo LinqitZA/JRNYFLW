@@ -9,6 +9,7 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import { t } from 'i18next';
 import {
+  ArrowRightLeft,
   Copy,
   CornerUpLeft,
   Download,
@@ -38,6 +39,7 @@ import { MoveToFolderDialog } from '@/features/automations/components/move-to-fo
 import { RenameDialog } from '@/features/automations/components/rename-dialog';
 import { flowHooks, flowsApi } from '@/features/flows';
 import { ChangeOwnerDialog } from '@/features/flows/components/change-owner-dialog';
+import { CopyToEnvironmentDialog } from '@/features/flows/components/copy-to-environment-dialog';
 import { ImportFlowDialog } from '@/features/flows/components/import-flow-dialog';
 import { foldersHooks } from '@/features/folders';
 import { projectMembersHooks } from '@/features/members';
@@ -298,6 +300,23 @@ const FlowActionMenu: React.FC<FlowActionMenuProps> = ({
                   </span>
                 </div>
               </DropdownMenuItem>
+            </PermissionNeededTooltip>
+          )}
+          {!embedState.hideDuplicateFlow && (
+            <PermissionNeededTooltip
+              hasPermission={userHasPermissionToUpdateFlow}
+            >
+              <CopyToEnvironmentDialog flow={flow} flowVersion={flowVersion}>
+                <DropdownMenuItem
+                  disabled={!userHasPermissionToUpdateFlow}
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  <div className="flex cursor-pointer flex-row gap-2 items-center">
+                    <ArrowRightLeft className="h-4 w-4" />
+                    <span>{t('Copy to Environment')}</span>
+                  </div>
+                </DropdownMenuItem>
+              </CopyToEnvironmentDialog>
             </PermissionNeededTooltip>
           )}
 
