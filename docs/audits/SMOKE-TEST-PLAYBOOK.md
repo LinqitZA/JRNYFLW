@@ -4,7 +4,7 @@
 |---|---|
 | Status | Ready to run when JRNY-side v0b is up |
 | Date | 2026-05-04 |
-| Segment under test | `@jrnyflw/dst-jrny-create-quote` v0.0.1 |
+| Segment under test | `@jrnyflw/jrny` v0.0.1 |
 | JRNY-side spec | `JRNY-SIDE-INTEGRATION-SPEC-V0.md` (v0b scope per JRNY dev team) |
 | Scope | Single-instance smoke test (two-instance import test deferred) |
 
@@ -37,7 +37,7 @@ JRNY_TOKEN       = <plaintext token>
 
 ### From the JRNYFLW side
 
-- Repo on a branch with `packages/pieces/custom/dst-jrny-create-quote/` present (built via the steps below).
+- Repo on a branch with `packages/pieces/custom/jrny/` present (built via the steps below).
 - JRNYFLW dev stack running (api + frontend + worker + postgres + redis).
 
 ## 3. Build the Segment
@@ -45,22 +45,22 @@ JRNY_TOKEN       = <plaintext token>
 ```bash
 cd /home/linqadmin/repo/jrnyflw
 bun install                                                          # populate workspace symlinks
-bunx turbo run build --filter=@jrnyflw/dst-jrny-create-quote         # tsc → dist/
+bunx turbo run build --filter=@jrnyflw/jrny         # tsc → dist/
 ```
 
-Expected: green build, output under `packages/pieces/custom/dst-jrny-create-quote/dist/`.
+Expected: green build, output under `packages/pieces/custom/jrny/dist/`.
 
 ## 4. Restart JRNYFLW Dev So the Segment Is Discovered
 
-JRNYFLW's piece loader walks `packages/pieces/` at startup, **but in dev mode it only exposes pieces listed in `AP_DEV_PIECES`**. The segment must be in that list under its stripped package name (`dst-jrny-create-quote`, matching the directory name). Two lookups depend on this string:
+JRNYFLW's piece loader walks `packages/pieces/` at startup, **but in dev mode it only exposes pieces listed in `AP_DEV_PIECES`**. The segment must be in that list under its stripped package name (`jrny`, matching the directory name). Two lookups depend on this string:
 
 - **dev-piece-watcher** matches the *directory basename*.
-- **worker piece-installer** matches `getPieceNameFromAlias(packageName)` — for `@jrnyflw/dst-jrny-create-quote`, that's `dst-jrny-create-quote`. If this name is missing from `AP_DEV_PIECES`, the installer tries to npm-install the package and the engine's auth-validation step returns `ENGINE_OPERATION_FAILURE / 404`.
+- **worker piece-installer** matches `getPieceNameFromAlias(packageName)` — for `@jrnyflw/jrny`, that's `jrny`. If this name is missing from `AP_DEV_PIECES`, the installer tries to npm-install the package and the engine's auth-validation step returns `ENGINE_OPERATION_FAILURE / 404`.
 
-In `.env.dev`, append `dst-jrny-create-quote` to `AP_DEV_PIECES`:
+In `.env.dev`, append `jrny` to `AP_DEV_PIECES`:
 
 ```
-AP_DEV_PIECES=google-sheets,store,webhook,dst-jrny-create-quote
+AP_DEV_PIECES=google-sheets,store,webhook,jrny
 ```
 
 Also confirm `turbo.json` has `"globalEnv": ["AP_DEV_PIECES"]` at the top level — without it, Turbo 2.x sandboxes the env var away from sub-tasks.
@@ -73,14 +73,14 @@ bun run dev
 Tail the api logs for the dev-pieces banner and watcher confirmations:
 
 ```
-[WARNING]: This is only shows pieces specified in AP_DEV_PIECES google-sheets,store,webhook,dst-jrny-create-quote ...
-Watching for changes: dst-jrny-create-quote
+[WARNING]: This is only shows pieces specified in AP_DEV_PIECES google-sheets,store,webhook,jrny ...
+Watching for changes: jrny
 ```
 
 **Pass criteria:**
 - The banner above shows the segment in the list.
-- `GET http://localhost:3002/api/v1/pieces` returns 4 entries including `@jrnyflw/dst-jrny-create-quote`.
-- Segment appears in the JRNYFLW UI's piece picker as "JRNY — Create Quote".
+- `GET http://localhost:3002/api/v1/pieces` returns 4 entries including `@jrnyflw/jrny`.
+- Segment appears in the JRNYFLW UI's piece picker as "JRNY".
 - Saving a connection succeeds (no 400 with `bun install ... 404` in the engine error).
 
 ## 5. Create a Connection
@@ -88,7 +88,7 @@ Watching for changes: dst-jrny-create-quote
 In the JRNYFLW UI:
 
 1. Settings → Connections → New connection.
-2. Pick "JRNY — Create Quote".
+2. Pick "JRNY".
 3. Paste the four pre-flight values:
    - **Base URL** → `JRNY_BASE_URL`
    - **Entity ID** → `JRNY_ENTITY_ID`
@@ -105,7 +105,7 @@ In JRNYFLW UI:
 
 1. Flows → New flow → Name: `Smoke — Create Quote from Webhook`.
 2. **Origin (trigger):** Webhook (catch hook) — note the unique webhook URL JRNYFLW generates; you'll curl this in step 7.
-3. **Destination (action):** "JRNY — Create Quote" / `create_quote`.
+3. **Destination (action):** "JRNY" / `create_quote`.
    - Bind to the connection from step 5.
    - **Customer Code:** `ACME001`
    - **Lines:**
@@ -217,8 +217,8 @@ This is the v0b acceptance test. After it passes, the "thin slice" is complete a
 
 | Symptom | Likely cause |
 |---|---|
-| Segment doesn't appear in piece picker | Build didn't run; or dev server wasn't restarted; or `tsconfig.base.json` paths entry missing; or `dst-jrny-create-quote` not in `AP_DEV_PIECES`; or `globalEnv` missing from `turbo.json`. |
-| Connection save returns 400 with `ENGINE_OPERATION_FAILURE` and `bun install ... 404` | Segment package name's stripped form (`dst-jrny-create-quote`) is not in `AP_DEV_PIECES`. The installer is treating it as a registry piece and trying to fetch from npm. Add the stripped form to `AP_DEV_PIECES` and restart. |
+| Segment doesn't appear in piece picker | Build didn't run; or dev server wasn't restarted; or `tsconfig.base.json` paths entry missing; or `jrny` not in `AP_DEV_PIECES`; or `globalEnv` missing from `turbo.json`. |
+| Connection save returns 400 with `ENGINE_OPERATION_FAILURE` and `bun install ... 404` | Segment package name's stripped form (`jrny`) is not in `AP_DEV_PIECES`. The installer is treating it as a registry piece and trying to fetch from npm. Add the stripped form to `AP_DEV_PIECES` and restart. |
 | Connection saves but flow run fails with `INVALID_TOKEN` | Token wasn't pasted exactly; or token revoked; or hash algorithm mismatch between issue script and guard. |
 | Flow run fails with `ENTITY_MISMATCH` immediately | The token was issued against a different entity than the one in the connection's `Entity ID` field. |
 | Flow run fails with `CUSTOMER_NOT_FOUND` | Customer `ACME001` not seeded in the bound entity. JRNY-side seed step skipped. |

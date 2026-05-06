@@ -7993,8 +7993,8 @@
         "vitest": "3.0.8",
       },
     },
-    "packages/pieces/custom/dst-jrny-create-quote": {
-      "name": "@jrnyflw/dst-jrny-create-quote",
+    "packages/pieces/custom/jrny": {
+      "name": "@jrnyflw/jrny",
       "version": "0.0.1",
       "dependencies": {
         "@activepieces/pieces-common": "workspace:*",
@@ -8240,7 +8240,7 @@
     },
     "packages/shared": {
       "name": "@activepieces/shared",
-      "version": "0.70.0",
+      "version": "0.71.0",
       "dependencies": {
         "dayjs": "1.11.9",
         "deepmerge-ts": "7.1.0",
@@ -10572,7 +10572,7 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.9", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.0.3", "@jridgewell/sourcemap-codec": "^1.4.10" } }, "sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ=="],
 
-    "@jrnyflw/dst-jrny-create-quote": ["@jrnyflw/dst-jrny-create-quote@workspace:packages/pieces/custom/dst-jrny-create-quote"],
+    "@jrnyflw/jrny": ["@jrnyflw/jrny@workspace:packages/pieces/custom/jrny"],
 
     "@js-sdsl/ordered-map": ["@js-sdsl/ordered-map@4.4.2", "", {}, "sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw=="],
 

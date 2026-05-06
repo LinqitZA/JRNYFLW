@@ -3,14 +3,14 @@ import { PieceCategory } from '@activepieces/shared';
 import { jrnyAuth } from './lib/auth';
 import { createQuote } from './lib/actions/create-quote';
 
-export const jrnyCreateQuoteSegment = createPiece({
-  displayName: 'JRNY — Create Quote',
+export const jrny = createPiece({
+  displayName: 'JRNY',
   description:
-    'Create a quotation in a JRNY ERP entity. Resolves customer, stock, pricing, tax, and UOM through the live JRNY services. Optionally auto-converts to a draft sales order.',
+    'JRNY ERP integration. Per-connection bearer auth scoped to a single JRNY entity. Destinations resolve customers, stock, pricing, tax, and UOM through the live JRNY services.',
   minimumSupportedRelease: '0.30.0',
   logoUrl: 'https://cdn.activepieces.com/pieces/webhook.png',
   authors: ['jrnyflw'],
-  categories: [PieceCategory.SALES_AND_CRM],
+  categories: [PieceCategory.SALES_AND_CRM, PieceCategory.ACCOUNTING],
   auth: jrnyAuth,
   actions: [createQuote],
   triggers: [],

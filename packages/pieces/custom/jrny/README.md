@@ -1,4 +1,4 @@
-# @jrnyflw/dst-jrny-create-quote
+# @jrnyflw/jrny
 
 JRNYFLW segment for creating quotations in JRNY ERP.
 
@@ -27,12 +27,12 @@ See `docs/audits/JRNY-SIDE-INTEGRATION-SPEC-V0.md` and the addendum for the full
 
 ```
 bun install               # at repo root, populates workspace symlinks
-bunx turbo run build --filter=@jrnyflw/dst-jrny-create-quote
+bunx turbo run build --filter=@jrnyflw/jrny
 ```
 
 ## Dev mode requirements
 
-This segment is only exposed in JRNYFLW dev mode if `dst-jrny-create-quote` (the stripped package name, matching the directory name) is listed in the `AP_DEV_PIECES` env var (in `.env.dev`). Both the dev-piece-watcher and the worker piece-installer match against this name; missing it causes the engine's auth-validation step to attempt an `npm install` and 404.
+This segment is only exposed in JRNYFLW dev mode if `jrny` (the stripped package name, matching the directory name) is listed in the `AP_DEV_PIECES` env var (in `.env.dev`). Both the dev-piece-watcher and the worker piece-installer match against this name; missing it causes the engine's auth-validation step to attempt an `npm install` and 404.
 
 `turbo.json` must also declare `"globalEnv": ["AP_DEV_PIECES"]` so the value reaches sub-tasks under Turbo 2.x.
 

@@ -1397,8 +1397,8 @@
       "@activepieces/pieces-framework": [
         "packages/pieces/framework/src/index.ts"
       ],
-      "@jrnyflw/dst-jrny-create-quote": [
-        "packages/pieces/custom/dst-jrny-create-quote/src/index.ts"
+      "@jrnyflw/jrny": [
+        "packages/pieces/custom/jrny/src/index.ts"
       ],
       "@activepieces/piece-meistertask": [
         "packages/pieces/community/meistertask/src/index.ts"
