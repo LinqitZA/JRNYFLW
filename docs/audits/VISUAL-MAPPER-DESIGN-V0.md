@@ -2,10 +2,30 @@
 
 | Field | Value |
 |---|---|
-| Status | Design — recon complete, code not started |
+| Status | **V0 shipped (commit 39f63d6)** — V0.5 + V1 pending UX iteration |
 | Date | 2026-05-06 |
 | Companion | Excel/CSV → Quotations use case (integration plan §2.1A) |
 | Out of scope | AI/auto-mapping, transform expressions, conditional mapping, validation rules |
+
+## 0. Status & What Ships Today
+
+**V0 (commit `39f63d6`) — drag-from-source-tree → drop-on-form-field.**
+
+Each insertable leaf in the data-selector tree is now a drag source with a `GripVertical` handle. Every `<TextInputWithMentions>` is a drop target. Dropping a source onto a field replaces the field's value with a single `{{<source path>}}` mention chip — same expression syntax as click-to-insert, no runtime change. Compatible drag in progress shows a light primary-colour ring on every drop target; the actual hover target shows a heavy ring. 1:N fan-out works for free since each drop is independent.
+
+DnD library: react-dnd@16 with HTML5Backend (MIT). Wrapper at builder root.
+
+**Not yet shipped — what answers from the user did NOT translate into code in this session:**
+
+| User answer | What it implies for code | Why deferred |
+|---|---|---|
+| Always-on mapper with side-by-side layout | Restructure `step-settings/index.tsx` from vertical-panels to horizontal split | Highest UX risk; needs your eye on the resize/scroll behaviour and the empty-state-when-no-sample-data UX |
+| react-dnd | ✅ Done in V0 |  |
+| Curved Bezier 2px lines | SVG overlay component | Without side-by-side layout, lines would cross the viewport between floating panels — visually noisy. Couples to layout decision above. |
+| Type compatibility hints | Thread `targetType` prop through auto-form-field-wrapper → TextInputWithMentions; map PieceProperty.type → FieldValueType | The prop-drilling pattern needs your eye — a plain prop pass vs. context vs. metadata-via-hook are three different idioms |
+| Partial-expression fallback | Detect non-single-mention values, render different drop affordance | Requires the side-by-side layout to be in place first |
+| Per-element array→array mapping | New compile step lowering `{ source, items: [...] }` to `loop-on-items` | Real product feature, separate spec needed |
+| 1:N fan-out | ✅ Works for free in V0 (each drop is independent) |  |
 
 ---
 
@@ -160,17 +180,47 @@ Phase split, in order:
 
 Total to land V1: probably **1 calendar week** with iterative review. V2 adds another 1–2 weeks.
 
-## 8. What I'm Not Building Tonight
+## 8. What Was Built and What Wasn't (Session of 2026-05-06)
 
-I considered building V0 in your absence. Decided against it because:
+**Built and committed:**
+- V0 drag/drop plumbing (commit `39f63d6`)
+- DnD library wired in (`react-dnd@16` + `react-dnd-html5-backend@16`)
+- Drag-source on data-selector tree leaves
+- Drop-target on every `<TextInputWithMentions>` field
+- Visual feedback (rings on drop targets during drag)
+- Compatible-with-existing-UX: click-to-insert still works
+- DOM data-attributes (`data-jrny-mapping-source`, `data-jrny-mapping-target`) ready for V0.5 SVG bind-line positioning
 
-- Every UX decision in §5 needs your eye.
-- The Tiptap/RHF/Zustand integration surface is sensitive — a misfire could regress the existing mention-insertion UX, which is a primary flow author tool.
-- The right way for a prototype to land is "I built this, look at it, tell me what to change" — without a synchronous review loop, I'd be building speculatively against assumptions.
+**Deliberately NOT built solo (deferred to next session):**
 
-The Excel segment shipped tonight (commit `<excel commit>`) is concrete and safe to land solo. The mapper isn't.
+1. **Side-by-side layout** in step-settings. The current builder has a vertical-panels resizable layout in step-settings; restructuring to horizontal split is the highest-risk UX change because:
+   - Empty-state when no upstream sample data exists needs an opinion
+   - Mobile/narrow-screen behaviour needs an opinion
+   - Whether the source panel scrolls independently from the target form needs an opinion
+   - Resize handle position + min/max widths need opinions
+   I'd be guessing on each of these.
 
-When you're back, react to §5 questions and we kick off V0 in the next session.
+2. **SVG bind-lines.** Without side-by-side layout, lines would have to cross the viewport from the floating data-selector to the right sidebar — technically possible but visually busy. Layout decision must come first.
+
+3. **Type compatibility hints.** `dnd-types.ts` already has `inferValueType` and `valueTypesCompatible` helpers, and `FieldPathDndItem` already carries `valueType`. What's missing is threading the *target* prop's type through the form to the drop component. Three reasonable patterns (prop drilling vs. React context vs. property-from-hook) each affect future props differently — worth your eye.
+
+4. **Partial-expression fallback.** Coupled to layout work.
+
+5. **Per-element array→array mapping.** This is a real V1 feature with its own technical spec (compile to `loop-on-items` vs. new mapping engine). Brainstorm separately.
+
+## 9. Next Session Hand-Off
+
+Order of operations when we resume:
+
+1. **(15 min) UX walkthrough** — open `localhost:4200`, open a flow, drag a leaf from the data-selector to a step's prop. Confirm it works. React to ring colours, drag handle visibility, opacity-while-dragging behaviour.
+
+2. **(30 min) Side-by-side layout decision** — answer: empty-state copy, scroll behaviour, resize handle, narrow-screen fallback. Write decisions in a comment block at top of the new layout component.
+
+3. **(2–3 hours) V0.5 build** — restructure step-settings, add type compat threading, ship SVG bind-lines.
+
+4. **(separate session) V1 brainstorm** — per-element array mapping spec.
+
+The V0 commit is safe to revert in isolation if any of the above changes the foundation.
 
 ---
 
