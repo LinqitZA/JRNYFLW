@@ -7,7 +7,7 @@ import {
     PrincipalType,
     PROFILE_PICTURE_ALLOWED_TYPES,
     UpdateMeResponse,
-    UserWithBadges,
+    UserWithMetaInformation,
 } from '@activepieces/shared'
 import { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { StatusCodes } from 'http-status-codes'
@@ -18,7 +18,7 @@ import { fileService } from '../../file/file.service'
 import { userService } from '../../user/user-service'
 
 export const usersController: FastifyPluginAsyncZod = async (app) => {
-    app.get('/:id', GetUserByIdRequest, async (req): Promise<UserWithBadges> => {
+    app.get('/:id', GetUserByIdRequest, async (req): Promise<UserWithMetaInformation> => {
         const userId = req.params.id
         const platformId = req.principal.platform.id
         return userService(req.log).getOneByIdAndPlatformIdOrThrow({ id: userId, platformId })
@@ -64,7 +64,7 @@ const GetUserByIdRequest = {
             id: ApId,
         }),
         response: {
-            [StatusCodes.OK]: UserWithBadges,
+            [StatusCodes.OK]: UserWithMetaInformation,
         },
     },
     config: {

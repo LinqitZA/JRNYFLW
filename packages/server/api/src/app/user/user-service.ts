@@ -16,7 +16,6 @@ import {
     UserId,
     UserIdentity,
     UserStatus,
-    UserWithBadges,
     UserWithMetaInformation,
 } from '@activepieces/shared'
 import dayjs from 'dayjs'
@@ -156,22 +155,15 @@ export const userService = (log: FastifyBaseLogger) => ({
     async getOneOrFail({ id }: IdParams): Promise<User> {
         return userRepo().findOneOrFail({ where: { id } })
     },
-    async getOneByIdAndPlatformIdOrThrow({ id, platformId }: GetOneByIdAndPlatformIdParams): Promise<UserWithBadges> {
-        const user = await userRepo().findOne({ where: { id, platformId }, relations: { badges: true } })
+    async getOneByIdAndPlatformIdOrThrow({ id, platformId }: GetOneByIdAndPlatformIdParams): Promise<UserWithMetaInformation> {
+        const user = await userRepo().findOne({ where: { id, platformId } })
         if (isNil(user)) {
             throw new ActivepiecesError({
                 code: ErrorCode.ENTITY_NOT_FOUND,
                 params: { entityType: 'user', entityId: id },
             })
         }
-        const meta = await this.getMetaInformation({ id })
-        return {
-            ...meta,
-            badges: user.badges.map((badge) => ({
-                name: badge.name,
-                created: badge.created,
-            })),
-        }
+        return this.getMetaInformation({ id })
     },
     async delete({ id, platformId }: DeleteParams): Promise<void> {
         await assertNotPlatformOwner({ id, platformId, log })

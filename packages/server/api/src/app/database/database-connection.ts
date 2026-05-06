@@ -8,6 +8,7 @@ import { PlatformAnalyticsReportEntity } from '../analytics/platform-analytics-r
 import { AppConnectionEntity } from '../app-connection/app-connection.entity'
 import { UserIdentityEntity } from '../authentication/user-identity/user-identity-entity'
 import { ChatConversationEntity } from '../chat/chat-conversation-entity'
+import { EventDestinationEntity } from '../event-destinations/event-destinations.entity'
 import { AlertEntity } from '../extras/alerts/alerts-entity'
 import { ApiKeyEntity } from '../extras/api-keys/api-key-entity'
 import { AppCredentialEntity } from '../extras/app-credentials/app-credentials.entity'
@@ -26,7 +27,6 @@ import { ProjectReleaseEntity } from '../extras/projects/project-release/project
 import { ProjectRoleEntity } from '../extras/projects/project-role/project-role.entity'
 import { SecretManagerEntity } from '../extras/secret-managers/secret-manager.entity'
 import { SigningKeyEntity } from '../extras/signing-key/signing-key-entity'
-import { EventDestinationEntity } from '../event-destinations/event-destinations.entity'
 import { FileEntity } from '../file/file.entity'
 import { FlagEntity } from '../flags/flag.entity'
 import { FlowEntity } from '../flows/flow/flow.entity'
@@ -57,7 +57,6 @@ import { TemplateEntity } from '../template/template.entity'
 import { AppEventRoutingEntity } from '../trigger/app-event-routing/app-event-routing.entity'
 import { TriggerEventEntity } from '../trigger/trigger-events/trigger-event.entity'
 import { TriggerSourceEntity } from '../trigger/trigger-source/trigger-source-entity'
-import { UserBadgeEntity } from '../user/badges/badge-entity'
 import { UserEntity } from '../user/user-entity'
 import { UserInvitationEntity } from '../user-invitations/user-invitation.entity'
 import { DatabaseType } from './database-type'
@@ -103,7 +102,6 @@ function getEntities(): EntitySchema<unknown>[] {
         KnowledgeBaseChunkEntity,
         ChatConversationEntity,
         TriggerSourceEntity,
-        UserBadgeEntity,
         WaitpointEntity,
         // Enterprise
         ConcurrencyPoolEntity,

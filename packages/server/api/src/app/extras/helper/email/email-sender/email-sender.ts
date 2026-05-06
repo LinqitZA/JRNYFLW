@@ -51,13 +51,6 @@ type IssueCreatedTemplateData = BaseEmailTemplateData<'issue-created', {
     createdAt: string
 }>
 
-type BadgeAwardedTemplateData = BaseEmailTemplateData<'badge-awarded', {
-    badgeTitle: string
-    badgeDescription: string
-    badgeImageUrl: string
-    firstName: string
-}>
-
 type ScimUserWelcomeTemplateData = BaseEmailTemplateData<'scim-user-welcome', {
     loginLink: string
 }>
@@ -68,7 +61,6 @@ export type EmailTemplateData =
   | ResetPasswordEmailTemplateData
   | VerifyEmailTemplateData
   | IssueCreatedTemplateData
-  | BadgeAwardedTemplateData
   | ScimUserWelcomeTemplateData
 
 type SendArgs = {

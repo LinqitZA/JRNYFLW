@@ -1,4 +1,3 @@
-import { BADGES, UserWithBadges } from '@activepieces/shared';
 import { ColumnDef } from '@tanstack/react-table';
 import { t } from 'i18next';
 import { Trophy } from 'lucide-react';
@@ -7,13 +6,7 @@ import { useMemo } from 'react';
 import { ApAvatar } from '@/components/custom/ap-avatar';
 import { DataTable, RowDataWithActions } from '@/components/custom/data-table';
 import { DataTableColumnHeader } from '@/components/custom/data-table/data-table-column-header';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { formatUtils } from '@/lib/format-utils';
-import { cn } from '@/lib/utils';
 
 import { RankCell } from './projects-leaderboard';
 
@@ -24,51 +17,12 @@ export type UserStats = {
   userEmail: string;
   flowCount: number;
   minutesSaved: number;
-  badges?: UserWithBadges['badges'];
   rank: number;
 };
 
 type UsersLeaderboardProps = {
   data: UserStats[];
   isLoading?: boolean;
-};
-
-const BadgesCell = ({
-  badges,
-  isTopRank,
-}: {
-  badges?: UserWithBadges['badges'];
-  isTopRank: boolean;
-}) => {
-  if (!badges || badges.length === 0)
-    return <span className="text-muted-foreground">-</span>;
-
-  return (
-    <div className="flex items-center gap-0.5">
-      {badges.map((badge) => {
-        const badgeInfo = BADGES[badge.name as keyof typeof BADGES];
-        if (!badgeInfo) return null;
-        return (
-          <Tooltip key={badge.name}>
-            <TooltipTrigger asChild>
-              <img
-                src={badgeInfo.imageUrl}
-                alt={badgeInfo.title}
-                className={cn(
-                  'h-7 w-7 object-cover rounded-md transition-opacity',
-                  !isTopRank && 'opacity-30 group-hover/leaderrow:opacity-100',
-                )}
-              />
-            </TooltipTrigger>
-            <TooltipContent className="text-left">
-              <p className="font-semibold">{badgeInfo.title}</p>
-              <p className="text-xs">{badgeInfo.description}</p>
-            </TooltipContent>
-          </Tooltip>
-        );
-      })}
-    </div>
-  );
 };
 
 const createColumns = (): ColumnDef<RowDataWithActions<UserStats>>[] => [
@@ -121,19 +75,6 @@ const createColumns = (): ColumnDef<RowDataWithActions<UserStats>>[] => [
     ),
     enableSorting: false,
     size: 120,
-  },
-  {
-    accessorKey: 'badges',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={t('Badges')} />
-    ),
-    cell: ({ row }) => (
-      <BadgesCell
-        badges={row.original.badges}
-        isTopRank={row.original.rank <= 3}
-      />
-    ),
-    enableSorting: false,
   },
 ];
 

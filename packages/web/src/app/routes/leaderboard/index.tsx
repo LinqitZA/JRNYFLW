@@ -1,9 +1,4 @@
-import {
-  AnalyticsTimePeriod,
-  ColorName,
-  UserWithBadges,
-} from '@activepieces/shared';
-import { useQueries } from '@tanstack/react-query';
+import { AnalyticsTimePeriod, ColorName } from '@activepieces/shared';
 import dayjs from 'dayjs';
 import { t } from 'i18next';
 import {
@@ -20,7 +15,6 @@ import {
 import { useContext, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-import { userApi } from '@/api/user-api';
 import LockedFeatureGuard from '@/app/components/locked-feature-guard';
 import { PageHeader } from '@/components/custom/page-header';
 import { SearchInput } from '@/components/custom/search-input';
@@ -143,30 +137,6 @@ export default function LeaderboardPage() {
     platformAnalyticsHooks.useRefreshAnalytics();
   const { isRefreshing } = useContext(RefreshAnalyticsContext);
 
-  const userIds = useMemo(
-    () => usersLeaderboardData?.map((u) => u.userId) ?? [],
-    [usersLeaderboardData],
-  );
-
-  const badgeQueries = useQueries({
-    queries: userIds.map((userId) => ({
-      queryKey: ['user-badges', userId],
-      queryFn: () => userApi.getUserById(userId),
-      staleTime: 5 * 60 * 1000,
-      enabled: userIds.length > 0,
-    })),
-  });
-
-  const badgesMap = useMemo(() => {
-    const map = new Map<string, UserWithBadges['badges']>();
-    badgeQueries.forEach((q) => {
-      if (q.data) {
-        map.set(q.data.id, q.data.badges);
-      }
-    });
-    return map;
-  }, [badgeQueries]);
-
   const isLoading = isAnalyticsLoading || isUsersLoading || isProjectsLoading;
 
   const cycleDraftTimeUnitMin = () => {
@@ -237,13 +207,12 @@ export default function LeaderboardPage() {
           userEmail: user.email,
           flowCount: item.flowCount ?? 0,
           minutesSaved: item.minutesSaved ?? 0,
-          badges: badgesMap.get(item.userId),
         });
         return acc;
       }, [])
       .sort((a, b) => b.minutesSaved - a.minutesSaved)
       .map((item, index) => ({ ...item, rank: index + 1 }));
-  }, [analyticsData?.users, usersLeaderboardData, isLoading, badgesMap]);
+  }, [analyticsData?.users, usersLeaderboardData, isLoading]);
 
   const projectsData = useMemo((): ProjectStats[] => {
     if (isLoading || !projectsLeaderboardData) {
