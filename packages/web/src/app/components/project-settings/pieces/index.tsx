@@ -5,15 +5,12 @@ import { t } from 'i18next';
 import { Package, Trash, Puzzle, Tag, Hash, GitBranch } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { RequestTrial } from '@/app/components/request-trial';
 import { DataTable, RowDataWithActions } from '@/components/custom/data-table';
 import { DataTableColumnHeader } from '@/components/custom/data-table/data-table-column-header';
 import { DataTableInputPopover } from '@/components/custom/data-table/data-table-input-popover';
 import { ConfirmationDeleteDialog } from '@/components/custom/delete-dialog';
-import { LockedAlert } from '@/components/custom/locked-alert';
 import { Button } from '@/components/ui/button';
 import { piecesApi, PieceIcon, piecesHooks } from '@/features/pieces';
-import { platformHooks } from '@/hooks/platform-hooks';
 
 import { ManagePiecesDialog } from './manage-pieces-dialog';
 
@@ -107,7 +104,6 @@ const columns: ColumnDef<RowDataWithActions<PieceMetadataModelSummary>>[] = [
 ];
 
 const PiecesSettings = () => {
-  const { platform } = platformHooks.useCurrentPlatform();
   const [searchQuery, setSearchQuery] = useState('');
   const { pieces, isLoading, refetch } = piecesHooks.usePieces({
     searchQuery,
@@ -133,20 +129,6 @@ const PiecesSettings = () => {
 
   return (
     <div className="space-y-6">
-      {!platform.plan.managePiecesEnabled && (
-        <LockedAlert
-          title={t('Control Pieces')}
-          description={t(
-            "Show the pieces that matter most to your users and hide the ones you don't like.",
-          )}
-          button={
-            <RequestTrial
-              featureKey="ENTERPRISE_PIECES"
-              buttonVariant="basic"
-            />
-          }
-        />
-      )}
       <DataTable
         emptyStateTextTitle={t('No pieces found')}
         emptyStateTextDescription={t(
@@ -162,7 +144,7 @@ const PiecesSettings = () => {
         }}
         isLoading={isLoading}
         hidePagination={true}
-        toolbarButtons={platform.plan.managePiecesEnabled ? toolbarButtons : []}
+        toolbarButtons={toolbarButtons}
       />
     </div>
   );

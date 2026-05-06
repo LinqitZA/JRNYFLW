@@ -4,11 +4,6 @@ import { CenteredPage } from '@/app/components/centered-page';
 import LockedFeatureGuard from '@/app/components/locked-feature-guard';
 import { AnimatedIconButton } from '@/components/custom/animated-icon-button';
 import { PlusIcon } from '@/components/icons/plus';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { projectRoleQueries } from '@/features/platform-admin';
 import { platformHooks } from '@/hooks/platform-hooks';
 
@@ -22,18 +17,7 @@ const ProjectRolePage = () => {
     platform.plan.projectRolesEnabled,
   );
 
-  const newRoleButton = !platform.plan.customRolesEnabled ? (
-    <Tooltip>
-      <TooltipTrigger>
-        <AnimatedIconButton icon={PlusIcon} iconSize={16} size="sm" disabled>
-          {t('New Role')}
-        </AnimatedIconButton>
-      </TooltipTrigger>
-      <TooltipContent side="bottom">
-        {t('Contact sales to unlock custom roles')}
-      </TooltipContent>
-    </Tooltip>
-  ) : (
+  const newRoleButton = (
     <ProjectRoleDialog
       mode="create"
       onSave={() => refetch()}

@@ -11,13 +11,7 @@ import prettyBytes from 'pretty-bytes';
 import React from 'react';
 
 import { DashboardPageHeader } from '@/app/components/dashboard-page-header';
-import { RequestTrial } from '@/app/components/request-trial';
-import {
-  Alert,
-  AlertAction,
-  AlertDescription,
-  AlertTitle,
-} from '@/components/ui/alert';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -50,24 +44,6 @@ export default function WorkersPage() {
         description={t('Check the health of your workers')}
         title={t('Workers')}
       ></DashboardPageHeader>
-      {isCloud && fleetType === WorkerMachineType.SHARED && (
-        <Alert variant="primary">
-          <Zap size={16} />
-          <AlertTitle>{t('Upgrade to Dedicated Workers')}</AlertTitle>
-          <AlertDescription className="text-xs">
-            {t(
-              'Your automations run on shared workers where strict sandboxing adds overhead to every execution. Dedicated workers give you your own execution pool that stays warm and ready, so your automations start much faster.',
-            )}
-          </AlertDescription>
-          <AlertAction>
-            <RequestTrial
-              featureKey="DEDICATED_WORKERS"
-              buttonVariant="default"
-              buttonSize="xs"
-            />
-          </AlertAction>
-        </Alert>
-      )}
       {isCloud && fleetType === WorkerMachineType.DEDICATED && (
         <Alert variant="success">
           <Zap size={16} />

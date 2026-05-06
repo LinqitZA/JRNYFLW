@@ -34,7 +34,6 @@ export default function Billing() {
         'Switch to the Enterprise edition to access billing and usage management.',
       )}
       lockDocumentationUrl="https://www.activepieces.com/docs/install/configuration/overview#enterprise-edition-optional"
-      showContactSales={false}
     >
       <BillingPageDetails />
     </LockedFeatureGuard>
