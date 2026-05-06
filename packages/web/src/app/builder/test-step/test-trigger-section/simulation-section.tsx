@@ -21,7 +21,7 @@ export const SimulationNote = ({
     <div className="flex flex-col gap-4 w-full">
       <div className="flex gap-2 items-center justify-center w-full">
         <LoadingSpinner className="size-4"></LoadingSpinner>
-        <div>{t('Testing Trigger')}</div>
+        <div>{t('Testing Origin')}</div>
         <div className="grow"></div>
 
         <Button

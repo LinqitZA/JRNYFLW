@@ -25,7 +25,7 @@ export const TestStepSection = ({ stepName }: { stepName: string }) => {
           variant="default"
           size="default"
         >
-          {isTrigger ? t('Go to Trigger') : t('Go to Step')}
+          {isTrigger ? t('Go to Origin') : t('Go to Step')}
         </Button>
       </div>
     </div>

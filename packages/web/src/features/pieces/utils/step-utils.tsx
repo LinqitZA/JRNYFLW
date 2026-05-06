@@ -48,9 +48,9 @@ export const CORE_STEP_METADATA: Record<
     type: FlowActionType.ROUTER as const,
   },
   [FlowTriggerType.EMPTY]: {
-    displayName: t('Empty Trigger'),
+    displayName: t('Empty Origin'),
     logoUrl: 'https://cdn.activepieces.com/pieces/new-core/empty-trigger.svg',
-    description: t('Empty Trigger'),
+    description: t('Empty Origin'),
     type: FlowTriggerType.EMPTY as const,
   },
 } as const;

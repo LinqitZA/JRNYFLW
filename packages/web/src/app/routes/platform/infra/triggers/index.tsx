@@ -250,13 +250,13 @@ export default function TriggerHealthPage() {
   return (
     <div className="flex flex-col w-full gap-4">
       <DashboardPageHeader
-        title={t('Trigger Health Status')}
-        description={t('Monitor the health and performance of your triggers')}
+        title={t('Origin Health Status')}
+        description={t('Monitor the health and performance of your origins')}
       />
       <DataTable
-        emptyStateTextTitle={t('No trigger data available')}
+        emptyStateTextTitle={t('No origin data available')}
         emptyStateTextDescription={t(
-          'Trigger health information will appear here',
+          'Origin health information will appear here',
         )}
         emptyStateIcon={<CheckCircle className="size-14" />}
         hidePagination={true}

@@ -53,7 +53,7 @@ export const FirstTimeTestingSection = ({
             data-testid="test-trigger-button"
           >
             <Dot animation={true} variant={'primary'}></Dot>
-            {t('Test Trigger')}
+            {t('Test Origin')}
           </Button>
         </TestButtonTooltip>
 

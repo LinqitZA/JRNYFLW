@@ -175,7 +175,7 @@ export function PlatformSidebar() {
         },
         {
           to: '/platform/infrastructure/triggers',
-          label: t('Triggers'),
+          label: t('Origins'),
           icon: MousePointerClickIcon,
         },
         {
