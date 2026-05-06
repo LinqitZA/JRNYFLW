@@ -1397,6 +1397,9 @@
       "@activepieces/pieces-framework": [
         "packages/pieces/framework/src/index.ts"
       ],
+      "@jrnyflw/excel": [
+        "packages/pieces/custom/excel/src/index.ts"
+      ],
       "@jrnyflw/jrny": [
         "packages/pieces/custom/jrny/src/index.ts"
       ],
