@@ -1,12 +1,18 @@
 import { flowStructureUtil } from '@activepieces/shared';
 import { t } from 'i18next';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { useDrag } from 'react-dnd';
 
 import { useApRipple } from '@/components/providers/theme-provider';
 import { Button } from '@/components/ui/button';
 import { PieceIcon, stepsHooks } from '@/features/pieces';
 
 import { useBuilderStateContext } from '../builder-hooks';
+import {
+  DND_TYPE_FIELD_PATH,
+  FieldPathDndItem,
+  inferValueType,
+} from '../mapping/dnd-types';
 
 import { DataSelectorTreeNode } from './type';
 
@@ -56,12 +62,55 @@ const DataSelectorNodeContent = ({
   const showInsertButton =
     node.data.type === 'value' && node.data.insertable && !node.isLoopStepNode;
   const showNodeValue = !node.children && node.data.type === 'value';
+  const isDraggable =
+    node.data.type === 'value' && node.data.insertable && !node.isLoopStepNode;
   const depthMultiplier = 23 / (1 + depth * 0.05);
+
+  const dragItem: FieldPathDndItem | null =
+    node.data.type === 'value' && node.data.insertable && !node.isLoopStepNode
+      ? {
+          type: DND_TYPE_FIELD_PATH,
+          propertyPath: node.data.propertyPath,
+          displayName: node.data.displayName,
+          valueType: inferValueType(node.data.value),
+        }
+      : null;
+
+  const dragItemPath = dragItem?.propertyPath;
+
+  const [{ isDragging }, dragRef] = useDrag<
+    FieldPathDndItem,
+    void,
+    { isDragging: boolean }
+  >(
+    () => ({
+      type: DND_TYPE_FIELD_PATH,
+      item: dragItem ?? undefined,
+      canDrag: () => isDraggable,
+      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
+    }),
+    [dragItemPath, isDraggable],
+  );
+
+  const composedRef = (el: HTMLDivElement | null) => {
+    if (typeof ripple === 'function') {
+      (ripple as (node: HTMLDivElement | null) => void)(el);
+    } else if (ripple && typeof ripple === 'object' && 'current' in ripple) {
+      (ripple as { current: HTMLDivElement | null }).current = el;
+    }
+    if (isDraggable) dragRef(el);
+  };
+
+  const draggablePropertyPath =
+    node.data.type === 'value' ? node.data.propertyPath : undefined;
+
   return (
     <div
       tabIndex={0}
       onKeyDown={handleKeyPress}
-      ref={ripple}
+      ref={composedRef}
+      data-jrny-mapping-source={isDraggable ? draggablePropertyPath : undefined}
+      style={{ opacity: isDragging ? 0.4 : 1 }}
       onClick={(e) => {
         if (node.children && node.children.length > 0) {
           rippleEvent(e);
@@ -85,6 +134,12 @@ const DataSelectorNodeContent = ({
             }px`,
           }}
         ></div>
+        {isDraggable && (
+          <GripVertical
+            className="shrink-0 size-4 text-muted-foreground/40 group-hover:text-muted-foreground cursor-grab active:cursor-grabbing"
+            aria-hidden
+          />
+        )}
         {stepMetadata && (
           <div className="shrink-0">
             <PieceIcon

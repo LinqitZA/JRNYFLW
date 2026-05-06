@@ -44,7 +44,7 @@ export const ProjectDashboardPageHeader = ({
   const [inviteOpen, setInviteOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settingsInitialTab, setSettingsInitialTab] = useState<
-    'general' | 'members' | 'alerts' | 'pieces' | 'environment'
+    'general' | 'members' | 'alerts' | 'pieces'
   >('general');
   const location = useLocation();
   const { projectMembers } = projectMembersHooks.useProjectMembers();
@@ -89,8 +89,7 @@ export const ProjectDashboardPageHeader = ({
     | 'general'
     | 'members'
     | 'alerts'
-    | 'pieces'
-    | 'environment' => {
+    | 'pieces' => {
     if (hasGeneralSettings) return 'general';
     if (
       project.type === ProjectType.TEAM &&

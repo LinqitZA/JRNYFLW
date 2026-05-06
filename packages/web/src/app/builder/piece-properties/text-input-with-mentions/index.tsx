@@ -9,12 +9,14 @@ import { Placeholder } from '@tiptap/extension-placeholder';
 import { Text } from '@tiptap/extension-text';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useDrop } from 'react-dnd';
 
 import { inputClass } from '@/components/ui/input';
 import { stepsHooks } from '@/features/pieces';
 import { cn } from '@/lib/utils';
 
 import { useBuilderStateContext } from '../../builder-hooks';
+import { DND_TYPE_FIELD_PATH, FieldPathDndItem } from '../../mapping/dnd-types';
 
 import { textMentionUtils } from './text-input-utils';
 
@@ -158,12 +160,44 @@ export const TextInputWithMentions = ({
     },
   });
 
+  const [{ isOver, canDrop }, dropRef] = useDrop<
+    FieldPathDndItem,
+    void,
+    { isOver: boolean; canDrop: boolean }
+  >(
+    () => ({
+      accept: DND_TYPE_FIELD_PATH,
+      canDrop: () => !disabled,
+      drop: (item) => {
+        if (disabled) return;
+        editor?.commands.clearContent();
+        insertMention(item.propertyPath);
+      },
+      collect: (monitor) => ({
+        isOver: monitor.isOver({ shallow: true }),
+        canDrop: monitor.canDrop(),
+      }),
+    }),
+    [editor, disabled],
+  );
+
   if (!editor) {
     return null;
   }
 
+  const wrapperRef = (el: HTMLDivElement | null) => {
+    dropRef(el);
+  };
+
   return (
-    <div className="w-full">
+    <div
+      ref={wrapperRef}
+      className={cn('w-full rounded-md transition-colors', {
+        'ring-2 ring-primary ring-offset-2': isOver && canDrop,
+        'ring-1 ring-primary/30': canDrop && !isOver,
+      })}
+      data-jrny-mapping-target
+    >
       <EditorContent editor={editor} />
     </div>
   );
