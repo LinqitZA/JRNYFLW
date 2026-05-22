@@ -10,6 +10,7 @@ import { htmlTableAdapter } from './html-table-adapter';
 import { jsonSampleAdapter } from './json-sample-adapter';
 import { jsonSchemaAdapter } from './json-schema-adapter';
 import { openapiAdapter } from './openapi-adapter';
+import { pieceSchemaAdapter } from './piece-schema-adapter';
 import { xmlAdapter } from './xml-adapter';
 
 export const schemaAdapters: Record<SchemaAdapterId, SchemaAdapter> = {
@@ -19,6 +20,7 @@ export const schemaAdapters: Record<SchemaAdapterId, SchemaAdapter> = {
   xml: xmlAdapter,
   html_table: htmlTableAdapter,
   openapi: openapiAdapter,
+  piece_schema: pieceSchemaAdapter,
 };
 
 export function runSchemaAdapter({

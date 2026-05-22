@@ -2,9 +2,9 @@
 import { schemaAdapters, runSchemaAdapter } from '@/app/builder/step-settings/mapper/schema-adapters/index';
 
 describe('schemaAdapters registry', () => {
-  test('registers all six adapters by id', () => {
+  test('registers all seven adapters by id', () => {
     expect(Object.keys(schemaAdapters).sort()).toEqual(
-      ['csv', 'html_table', 'json_sample', 'json_schema', 'openapi', 'xml'].sort(),
+      ['csv', 'html_table', 'json_sample', 'json_schema', 'openapi', 'piece_schema', 'xml'].sort(),
     );
   });
 

@@ -6,7 +6,8 @@ export type SchemaAdapterId =
   | 'csv'
   | 'xml'
   | 'html_table'
-  | 'openapi';
+  | 'openapi'
+  | 'piece_schema';
 
 export type SchemaAdapterInput = {
   raw: string;
