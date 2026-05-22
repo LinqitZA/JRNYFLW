@@ -60,3 +60,39 @@ describe('mapperSpecUtils create/set/remove binding', () => {
     expect(spec.fields).toEqual([]);
   });
 });
+
+describe('mapperSpecUtils mode/groupBy/transforms', () => {
+  const { createEmptySpec, setBinding, setMode, setGroupBy, setTransforms } = mapperSpecUtils;
+
+  test('setMode sets the explicit mode', () => {
+    expect(setMode(createEmptySpec(), 'grouped').mode).toBe('grouped');
+  });
+
+  test('setGroupBy sets keys; empty array clears it', () => {
+    expect(setGroupBy(createEmptySpec(), ['CustomerPONumber']).groupBy).toEqual(['CustomerPONumber']);
+    expect(setGroupBy(setGroupBy(createEmptySpec(), ['x']), []).groupBy).toBeUndefined();
+  });
+
+  test('setTransforms attaches transforms to a top-level header binding', () => {
+    let spec = setBinding(createEmptySpec(), { targetPath: 'name', sourcePath: 'CustomerName' });
+    spec = setTransforms(spec, { targetPath: 'name', transforms: [{ id: 'trim' }] });
+    expect(spec.fields[0].binding).toEqual({ kind: 'header', source: 'CustomerName', transforms: [{ id: 'trim' }] });
+  });
+
+  test('setTransforms attaches transforms to a collection item (row) binding', () => {
+    let spec = setBinding(createEmptySpec(), { targetPath: 'quantity', sourcePath: 'Qty', collectionPath: 'lines' });
+    spec = setTransforms(spec, { targetPath: 'quantity', collectionPath: 'lines', transforms: [{ id: 'parse_number' }] });
+    const lines = spec.fields.find((f) => f.target === 'lines');
+    expect(lines?.binding).toEqual({
+      kind: 'line_collection',
+      items: [{ target: 'quantity', binding: { kind: 'row', source: 'Qty', transforms: [{ id: 'parse_number' }] } }],
+    });
+  });
+
+  test('setTransforms with an empty array removes transforms', () => {
+    let spec = setBinding(createEmptySpec(), { targetPath: 'name', sourcePath: 'CustomerName' });
+    spec = setTransforms(spec, { targetPath: 'name', transforms: [{ id: 'trim' }] });
+    spec = setTransforms(spec, { targetPath: 'name', transforms: [] });
+    expect(spec.fields[0].binding).toEqual({ kind: 'header', source: 'CustomerName' });
+  });
+});
