@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
 import { act } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { createRoot } from 'react-dom/client';
 import { FormProvider, useForm } from 'react-hook-form';
 import { afterEach, describe, expect, test, vi } from 'vitest';
@@ -10,6 +12,13 @@ declare global {
 }
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
+class ResizeObserverStub {
+  observe(): void {}
+  unobserve(): void {}
+  disconnect(): void {}
+}
+globalThis.ResizeObserver = ResizeObserverStub;
 
 vi.mock('i18next', () => ({ t: (k: string) => k }));
 
@@ -51,9 +60,11 @@ const Harness = () => {
     },
   });
   return (
-    <FormProvider {...form}>
-      <MapperStepConfig readonly={false} />
-    </FormProvider>
+    <DndProvider backend={HTML5Backend}>
+      <FormProvider {...form}>
+        <MapperStepConfig readonly={false} />
+      </FormProvider>
+    </DndProvider>
   );
 };
 

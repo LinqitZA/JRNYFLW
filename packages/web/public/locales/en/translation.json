@@ -7,6 +7,8 @@
   "Preview": "Preview",
   "No source data yet. Test the source step to load a sample.": "No source data yet. Test the source step to load a sample.",
   "Attach a target schema to begin mapping": "Attach a target schema to begin mapping",
+  "No warnings": "No warnings",
+  "Source fields": "Source fields",
   "Support": "Support",
   "Runs": "Runs",
   "Queue Status": "Queue Status",

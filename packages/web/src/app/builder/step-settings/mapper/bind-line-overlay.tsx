@@ -12,13 +12,16 @@ type BindPair = {
 };
 
 type BindLineOverlayProps = {
-  containerRef: RefObject<HTMLElement>;
+  containerRef: RefObject<HTMLElement | null>;
   pairs: BindPair[];
 };
 
 type RenderedLine = { d: string; status: 'valid' | 'missing'; key: string };
 
-export const BindLineOverlay = ({ containerRef, pairs }: BindLineOverlayProps) => {
+export const BindLineOverlay = ({
+  containerRef,
+  pairs,
+}: BindLineOverlayProps) => {
   const [lines, setLines] = useState<RenderedLine[]>([]);
 
   useEffect(() => {
@@ -37,7 +40,11 @@ export const BindLineOverlay = ({ containerRef, pairs }: BindLineOverlayProps) =
           `[data-jrny-mapping-target="${cssEscape(pair.targetPath)}"]`,
         );
 
-        if (!(sourceEl instanceof HTMLElement) || !(targetEl instanceof HTMLElement)) continue;
+        if (
+          !(sourceEl instanceof HTMLElement) ||
+          !(targetEl instanceof HTMLElement)
+        )
+          continue;
 
         const s = sourceEl.getBoundingClientRect();
         const tt = targetEl.getBoundingClientRect();
@@ -84,7 +91,9 @@ export const BindLineOverlay = ({ containerRef, pairs }: BindLineOverlayProps) =
           fill="none"
           strokeWidth={2}
           className={cn(
-            line.status === 'missing' ? 'stroke-amber-500' : 'stroke-muted-foreground',
+            line.status === 'missing'
+              ? 'stroke-amber-500'
+              : 'stroke-muted-foreground',
           )}
         />
       ))}
