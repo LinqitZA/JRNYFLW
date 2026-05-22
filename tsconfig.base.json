@@ -1403,6 +1403,9 @@
       "@jrnyflw/jrny": [
         "packages/pieces/custom/jrny/src/index.ts"
       ],
+      "@jrnyflw/mapper": [
+        "packages/pieces/custom/mapper/src/index.ts"
+      ],
       "@activepieces/piece-meistertask": [
         "packages/pieces/community/meistertask/src/index.ts"
       ],
