@@ -5,11 +5,15 @@ import { SchemaAdapter } from './adapter-type';
 function extractHeaders(table: HTMLTableElement): string[] {
   const headerCells = table.querySelectorAll('thead th');
   if (headerCells.length > 0) {
-    return Array.from(headerCells).map((cell) => cell.textContent?.trim() ?? '');
+    return Array.from(headerCells).map(
+      (cell) => cell.textContent?.trim() ?? '',
+    );
   }
   const firstRow = table.querySelector('tr');
   if (!firstRow) return [];
-  return Array.from(firstRow.querySelectorAll('th, td')).map((cell) => cell.textContent?.trim() ?? '');
+  return Array.from(firstRow.querySelectorAll('th, td')).map(
+    (cell) => cell.textContent?.trim() ?? '',
+  );
 }
 
 export const htmlTableAdapter: SchemaAdapter = {
