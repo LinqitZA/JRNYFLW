@@ -3,13 +3,21 @@ import { t } from 'i18next';
 
 import { cn } from '@/lib/utils';
 
-export function TransformPicker({ selected, onChange, disabled }: TransformPickerProps) {
+export function TransformPicker({
+  selected,
+  onChange,
+  disabled,
+}: TransformPickerProps) {
   const availableIds = Object.keys(transformRegistry);
   const isSelected = (id: string) => selected.some((tr) => tr.id === id);
 
   const toggle = (id: string) => {
     if (disabled) return;
-    onChange(isSelected(id) ? selected.filter((tr) => tr.id !== id) : [...selected, { id }]);
+    onChange(
+      isSelected(id)
+        ? selected.filter((tr) => tr.id !== id)
+        : [...selected, { id }],
+    );
   };
 
   return (

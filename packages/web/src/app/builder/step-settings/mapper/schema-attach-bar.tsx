@@ -34,7 +34,12 @@ export const SchemaAttachBar = ({
         onChange={(e) => setRaw(e.target.value)}
         placeholder={t('Paste a JSON sample')}
       />
-      <Button type="button" variant="outline" disabled={disabled} onClick={onParse}>
+      <Button
+        type="button"
+        variant="outline"
+        disabled={disabled}
+        onClick={onParse}
+      >
         {t('Parse schema')}
       </Button>
       {error !== null && (

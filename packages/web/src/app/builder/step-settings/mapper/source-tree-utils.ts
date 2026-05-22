@@ -23,7 +23,10 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function buildNodes(record: Record<string, unknown>, basePath: string): SourceNode[] {
+function buildNodes(
+  record: Record<string, unknown>,
+  basePath: string,
+): SourceNode[] {
   return Object.entries(record).map(([name, value]) => {
     const path = basePath ? `${basePath}.${name}` : name;
     const type = inferType(value);

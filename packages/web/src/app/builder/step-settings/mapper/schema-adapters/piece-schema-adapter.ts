@@ -1,4 +1,8 @@
-import { NormalizedField, NormalizedFieldType, NormalizedSchema } from '@activepieces/shared';
+import {
+  NormalizedField,
+  NormalizedFieldType,
+  NormalizedSchema,
+} from '@activepieces/shared';
 
 import { SchemaAdapter } from './adapter-type';
 
