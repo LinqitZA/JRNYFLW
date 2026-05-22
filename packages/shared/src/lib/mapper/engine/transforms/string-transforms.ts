@@ -27,8 +27,8 @@ const concat: Transform = {
     labelKey: 'Concatenate',
     paramsSchema: z.object({ value: z.string(), separator: z.string().optional() }),
     apply: ({ value, params }) => {
-        const separator = typeof params.separator === 'string' ? params.separator : ''
-        return `${String(value ?? '')}${separator}${String(params.value ?? '')}`
+        const separator = typeof params['separator'] === 'string' ? params['separator'] : ''
+        return `${String(value ?? '')}${separator}${String(params['value'] ?? '')}`
     },
 }
 
@@ -37,8 +37,8 @@ const split: Transform = {
     labelKey: 'Split',
     paramsSchema: z.object({ separator: z.string(), index: z.number().optional() }),
     apply: ({ value, params }) => {
-        const parts = String(value ?? '').split(String(params.separator))
-        const index = typeof params.index === 'number' ? params.index : 0
+        const parts = String(value ?? '').split(String(params['separator']))
+        const index = typeof params['index'] === 'number' ? params['index'] : 0
         return parts[index] ?? null
     },
 }
@@ -48,10 +48,10 @@ const regexExtract: Transform = {
     labelKey: 'Extract with regex',
     paramsSchema: z.object({ pattern: z.string(), group: z.number().optional() }),
     apply: ({ value, params }) => {
-        const re = new RegExp(String(params.pattern))
+        const re = new RegExp(String(params['pattern']))
         const match = String(value ?? '').match(re)
         if (!match) return null
-        const group = typeof params.group === 'number' ? params.group : 0
+        const group = typeof params['group'] === 'number' ? params['group'] : 0
         return match[group] ?? null
     },
 }

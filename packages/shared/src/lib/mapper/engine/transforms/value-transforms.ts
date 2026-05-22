@@ -4,11 +4,14 @@ import { Transform } from './transform-type'
 const isNilOrEmpty = (value: unknown): boolean =>
     value === null || value === undefined || value === ''
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null && !Array.isArray(value)
+
 const defaultTransform: Transform = {
     id: 'default',
     labelKey: 'Default value',
     paramsSchema: z.object({ value: z.unknown() }),
-    apply: ({ value, params }) => (isNilOrEmpty(value) ? params.value : value),
+    apply: ({ value, params }) => (isNilOrEmpty(value) ? params['value'] : value),
 }
 
 const parseNumber: Transform = {
@@ -31,10 +34,11 @@ const lookup: Transform = {
     labelKey: 'Lookup table',
     paramsSchema: z.object({ table: z.record(z.string(), z.unknown()), fallback: z.unknown().optional() }),
     apply: ({ value, params }) => {
-        const table = (params.table ?? {}) as Record<string, unknown>
+        const rawTable = params['table']
+        const table: Record<string, unknown> = isRecord(rawTable) ? rawTable : {}
         const key = String(value ?? '')
         if (key in table) return table[key]
-        return 'fallback' in params ? params.fallback : value
+        return 'fallback' in params ? params['fallback'] : value
     },
 }
 
@@ -56,7 +60,7 @@ const dateFormat: Transform = {
             mm: pad(date.getUTCMinutes()),
             ss: pad(date.getUTCSeconds()),
         }
-        return String(params.format).replace(/YYYY|MM|DD|HH|mm|ss/g, (t) => tokens[t])
+        return String(params['format']).replace(/YYYY|MM|DD|HH|mm|ss/g, (t) => tokens[t] ?? t)
     },
 }
 

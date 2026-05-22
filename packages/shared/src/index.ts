@@ -108,3 +108,5 @@ export * from './lib/extras/event-destinations'
 export * from './lib/extras/secret-managers'
 export * from './lib/extras/scim'
 export * from './lib/management/project/project-requests'
+// mapper
+export * from './lib/mapper'
