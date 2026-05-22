@@ -12,11 +12,16 @@ import { jsonSchemaAdapter } from './json-schema-adapter';
 import { openapiAdapter } from './openapi-adapter';
 import { xmlAdapter } from './xml-adapter';
 
-type RunSchemaAdapterParams = SchemaAdapterInput & {
-  id: SchemaAdapterId;
+export const schemaAdapters: Record<SchemaAdapterId, SchemaAdapter> = {
+  json_sample: jsonSampleAdapter,
+  json_schema: jsonSchemaAdapter,
+  csv: csvAdapter,
+  xml: xmlAdapter,
+  html_table: htmlTableAdapter,
+  openapi: openapiAdapter,
 };
 
-function runSchemaAdapter({
+export function runSchemaAdapter({
   id,
   raw,
   ref,
@@ -28,17 +33,10 @@ function runSchemaAdapter({
   return adapter.parse({ raw, ref });
 }
 
-export const schemaAdapters: Record<SchemaAdapterId, SchemaAdapter> = {
-  json_sample: jsonSampleAdapter,
-  json_schema: jsonSchemaAdapter,
-  csv: csvAdapter,
-  xml: xmlAdapter,
-  html_table: htmlTableAdapter,
-  openapi: openapiAdapter,
+type RunSchemaAdapterParams = SchemaAdapterInput & {
+  id: SchemaAdapterId;
 };
 
-export const schemaAdapterRunner = { runSchemaAdapter };
-export { runSchemaAdapter };
 export type {
   SchemaAdapter,
   SchemaAdapterId,

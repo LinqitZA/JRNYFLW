@@ -20,4 +20,8 @@ describe('csvAdapter', () => {
     test('throws on empty input', () => {
         expect(() => csvAdapter.parse({ raw: '' })).toThrow(/CSV/i)
     })
+
+    test('throws when the CSV has only a header row', () => {
+        expect(() => csvAdapter.parse({ raw: 'sku,qty\n' })).toThrow(/no data/i)
+    })
 })
