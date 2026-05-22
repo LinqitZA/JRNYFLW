@@ -88,8 +88,15 @@ function setMode(spec: MappingSpec, mode: MapperMode): MappingSpec {
 
 function setGroupBy(spec: MappingSpec, keys: string[]): MappingSpec {
   if (keys.length === 0) {
-    const { groupBy: _groupBy, ...rest } = spec;
-    return rest as MappingSpec;
+    const cleared: MappingSpec = {
+      specVersion: spec.specVersion,
+      mode: spec.mode,
+      fields: spec.fields,
+    };
+    if (spec.targetSchema !== undefined) {
+      cleared.targetSchema = spec.targetSchema;
+    }
+    return cleared;
   }
   return { ...spec, groupBy: keys };
 }
