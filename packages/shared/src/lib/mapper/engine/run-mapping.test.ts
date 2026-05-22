@@ -54,4 +54,23 @@ describe('mapperEngine.runMapping', () => {
         const spec: MappingSpec = { specVersion: 1, mode: 'auto', groupBy: ['x'], fields: [] }
         expect(mapperEngine.runMapping({ sourceData: [], spec }).output).toEqual([])
     })
+
+    test('grouped: diverging header value within a group emits a header_mismatch warning', () => {
+        const spec: MappingSpec = {
+            specVersion: 1, mode: 'auto', groupBy: ['PO'],
+            fields: [
+                { target: 'po', binding: { kind: 'header', source: 'PO' } },
+                { target: 'customer', binding: { kind: 'header', source: 'CustomerName' } },
+            ],
+        }
+        const sourceData = [
+            { PO: 'PO-1', CustomerName: 'Acme' },
+            { PO: 'PO-1', CustomerName: 'Acme Corp' },
+        ]
+        const { output, warnings } = mapperEngine.runMapping({ sourceData, spec })
+        expect(output).toEqual([{ po: 'PO-1', customer: 'Acme' }])
+        expect(warnings).toEqual([
+            { path: 'customer', code: 'header_mismatch', message: expect.stringContaining('CustomerName') },
+        ])
+    })
 })

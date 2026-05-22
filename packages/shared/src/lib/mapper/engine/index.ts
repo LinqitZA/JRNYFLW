@@ -2,6 +2,7 @@ import { MapperResult, MapperWarning } from '../mapper-warning'
 import { MappingSpec } from '../mapping-spec'
 import { detectMode } from './detect-mode'
 import { partitionByKey } from './group'
+import { collectHeaderMismatches } from './header-validation'
 import { shapeFields } from './shape'
 
 type RunMappingParams = {
@@ -33,9 +34,10 @@ function runMapping({ sourceData, spec }: RunMappingParams): MapperResult {
     }
 
     const groups = partitionByKey({ rows, groupBy: spec.groupBy ?? [] })
-    const output = groups.map((group) =>
-        shapeFields({ fields: spec.fields, scope: { current: group[0], rows: group }, basePath: '', warnings }),
-    )
+    const output = groups.map((group) => {
+        collectHeaderMismatches({ fields: spec.fields, group, warnings })
+        return shapeFields({ fields: spec.fields, scope: { current: group[0], rows: group }, basePath: '', warnings })
+    })
     return { output, warnings }
 }
 

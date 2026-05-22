@@ -10,4 +10,6 @@ const buildRegistry = (): Record<string, Transform> => {
     }, {})
 }
 
+export * from './transform-type'
+
 export const transformRegistry: Record<string, Transform> = buildRegistry()
