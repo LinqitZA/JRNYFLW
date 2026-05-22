@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { inferSchemaUtils } from './infer-schema'
+import { inferSchemaUtils } from '@/app/builder/step-settings/mapper/schema-adapters/infer-schema'
 
 const { inferSchemaFromSample } = inferSchemaUtils
 
