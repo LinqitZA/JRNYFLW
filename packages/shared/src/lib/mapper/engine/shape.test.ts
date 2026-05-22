@@ -1,8 +1,8 @@
-import { FieldMapping } from '../mapping-spec'
 import { MapperWarning } from '../mapper-warning'
+import { FieldMapping } from '../mapping-spec'
 import { shapeFields } from './shape'
 
-const shape = (fields: FieldMapping[], scope: { current: unknown; rows: unknown[] }) => {
+const shape = (fields: FieldMapping[], scope: { current: unknown, rows: unknown[] }) => {
     const warnings: MapperWarning[] = []
     const output = shapeFields({ fields, scope, basePath: '', warnings })
     return { output, warnings }

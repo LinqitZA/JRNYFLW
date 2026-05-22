@@ -1,5 +1,5 @@
-import { TransformRef } from '../mapping-spec'
 import { MapperWarning } from '../mapper-warning'
+import { TransformRef } from '../mapping-spec'
 import { transformRegistry } from './transforms'
 
 type ApplyTransformsParams = {

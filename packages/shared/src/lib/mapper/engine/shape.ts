@@ -1,5 +1,5 @@
-import { Binding, FieldMapping } from '../mapping-spec'
 import { MapperWarning } from '../mapper-warning'
+import { Binding, FieldMapping } from '../mapping-spec'
 import { applyTransforms } from './apply-transforms'
 import { mapperPathUtils } from './path-utils'
 

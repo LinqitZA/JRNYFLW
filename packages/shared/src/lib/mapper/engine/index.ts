@@ -1,5 +1,5 @@
-import { MappingSpec } from '../mapping-spec'
 import { MapperResult, MapperWarning } from '../mapper-warning'
+import { MappingSpec } from '../mapping-spec'
 import { detectMode } from './detect-mode'
 import { partitionByKey } from './group'
 import { shapeFields } from './shape'
