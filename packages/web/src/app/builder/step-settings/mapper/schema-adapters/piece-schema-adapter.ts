@@ -31,7 +31,8 @@ function mapType(propertyType: string | undefined): NormalizedFieldType {
 }
 
 function toField(name: string, node: Record<string, unknown>): NormalizedField {
-  const type = mapType(node['type'] as string | undefined);
+  const rawType = node['type'];
+  const type = mapType(typeof rawType === 'string' ? rawType : undefined);
   if (type === 'array') {
     const nested = node['properties'];
     if (isObjectNode(nested)) {
