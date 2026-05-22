@@ -44,7 +44,11 @@ The web vitest config aliases `@activepieces/shared` → `packages/shared/src`, 
 | `…/mapper/schema-adapters/index.ts` | `schemaAdapters` registry + re-exports |
 | `packages/web/package.json` | add `fast-xml-parser` dependency (Task 5) |
 
-All test files are colocated `.test.ts` with `// @vitest-environment jsdom` as the first line. Run from `packages/web`: `npm test -- <path>` (script is `vitest run --passWithNoTests`). The base path `…` = `packages/web/src/app/builder/step-settings/mapper/schema-adapters/`.
+> **CORRECTION (test location):** Per `packages/web/CLAUDE.md`, tests live under **`packages/web/test/`** mirroring the source path — **never** colocated under `src/`. So a source file at `src/app/builder/step-settings/mapper/schema-adapters/foo.ts` has its test at `test/app/builder/step-settings/mapper/schema-adapters/foo.test.ts`, and the test imports the subject via the **`@/` alias** (`import { x } from '@/app/builder/step-settings/mapper/schema-adapters/foo'`), not a relative path. The code blocks below show relative imports for brevity — convert every test import to the `@/` alias and place every test file under `packages/web/test/...`. Each test file's first line is `// @vitest-environment jsdom`. Run from `packages/web`: `npm test -- test/app/builder/step-settings/mapper/schema-adapters/<file>.test.ts` (script is `vitest run --passWithNoTests`).
+
+Source base path = `packages/web/src/app/builder/step-settings/mapper/schema-adapters/`. Test base path = `packages/web/test/app/builder/step-settings/mapper/schema-adapters/`.
+
+> **CORRECTION (formatting):** The **web** package uses Prettier defaults — **2-space indentation, semicolons, single quotes** (root `.prettierrc` = `{"singleQuote": true}`). The code blocks below show 4-space/no-semicolon (shared-package style) — write web files in 2-space + semicolons instead. Either way, Task 8's `npm run lint-dev --fix` normalizes formatting across all adapter files; do not hand-fight Prettier.
 
 ---
 
