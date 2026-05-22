@@ -1584,5 +1584,7 @@
   "AI Chat requires an E2B sandbox to run. Ask your admin to set the AP_E2B_API_KEY environment variable.": "AI Chat requires an E2B sandbox to run. Ask your admin to set the AP_E2B_API_KEY environment variable.",
   "Paste a JSON sample": "Paste a JSON sample",
   "Parse schema": "Parse schema",
-  "Could not parse the schema": "Could not parse the schema"
+  "Could not parse the schema": "Could not parse the schema",
+  "Transforms": "Transforms",
+  "Add transform": "Add transform"
 }
