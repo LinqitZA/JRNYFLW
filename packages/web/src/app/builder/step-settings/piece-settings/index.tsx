@@ -12,9 +12,13 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { flagsHooks } from '@/hooks/flags-hooks';
 
 import { GenericPropertiesForm } from '../../piece-properties/generic-properties-form';
+import { MapperStepConfig } from '../mapper';
 import { useStepSettingsContext } from '../step-settings-context';
 
 import { ConnectionSelect } from './connection-select';
+
+const MAPPER_PIECE_NAME = '@jrnyflw/mapper';
+const MAPPER_ACTION_NAME = 'apply_mapping';
 
 type PieceSettingsProps = {
   step: PieceAction | PieceTrigger;
@@ -103,25 +107,29 @@ const PieceSettings = React.memo((props: PieceSettingsProps) => {
               disabled={props.readonly}
             ></ConnectionSelect>
           )}
-          {selectedAction && (
-            <GenericPropertiesForm
-              key={selectedAction.name}
-              prefixValue={'settings.input'}
-              props={actionPropsWithoutAuth}
-              propertySettings={selectedStep.settings.propertySettings}
-              disabled={props.readonly}
-              useMentionTextInput={true}
-              markdownVariables={markdownVariables}
-              dynamicPropsInfo={{
-                pieceName: pieceModel.name,
-                pieceVersion: pieceModel.version,
-                actionOrTriggerName: selectedAction.name,
-                placedInside: 'stepSettings',
-                updateFormSchema,
-                updatePropertySettingsSchema,
-              }}
-            ></GenericPropertiesForm>
-          )}
+          {selectedAction &&
+            (pieceModel.name === MAPPER_PIECE_NAME &&
+            selectedAction.name === MAPPER_ACTION_NAME ? (
+              <MapperStepConfig readonly={props.readonly} />
+            ) : (
+              <GenericPropertiesForm
+                key={selectedAction.name}
+                prefixValue={'settings.input'}
+                props={actionPropsWithoutAuth}
+                propertySettings={selectedStep.settings.propertySettings}
+                disabled={props.readonly}
+                useMentionTextInput={true}
+                markdownVariables={markdownVariables}
+                dynamicPropsInfo={{
+                  pieceName: pieceModel.name,
+                  pieceVersion: pieceModel.version,
+                  actionOrTriggerName: selectedAction.name,
+                  placedInside: 'stepSettings',
+                  updateFormSchema,
+                  updatePropertySettingsSchema,
+                }}
+              ></GenericPropertiesForm>
+            ))}
           {selectedTrigger && (
             <GenericPropertiesForm
               dynamicPropsInfo={{

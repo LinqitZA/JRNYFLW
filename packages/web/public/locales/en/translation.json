@@ -1,5 +1,12 @@
 {
   "0": "",
+  "Mapper": "Mapper",
+  "Source step": "Source step",
+  "Select a source step": "Select a source step",
+  "Target schema": "Target schema",
+  "Preview": "Preview",
+  "No source data yet. Test the source step to load a sample.": "No source data yet. Test the source step to load a sample.",
+  "Attach a target schema to begin mapping": "Attach a target schema to begin mapping",
   "Support": "Support",
   "Runs": "Runs",
   "Queue Status": "Queue Status",
