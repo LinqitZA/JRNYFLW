@@ -88,12 +88,33 @@ const mountHarness = (): HTMLDivElement => {
   return container;
 };
 
+const findButtonByText = (text: string): HTMLButtonElement => {
+  const buttons = Array.from(document.body.querySelectorAll('button'));
+  const match = buttons.find((b) => b.textContent?.includes(text));
+  if (!(match instanceof HTMLButtonElement)) {
+    throw new Error(`Button with text "${text}" not found`);
+  }
+  return match;
+};
+
 describe('MapperStepConfig', () => {
-  test('renders the source step picker and target schema region', () => {
+  test('renders the source step picker and the open-mapper button', () => {
     const mounted = mountHarness();
     /* eslint-disable jest-dom/prefer-to-have-text-content -- jest-dom matchers are not configured in this project's vitest setup */
     expect(mounted.textContent).toContain('Source step');
-    expect(mounted.textContent).toContain('Target schema');
+    expect(mounted.textContent).toContain('Open mapper');
+    /* eslint-enable jest-dom/prefer-to-have-text-content */
+  });
+
+  test('opening the mapper modal reveals the target schema region', () => {
+    mountHarness();
+    // eslint-disable-next-line testing-library/no-unnecessary-act
+    act(() => {
+      findButtonByText('Open mapper').click();
+    });
+    /* eslint-disable jest-dom/prefer-to-have-text-content -- jest-dom matchers are not configured in this project's vitest setup */
+    expect(document.body.textContent).toContain('Field Mapper');
+    expect(document.body.textContent).toContain('Target schema');
     /* eslint-enable jest-dom/prefer-to-have-text-content */
   });
 });

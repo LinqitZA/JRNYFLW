@@ -1,4 +1,7 @@
+import { GripVertical } from 'lucide-react';
 import { useDrag } from 'react-dnd';
+
+import { cn } from '@/lib/utils';
 
 import { DND_TYPE_FIELD_PATH, FieldPathDndItem } from '../../mapping/dnd-types';
 
@@ -35,13 +38,18 @@ const SourceLeaf = ({ node, depth, disabled }: SourceLeafProps) => {
   };
 
   return (
-    <div
-      ref={composedDragRef}
-      data-jrny-mapping-source={node.path}
-      style={{ opacity: isDragging ? 0.4 : 1, paddingLeft: `${depth * 16}px` }}
-      className="flex items-center min-h-9 px-2 rounded-md select-none cursor-grab active:cursor-grabbing hover:bg-accent text-sm"
-    >
-      <span className="truncate">{node.name}</span>
+    <div style={{ paddingLeft: `${depth * 16}px` }}>
+      <div
+        ref={composedDragRef}
+        data-jrny-mapping-source={node.path}
+        style={{ opacity: isDragging ? 0.4 : 1 }}
+        className={cn(
+          'flex items-center gap-2 rounded-md border bg-background px-2 py-1.5 text-sm cursor-grab hover:bg-muted active:cursor-grabbing select-none',
+        )}
+      >
+        <GripVertical className="size-3.5 shrink-0 text-muted-foreground" />
+        <span className="truncate">{node.name}</span>
+      </div>
     </div>
   );
 };
@@ -63,7 +71,7 @@ const SourceTreeNode = ({ node, depth, disabled }: SourceTreeNodeProps) => {
     <div className="flex flex-col">
       <div
         style={{ paddingLeft: `${depth * 16}px` }}
-        className="flex items-center min-h-9 px-2 text-sm font-medium text-muted-foreground select-none"
+        className="flex items-center py-1 text-sm font-medium select-none"
       >
         {node.name}
       </div>

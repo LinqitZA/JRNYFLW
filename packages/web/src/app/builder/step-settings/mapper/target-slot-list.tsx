@@ -1,12 +1,22 @@
 import { MappingSpec } from '@activepieces/shared';
+import { t } from 'i18next';
+import { FunctionSquare, Unlink } from 'lucide-react';
 import { useDrop } from 'react-dnd';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 
 import { DND_TYPE_FIELD_PATH, FieldPathDndItem } from '../../mapping/dnd-types';
 
 import { mapperSpecUtils } from './mapper-spec-utils';
 import { TargetSlot } from './mapper-ui-types';
+import { TransformPicker } from './transform-picker';
 
 function applyDrop({ spec, slot, sourcePath }: ApplyDropParams): MappingSpec {
   return mapperSpecUtils.setBinding(spec, {
@@ -41,14 +51,14 @@ function findBoundSource(
 type TargetSlotRowProps = {
   slot: TargetSlot;
   spec: MappingSpec;
-  onBind: (next: MappingSpec) => void;
+  onChange: (next: MappingSpec) => void;
   disabled: boolean;
 };
 
 const TargetSlotRow = ({
   slot,
   spec,
-  onBind,
+  onChange,
   disabled,
 }: TargetSlotRowProps) => {
   const [{ isOver, canDrop }, dropRef] = useDrop<
@@ -61,7 +71,7 @@ const TargetSlotRow = ({
       canDrop: () => !disabled,
       drop: (item) => {
         if (disabled) return;
-        onBind(applyDrop({ spec, slot, sourcePath: item.propertyPath }));
+        onChange(applyDrop({ spec, slot, sourcePath: item.propertyPath }));
       },
       collect: (monitor) => ({
         isOver: monitor.isOver({ shallow: true }),
@@ -79,11 +89,10 @@ const TargetSlotRow = ({
 
   if (slot.kind === 'collection') {
     return (
-      <div
-        style={indentStyle}
-        className="flex items-center min-h-9 px-2 text-sm font-medium text-muted-foreground select-none"
-      >
-        {slot.name}
+      <div style={indentStyle}>
+        <div className="flex items-center py-1 text-sm font-medium text-muted-foreground select-none">
+          {slot.name}
+        </div>
       </div>
     );
   }
@@ -92,24 +101,94 @@ const TargetSlotRow = ({
   const dataTarget = slot.collectionPath
     ? `${slot.collectionPath}.${slot.path}`
     : slot.path;
+  const transforms = mapperSpecUtils.getTransforms(spec, {
+    targetPath: slot.path,
+    collectionPath: slot.collectionPath,
+  });
+
+  const onTransformsChange = (next: typeof transforms) => {
+    onChange(
+      mapperSpecUtils.setTransforms(spec, {
+        targetPath: slot.path,
+        collectionPath: slot.collectionPath,
+        transforms: next,
+      }),
+    );
+  };
+
+  const onUnlink = () => {
+    onChange(
+      mapperSpecUtils.removeBinding(spec, {
+        targetPath: slot.path,
+        collectionPath: slot.collectionPath,
+      }),
+    );
+  };
 
   return (
-    <div
-      ref={composedDropRef}
-      data-jrny-mapping-target={dataTarget}
-      style={indentStyle}
-      className={cn(
-        'flex items-center justify-between gap-2 min-h-9 px-2 rounded-md transition-colors select-none',
-        {
-          'ring-2 ring-primary ring-offset-2': isOver && canDrop,
-          'ring-1 ring-primary/30': canDrop && !isOver,
-        },
-      )}
-    >
-      <span className="truncate text-sm">{slot.name}</span>
-      {boundSource ? (
-        <span className="truncate text-xs text-primary">{boundSource}</span>
-      ) : null}
+    <div style={indentStyle}>
+      <div
+        ref={composedDropRef}
+        data-jrny-mapping-target={dataTarget}
+        className={cn(
+          'flex items-center justify-between gap-2 rounded-md border px-2 py-1.5 text-sm transition-colors select-none',
+          {
+            'ring-2 ring-primary ring-offset-2': isOver && canDrop,
+            'ring-1 ring-primary/30': canDrop && !isOver,
+          },
+        )}
+      >
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate">{slot.name}</span>
+          <span className="truncate text-xs text-muted-foreground">
+            {slot.type}
+          </span>
+        </div>
+        <div className="flex shrink-0 items-center gap-1.5">
+          {boundSource ? (
+            <span className="truncate text-xs text-primary">{boundSource}</span>
+          ) : null}
+          {transforms.map((tr) => (
+            <Badge key={tr.id} variant="secondary">
+              {tr.id}
+            </Badge>
+          ))}
+          {boundSource ? (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  disabled={disabled}
+                  aria-label={t('Apply transforms')}
+                >
+                  <FunctionSquare />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent align="end">
+                <TransformPicker
+                  selected={transforms}
+                  onChange={onTransformsChange}
+                  disabled={disabled}
+                />
+              </PopoverContent>
+            </Popover>
+          ) : null}
+          {boundSource ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              disabled={disabled}
+              onClick={onUnlink}
+              aria-label={t('Remove mapping')}
+            >
+              <Unlink />
+            </Button>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 };
@@ -128,7 +207,7 @@ const TargetSlotList = ({
   disabled,
 }: TargetSlotListProps) => {
   return (
-    <div className="flex flex-col gap-1">
+    <>
       {slots.map((slot) => (
         <TargetSlotRow
           key={
@@ -138,11 +217,11 @@ const TargetSlotList = ({
           }
           slot={slot}
           spec={spec}
-          onBind={onChange}
+          onChange={onChange}
           disabled={disabled}
         />
       ))}
-    </div>
+    </>
   );
 };
 

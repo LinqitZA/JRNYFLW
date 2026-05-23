@@ -25,6 +25,11 @@ type SetTransformsParams = {
   transforms: TransformRef[];
 };
 
+type GetTransformsParams = {
+  targetPath: string;
+  collectionPath?: string;
+};
+
 function createEmptySpec(): MappingSpec {
   return { specVersion: 1, mode: 'auto', fields: [] };
 }
@@ -138,6 +143,23 @@ function setTransforms(
   return { ...spec, fields };
 }
 
+function getTransforms(
+  spec: MappingSpec,
+  params: GetTransformsParams,
+): TransformRef[] {
+  const { targetPath, collectionPath } = params;
+  if (!collectionPath) {
+    const field = spec.fields.find((f) => f.target === targetPath);
+    if (!field || field.binding.kind === 'line_collection') return [];
+    return field.binding.transforms ?? [];
+  }
+  const collection = spec.fields.find((f) => f.target === collectionPath);
+  if (!collection || collection.binding.kind !== 'line_collection') return [];
+  const item = collection.binding.items.find((i) => i.target === targetPath);
+  if (!item || item.binding.kind === 'line_collection') return [];
+  return item.binding.transforms ?? [];
+}
+
 function removeBinding(
   spec: MappingSpec,
   params: RemoveBindingParams,
@@ -172,4 +194,5 @@ export const mapperSpecUtils = {
   setMode,
   setGroupBy,
   setTransforms,
+  getTransforms,
 };

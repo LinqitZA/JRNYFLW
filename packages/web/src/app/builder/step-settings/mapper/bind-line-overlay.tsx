@@ -5,22 +5,25 @@ import { cn } from '@/lib/utils';
 
 type Point = { x: number; y: number };
 
-type BindPair = {
-  sourcePath: string;
-  targetPath: string;
-  status: 'valid' | 'missing';
-};
-
 type BindLineOverlayProps = {
   containerRef: RefObject<HTMLElement | null>;
   pairs: BindPair[];
+  onRemove: (pair: BindPair) => void;
 };
 
-type RenderedLine = { d: string; status: 'valid' | 'missing'; key: string };
+type RenderedLine = {
+  d: string;
+  from: Point;
+  to: Point;
+  status: 'valid' | 'missing';
+  key: string;
+  pair: BindPair;
+};
 
 export const BindLineOverlay = ({
   containerRef,
   pairs,
+  onRemove,
 }: BindLineOverlayProps) => {
   const [lines, setLines] = useState<RenderedLine[]>([]);
 
@@ -60,8 +63,11 @@ export const BindLineOverlay = ({
 
         next.push({
           d: bezierPath({ from, to }),
+          from,
+          to,
           status: pair.status,
           key: `${pair.sourcePath}->${pair.targetPath}`,
+          pair,
         });
       }
 
@@ -85,17 +91,32 @@ export const BindLineOverlay = ({
   return (
     <svg className="pointer-events-none absolute inset-0 h-full w-full">
       {lines.map((line) => (
-        <path
-          key={line.key}
-          d={line.d}
-          fill="none"
-          strokeWidth={2}
-          className={cn(
-            line.status === 'missing'
-              ? 'stroke-amber-500'
-              : 'stroke-muted-foreground',
-          )}
-        />
+        <g key={line.key}>
+          <path
+            d={line.d}
+            fill="none"
+            strokeWidth={2}
+            className={cn(
+              line.status === 'missing'
+                ? 'stroke-amber-500'
+                : 'stroke-muted-foreground',
+            )}
+          />
+          <circle
+            cx={line.from.x}
+            cy={line.from.y}
+            r={5}
+            className={cn('pointer-events-auto cursor-pointer fill-primary')}
+            onClick={() => onRemove(line.pair)}
+          />
+          <circle
+            cx={line.to.x}
+            cy={line.to.y}
+            r={5}
+            className={cn('pointer-events-auto cursor-pointer fill-primary')}
+            onClick={() => onRemove(line.pair)}
+          />
+        </g>
       ))}
     </svg>
   );
@@ -111,3 +132,15 @@ function bezierPath({ from, to }: { from: Point; to: Point }): string {
 }
 
 export const bindLineUtils = { bezierPath };
+
+export type BindPair = {
+  sourcePath: string;
+  targetPath: string;
+  status: 'valid' | 'missing';
+  removal: BindRemoval;
+};
+
+type BindRemoval = {
+  targetPath: string;
+  collectionPath?: string;
+};

@@ -96,3 +96,21 @@ describe('mapperSpecUtils mode/groupBy/transforms', () => {
     expect(spec.fields[0].binding).toEqual({ kind: 'header', source: 'CustomerName' });
   });
 });
+
+describe('mapperSpecUtils.getTransforms', () => {
+  const { createEmptySpec, setBinding, setTransforms, getTransforms } = mapperSpecUtils;
+  test('returns [] when no transforms set', () => {
+    const spec = setBinding(createEmptySpec(), { targetPath: 'name', sourcePath: 'CustomerName' });
+    expect(getTransforms(spec, { targetPath: 'name' })).toEqual([]);
+  });
+  test('returns the header binding transforms', () => {
+    let spec = setBinding(createEmptySpec(), { targetPath: 'name', sourcePath: 'CustomerName' });
+    spec = setTransforms(spec, { targetPath: 'name', transforms: [{ id: 'trim' }] });
+    expect(getTransforms(spec, { targetPath: 'name' })).toEqual([{ id: 'trim' }]);
+  });
+  test('returns a collection item binding transforms', () => {
+    let spec = setBinding(createEmptySpec(), { targetPath: 'qty', sourcePath: 'Qty', collectionPath: 'lines' });
+    spec = setTransforms(spec, { targetPath: 'qty', collectionPath: 'lines', transforms: [{ id: 'parse_number' }] });
+    expect(getTransforms(spec, { targetPath: 'qty', collectionPath: 'lines' })).toEqual([{ id: 'parse_number' }]);
+  });
+});
