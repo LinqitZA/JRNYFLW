@@ -1406,6 +1406,9 @@
       "@jrnyflw/mapper": [
         "packages/pieces/custom/mapper/src/index.ts"
       ],
+      "@jrnyflw/shoprite": [
+        "packages/pieces/custom/shoprite/src/index.ts"
+      ],
       "@activepieces/piece-meistertask": [
         "packages/pieces/community/meistertask/src/index.ts"
       ],

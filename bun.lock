@@ -8027,6 +8027,19 @@
         "vitest": "3.0.8",
       },
     },
+    "packages/pieces/custom/shoprite": {
+      "name": "@jrnyflw/shoprite",
+      "version": "0.0.1",
+      "dependencies": {
+        "@activepieces/pieces-common": "workspace:*",
+        "@activepieces/pieces-framework": "workspace:*",
+        "@activepieces/shared": "workspace:*",
+        "tslib": "2.6.2",
+      },
+      "devDependencies": {
+        "vitest": "3.0.8",
+      },
+    },
     "packages/pieces/framework": {
       "name": "@activepieces/pieces-framework",
       "version": "0.28.1",
@@ -10609,6 +10622,8 @@
     "@jrnyflw/jrny": ["@jrnyflw/jrny@workspace:packages/pieces/custom/jrny"],
 
     "@jrnyflw/mapper": ["@jrnyflw/mapper@workspace:packages/pieces/custom/mapper"],
+
+    "@jrnyflw/shoprite": ["@jrnyflw/shoprite@workspace:packages/pieces/custom/shoprite"],
 
     "@js-sdsl/ordered-map": ["@js-sdsl/ordered-map@4.4.2", "", {}, "sha512-iUKgm52T8HOE/makSxjqoWhe95ZJA1/G1sYsGev2JDKUSS14KAgg1LHb+Ba+IPow0xflbnSkOsZcO08C7w1gYw=="],
 
