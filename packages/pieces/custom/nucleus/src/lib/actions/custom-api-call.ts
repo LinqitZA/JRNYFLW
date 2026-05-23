@@ -4,6 +4,8 @@ import { nucleusClient } from '../client';
 
 export const customApiCall = createCustomApiCallAction({
     auth: nucleusAuth,
+    description:
+        'Call any Winfreight FMS endpoint. Auth (Bearer token) is handled for you. NOTE: most Winfreight endpoints require a GroupName query parameter — add `GroupName` with your connection\'s Group Name value under Query Params (the typed actions add it automatically).',
     baseUrl: (auth) => auth?.props.baseUrl ?? '',
     authMapping: async (auth) => {
         const res = await httpClient.sendRequest<{ access_token: string }>({
