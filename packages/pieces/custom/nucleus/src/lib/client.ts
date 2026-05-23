@@ -13,14 +13,13 @@ function isExpired(cached: CachedToken, nowMs: number): boolean {
 }
 
 function isCachedToken(value: unknown): value is CachedToken {
-    return (
-        typeof value === 'object' &&
-        value !== null &&
-        'token' in value &&
-        'expiresAt' in value &&
-        typeof (value as { token: unknown }).token === 'string' &&
-        typeof (value as { expiresAt: unknown }).expiresAt === 'number'
-    );
+    if (typeof value !== 'object' || value === null) {
+        return false;
+    }
+    if (!('token' in value) || !('expiresAt' in value)) {
+        return false;
+    }
+    return typeof value.token === 'string' && typeof value.expiresAt === 'number';
 }
 
 async function fetchToken(auth: NucleusAuth): Promise<CachedToken> {
