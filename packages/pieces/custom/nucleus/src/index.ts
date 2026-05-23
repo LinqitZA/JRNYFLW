@@ -1,6 +1,11 @@
 import { createPiece } from '@activepieces/pieces-framework';
 import { PieceCategory } from '@activepieces/shared';
 import { nucleusAuth } from './lib/auth';
+import { createWaybill } from './lib/actions/create-waybill';
+import { getTrackingByAccnum } from './lib/actions/get-tracking-by-accnum';
+import { getPodBulk } from './lib/actions/get-pod-bulk';
+import { getLabel } from './lib/actions/get-label';
+import { customApiCall } from './lib/actions/custom-api-call';
 
 export const nucleus = createPiece({
     displayName: 'Nucleus',
@@ -10,6 +15,6 @@ export const nucleus = createPiece({
     authors: ['jrnyflw'],
     categories: [PieceCategory.SALES_AND_CRM],
     auth: nucleusAuth,
-    actions: [],
+    actions: [createWaybill, getTrackingByAccnum, getPodBulk, getLabel, customApiCall],
     triggers: [],
 });
