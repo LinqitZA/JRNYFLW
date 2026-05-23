@@ -8027,6 +8027,19 @@
         "vitest": "3.0.8",
       },
     },
+    "packages/pieces/custom/nucleus": {
+      "name": "@jrnyflw/nucleus",
+      "version": "0.0.1",
+      "dependencies": {
+        "@activepieces/pieces-common": "workspace:*",
+        "@activepieces/pieces-framework": "workspace:*",
+        "@activepieces/shared": "workspace:*",
+        "tslib": "2.6.2",
+      },
+      "devDependencies": {
+        "vitest": "3.0.8",
+      },
+    },
     "packages/pieces/custom/shoprite": {
       "name": "@jrnyflw/shoprite",
       "version": "0.0.1",
@@ -10622,6 +10635,8 @@
     "@jrnyflw/jrny": ["@jrnyflw/jrny@workspace:packages/pieces/custom/jrny"],
 
     "@jrnyflw/mapper": ["@jrnyflw/mapper@workspace:packages/pieces/custom/mapper"],
+
+    "@jrnyflw/nucleus": ["@jrnyflw/nucleus@workspace:packages/pieces/custom/nucleus"],
 
     "@jrnyflw/shoprite": ["@jrnyflw/shoprite@workspace:packages/pieces/custom/shoprite"],
 

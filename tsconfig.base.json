@@ -1406,6 +1406,9 @@
       "@jrnyflw/mapper": [
         "packages/pieces/custom/mapper/src/index.ts"
       ],
+      "@jrnyflw/nucleus": [
+        "packages/pieces/custom/nucleus/src/index.ts"
+      ],
       "@jrnyflw/shoprite": [
         "packages/pieces/custom/shoprite/src/index.ts"
       ],
