@@ -10,6 +10,6 @@ export const downloadOrders = createAction({
     description: 'Download new (un-acknowledged) orders for the vendor (GS1 OrderMessageType).',
     props: {},
     async run(context) {
-        return shopriteClient.call(context.auth, HttpMethod.GET, '/api/VendorOrder');
+        return shopriteClient.call(context.auth.props, HttpMethod.GET, '/api/VendorOrder');
     },
 });

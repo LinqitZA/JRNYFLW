@@ -39,5 +39,5 @@ export type ShopriteAuth = {
     username: string;
     password: string;
     contractId: string;
-    invoiceEndpoint: 'VendorInvoice' | 'B2BInvoice';
+    invoiceEndpoint: 'VendorInvoice' | 'B2BInvoice' | undefined;
 };

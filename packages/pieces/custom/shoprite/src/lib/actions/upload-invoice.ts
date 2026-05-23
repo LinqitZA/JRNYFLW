@@ -16,10 +16,11 @@ export const uploadInvoice = createAction({
         }),
     },
     async run(context) {
+        const endpoint = context.auth.props.invoiceEndpoint ?? 'VendorInvoice';
         return shopriteClient.call(
-            context.auth,
+            context.auth.props,
             HttpMethod.POST,
-            `/api/${context.auth.invoiceEndpoint}`,
+            `/api/${endpoint}`,
             context.propsValue.invoiceMessage,
         );
     },

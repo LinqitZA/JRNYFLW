@@ -12,7 +12,8 @@ import { createMockActionContext } from '@activepieces/pieces-framework';
 import { downloadOrders } from '../src/lib/actions/download-orders';
 import { ShopriteAuth } from '../src/lib/auth';
 
-const auth: ShopriteAuth = { baseUrl: 'https://x/b2bservice', username: 'u', password: 'p', contractId: 'c', invoiceEndpoint: 'VendorInvoice' };
+const authProps: ShopriteAuth = { baseUrl: 'https://x/b2bservice', username: 'u', password: 'p', contractId: 'c', invoiceEndpoint: 'VendorInvoice' };
+const auth = { props: authProps };
 
 describe('downloadOrders', () => {
     test('GETs /api/VendorOrder with the auth headers and returns the body', async () => {

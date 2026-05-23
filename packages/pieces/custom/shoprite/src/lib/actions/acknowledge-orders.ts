@@ -18,6 +18,6 @@ export const acknowledgeOrders = createAction({
     },
     async run(context) {
         const action = encodeURIComponent(context.propsValue.action);
-        return shopriteClient.call(context.auth, HttpMethod.PUT, `/api/VendorOrder/${action}`);
+        return shopriteClient.call(context.auth.props, HttpMethod.PUT, `/api/VendorOrder/${action}`);
     },
 });

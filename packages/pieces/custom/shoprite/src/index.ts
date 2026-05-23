@@ -1,6 +1,10 @@
 import { createPiece } from '@activepieces/pieces-framework';
 import { PieceCategory } from '@activepieces/shared';
 import { shopriteAuth } from './lib/auth';
+import { downloadOrders } from './lib/actions/download-orders';
+import { acknowledgeOrders } from './lib/actions/acknowledge-orders';
+import { uploadInvoice } from './lib/actions/upload-invoice';
+import { customApiCall } from './lib/actions/custom-api-call';
 
 export const shoprite = createPiece({
     displayName: 'Shoprite',
@@ -10,6 +14,6 @@ export const shoprite = createPiece({
     authors: ['jrnyflw'],
     categories: [PieceCategory.SALES_AND_CRM],
     auth: shopriteAuth,
-    actions: [],
+    actions: [downloadOrders, acknowledgeOrders, uploadInvoice, customApiCall],
     triggers: [],
 });

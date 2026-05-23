@@ -14,7 +14,7 @@ describe('uploadInvoice', () => {
     test('POSTs the GS1 invoice body to the configured invoice endpoint', async () => {
         sendRequest.mockResolvedValue({ body: 'ok' });
         const invoiceMessage = { invoiceField: [{ invoiceIdentificationField: { entityIdentificationField: 'INV-1' } }] };
-        const auth = { baseUrl: 'https://x/b2bservice', username: 'u', password: 'p', contractId: 'c', invoiceEndpoint: 'B2BInvoice' };
+        const auth = { props: { baseUrl: 'https://x/b2bservice', username: 'u', password: 'p', contractId: 'c', invoiceEndpoint: 'B2BInvoice' } };
         const ctx = { ...createMockActionContext({ propsValue: { invoiceMessage } }), auth };
         await uploadInvoice.run(ctx);
         expect(sendRequest).toHaveBeenCalledWith(expect.objectContaining({
