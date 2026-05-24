@@ -1,6 +1,6 @@
 import { createAction, InputPropertyMap, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
-import { jrnyAuth, JrnyAuth } from './auth';
+import { jrnyAuth } from './auth';
 import { jrnyClient } from './client';
 import { JrnyHttpMethod, JrnyOperation } from './operation-types';
 
@@ -26,10 +26,7 @@ export function buildJrnyAction(op: JrnyOperation) {
     description: op.description,
     props,
     async run(context) {
-      if (!isJrnyAuth(context.auth)) {
-        throw new Error('Invalid JRNY connection');
-      }
-      const connection = context.auth;
+      const connection = context.auth.props;
       const values = context.propsValue;
       let path = op.path.replace('{entityId}', encodeURIComponent(connection.entityId));
       for (const p of op.pathParams) {
@@ -60,10 +57,6 @@ function humanizeParam(name: string): string {
 
 function stringifyValue(value: unknown): string {
   return value === undefined || value === null ? '' : String(value);
-}
-
-function isJrnyAuth(value: unknown): value is JrnyAuth {
-  return typeof value === 'object' && value !== null && 'entityId' in value && 'baseUrl' in value && 'bearerToken' in value;
 }
 
 const METHODS: Record<JrnyHttpMethod, HttpMethod> = {

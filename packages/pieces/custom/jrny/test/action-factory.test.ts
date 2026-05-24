@@ -6,7 +6,7 @@ vi.mock('../src/lib/client', () => ({ jrnyClient: { request } }));
 import { createMockActionContext } from '@activepieces/pieces-framework';
 import { buildJrnyAction } from '../src/lib/action-factory';
 
-const auth = { baseUrl: 'https://jrny', entityId: 'ent-1', entityCode: 'ZA01', bearerToken: 'tok' };
+const auth = { props: { baseUrl: 'https://jrny', entityId: 'ent-1', entityCode: 'ZA01', bearerToken: 'tok' } };
 
 describe('buildJrnyAction', () => {
     test('GET with a path param + query: substitutes entityId + id and forwards set query params', async () => {
