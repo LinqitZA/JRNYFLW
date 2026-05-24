@@ -4,7 +4,7 @@ const description = `
 Connect to a JRNY ERP instance.
 
 You will need:
-1. **Base URL** — the JRNY API root, e.g. \`http://localhost:4200/api\` or \`https://erp.yourcompany.com/api\`.
+1. **Base URL** — the JRNY API host root (no path), e.g. \`http://dev.sideswipe.home:3000\` or \`https://erp.yourcompany.com\`.
 2. **Entity ID** — the UUID of the JRNY entity this connection is bound to. The bearer token is scoped to a single entity; cross-entity calls return 403.
 3. **Entity Code** — short code for the entity (e.g. \`ZA01\`). Used for display only — it is included in the connection name and run logs.
 4. **Bearer Token** — generated in JRNY by an administrator with the \`integration.manage_keys\` permission. Treat as a secret.
@@ -16,7 +16,7 @@ export const jrnyAuth = PieceAuth.CustomAuth({
   props: {
     baseUrl: Property.ShortText({
       displayName: 'Base URL',
-      description: 'JRNY API root, no trailing slash. Example: http://localhost:4200/api',
+      description: 'JRNY API host, no path and no trailing slash. Example: http://dev.sideswipe.home:3000',
       required: true,
     }),
     entityId: Property.ShortText({

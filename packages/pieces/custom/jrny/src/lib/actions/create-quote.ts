@@ -136,7 +136,7 @@ export const createQuote = createAction({
     const deliveryAddress = buildDeliveryAddress(p);
     if (deliveryAddress) body['deliveryAddress'] = deliveryAddress;
 
-    const path = `/v1/integration/entities/${encodeURIComponent(auth.entityId)}/quotations`;
+    const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/quotations`;
     return callJrny(auth, HttpMethod.POST, path, body);
   },
 });
