@@ -60,10 +60,12 @@ Internet ──HTTPS──> host nginx (devflw.jrny.co.za, TLS)
 ```
 
 ### Port allocation
-- **App:** `127.0.0.1:<APP_HOST_PORT>:80`. Proposed `3020`, to be confirmed by a
-  pre-deploy inventory on the VM (`ss -ltnp` + `docker ps`). Must be disjoint from
-  the ERP (3000, 3001, 5432, 5433, 5434, 6379, 6380, 6432, 9000, 9001, 5005) and
-  from any other listener.
+- **App:** `127.0.0.1:3020:80`. **Confirmed free** by the 2026-05-24 VM inventory.
+  Host ports already in use on the UAT VM (ERP `jrny-uat-*` stack): 3280 (shell),
+  3281 (api), 5005 (jrnybi-server), 5433 (postgres), 5434 (pg-replica), 5435
+  (jrnybi-postgres), 6380 (redis), 6381 (jrnybi-redis), 6433 (pgbouncer),
+  9000-9001 (rustfs). `3020` collides with none and sits clear of the ERP `328x`
+  web/api block.
 - **Postgres / Redis:** no `ports:` mapping at all (internal network only).
 - **Container names:** `jrnyflw-uat-app`, `jrnyflw-uat-postgres`, `jrnyflw-uat-redis`
   (distinct from both the dev `jrnyflw-dev-*` stack and the ERP `jrny-dev-*` stack).
@@ -141,10 +143,10 @@ Reverse-proxy server block for the host nginx:
 | `AP_REDIS_PORT` | `6379` (internal) |
 | `AP_QUEUE_MODE` | `REDIS` |
 | `AP_DB_TYPE` | `POSTGRES` |
-| `AP_DEV_PIECES` | `jrny,nucleus,shoprite,mapper,data-mapper` + core utilities used by UAT flows (baseline: `store,webhook,schedule,sftp,subflows,tables,manual-trigger,http,csv,date-helper,delay,forms` — tunable) |
+| `AP_DEV_PIECES` | `jrny,nucleus,shoprite,mapper,excel,data-mapper` (all first-party custom + data-mapper) + core utilities used by UAT flows (baseline: `store,webhook,schedule,sftp,subflows,tables,manual-trigger,http,csv,date-helper,delay,forms` — tunable) |
 | `AP_PIECES_SYNC_MODE` | `NONE` |
 | `AP_TELEMETRY_ENABLED` | `false` |
-| `APP_HOST_PORT` | `3020` (pending VM inventory) |
+| `APP_HOST_PORT` | `3020` (confirmed free on UAT VM, 2026-05-24) |
 | `AP_UAT_ADMIN_EMAIL` / `AP_UAT_ADMIN_PASSWORD` | consumed only by `seed-admin.sh` |
 
 `AP_WORKER_TOKEN` is auto-generated from `AP_JWT_SECRET` by `docker-entrypoint.sh`.
@@ -184,6 +186,6 @@ Reverse-proxy server block for the host nginx:
 
 ## 9. Open items to confirm at deploy time
 
-1. `APP_HOST_PORT` free on the VM (proposed `3020`).
+1. ~~`APP_HOST_PORT` free on the VM~~ — **resolved**: `3020` confirmed free (2026-05-24).
 2. Final `AP_DEV_PIECES` utility list for the flows UAT testers will build.
 3. SSH access + docker permissions on the UAT VM for the `save`/`load` step.
