@@ -34,6 +34,30 @@ export class JrnyApiError extends Error {
 const trimTrailingSlash = (url: string): string =>
   url.endsWith('/') ? url.slice(0, -1) : url;
 
+function joinUrl(base: string, path: string): string {
+  return `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
+}
+
+type JrnyRequest = {
+  auth: JrnyAuth;
+  method: HttpMethod;
+  path: string;
+  query?: Record<string, string>;
+  body?: unknown;
+};
+
+async function request<T>({ auth, method, path, query, body }: JrnyRequest): Promise<T> {
+  const response = await httpClient.sendRequest<T>({
+    method,
+    url: joinUrl(auth.baseUrl, path),
+    authentication: { type: AuthenticationType.BEARER_TOKEN, token: auth.bearerToken },
+    headers: { 'Content-Type': 'application/json' },
+    queryParams: query,
+    body,
+  });
+  return response.body;
+}
+
 export const callJrny = async <TResponse>(
   auth: JrnyAuth,
   method: HttpMethod,
@@ -87,3 +111,5 @@ const stringifyForLog = (value: unknown): string => {
     return String(value);
   }
 };
+
+export const jrnyClient = { callJrny, request, joinUrl };
