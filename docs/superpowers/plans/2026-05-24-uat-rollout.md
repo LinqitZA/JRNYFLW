@@ -306,6 +306,12 @@ Postgres/Redis interpolation values (`${AP_POSTGRES_*}`, `${APP_HOST_PORT}`) com
 - [ ] **Step 1: Create `docker-compose.uat.yml` with this exact content**
 
 ```yaml
+# Explicit project name so this stack is ALWAYS isolated from the dev stack
+# (docker-compose.jrnyflw.yml) that shares this directory. Without it, compose
+# infers the project name from the directory and the two stacks collide
+# (booting UAT would recreate/remove the jrnyflw-dev-* containers).
+name: jrnyflw-uat
+
 services:
   app:
     image: jrnyflw-uat:${UAT_IMAGE_TAG:-latest}
