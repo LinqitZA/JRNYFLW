@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build the UAT image locally, ship it to the UAT VM over SSH, bring up the stack, seed.
+# Build the UAT image locally and ship it + the deploy files to the UAT VM over SSH.
+# Does NOT start or seed the stack — run those on the VM yourself (commands are
+# printed at the end). Re-run this script any time to ship a new image build.
 # Usage:
 #   UAT_SSH=user@uat-host UAT_IMAGE_TAG=$(git rev-parse --short HEAD) scripts/uat/deploy.sh
 # Prerequisite: ${UAT_REMOTE_DIR}/.env.uat already exists on the VM (filled secrets).
@@ -23,10 +25,18 @@ scp docker-compose.uat.yml "${UAT_SSH}:${UAT_REMOTE_DIR}/"
 scp scripts/uat/seed-admin.sh "${UAT_SSH}:${UAT_REMOTE_DIR}/scripts/uat/"
 scp nginx/devflw.jrny.co.za.conf "${UAT_SSH}:${UAT_REMOTE_DIR}/nginx/"
 
-echo "==> Bringing up stack (expects ${UAT_REMOTE_DIR}/.env.uat on the VM)"
-ssh "${UAT_SSH}" "cd '${UAT_REMOTE_DIR}' && UAT_IMAGE_TAG='${UAT_IMAGE_TAG}' docker compose --env-file .env.uat -f docker-compose.uat.yml up -d"
+cat <<EOF
 
-echo "==> Seeding admin + locking signup"
-ssh "${UAT_SSH}" "cd '${UAT_REMOTE_DIR}' && set -a && . ./.env.uat && set +a && bash scripts/uat/seed-admin.sh"
+==> Image + files delivered to ${UAT_SSH}:${UAT_REMOTE_DIR}
+    Image tag: ${IMAGE}
 
-echo "==> Done. Verify at https://devflw.jrny.co.za"
+Next, run these ON THE UAT VM to start (and, on first deploy, seed) the stack:
+
+  cd ${UAT_REMOTE_DIR}
+  UAT_IMAGE_TAG=${UAT_IMAGE_TAG} docker compose --env-file .env.uat -f docker-compose.uat.yml up -d
+
+  # First deploy only — create the admin and lock open signup:
+  set -a && . ./.env.uat && set +a && bash scripts/uat/seed-admin.sh
+
+Then verify at https://devflw.jrny.co.za
+EOF
