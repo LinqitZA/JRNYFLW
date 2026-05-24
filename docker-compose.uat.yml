@@ -1,0 +1,60 @@
+services:
+  app:
+    image: jrnyflw-uat:${UAT_IMAGE_TAG:-latest}
+    container_name: jrnyflw-uat-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file: .env.uat
+    environment:
+      - AP_CONTAINER_TYPE=WORKER_AND_APP
+    ports:
+      - "127.0.0.1:${APP_HOST_PORT:-3020}:80"
+    volumes:
+      - jrnyflw_uat_cache:/usr/src/app/cache
+    networks:
+      - jrnyflw-uat
+
+  postgres:
+    image: pgvector/pgvector:0.8.0-pg14
+    container_name: jrnyflw-uat-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${AP_POSTGRES_DATABASE}
+      - POSTGRES_USER=${AP_POSTGRES_USERNAME}
+      - POSTGRES_PASSWORD=${AP_POSTGRES_PASSWORD}
+    volumes:
+      - jrnyflw_uat_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${AP_POSTGRES_USERNAME} -d ${AP_POSTGRES_DATABASE}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - jrnyflw-uat
+
+  redis:
+    image: redis:7.0.7
+    container_name: jrnyflw-uat-redis
+    restart: unless-stopped
+    volumes:
+      - jrnyflw_uat_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - jrnyflw-uat
+
+volumes:
+  jrnyflw_uat_pg_data:
+  jrnyflw_uat_redis_data:
+  jrnyflw_uat_cache:
+
+networks:
+  jrnyflw-uat:
+    name: jrnyflw-uat
