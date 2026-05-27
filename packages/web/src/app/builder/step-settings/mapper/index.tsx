@@ -115,6 +115,15 @@ export const MapperStepConfig = ({ readonly }: MapperStepConfigProps) => {
     selectedStep.name,
   );
 
+  // eslint-disable-next-line no-console
+  console.log('[mapper-debug]', {
+    selectedStepName: selectedStep.name,
+    triggerName: flowVersion.trigger?.name,
+    triggerType: flowVersion.trigger?.type,
+    priorStepsCount: priorSteps.length,
+    priorStepNames: priorSteps.map((s) => `${s.name} (${s.displayName})`),
+  });
+
   const sourceData: unknown = form.watch(SOURCE_DATA_FIELD);
   const sourceStepName = extractSourceStepName(sourceData);
   const sample = sourceStepName ? outputSampleData[sourceStepName] : undefined;
