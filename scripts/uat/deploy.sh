@@ -4,14 +4,12 @@ set -euo pipefail
 # Build the UAT image locally and ship it + the deploy files to the UAT VM over SSH.
 # Does NOT start or seed the stack — run those on the VM yourself (commands are
 # printed at the end). Re-run this script any time to ship a new image build.
-# Usage:
-#   UAT_SSH=user@uat-host UAT_IMAGE_TAG=$(git rev-parse --short HEAD) scripts/uat/deploy.sh
+# Usage: scripts/uat/deploy.sh
 # Prerequisite: ${UAT_REMOTE_DIR}/.env.uat already exists on the VM (filled secrets).
 
-UAT_SSH="${UAT_SSH:?set UAT_SSH=user@host}"
-UAT_IMAGE_TAG="${UAT_IMAGE_TAG:-latest}"
-UAT_REMOTE_DIR="${UAT_REMOTE_DIR:-jrnyflw-uat}"
-IMAGE="jrnyflw-uat:${UAT_IMAGE_TAG}"
+UAT_SSH="${UAT_SSH:-bbadmin@powerglide.linqit.io}"
+UAT_REMOTE_DIR="${UAT_REMOTE_DIR:-~/repo/jrnyflw}"
+IMAGE="jrnyflw-uat:latest"
 
 echo "==> Building ${IMAGE} locally"
 docker build -f Dockerfile.uat -t "${IMAGE}" .
@@ -33,7 +31,7 @@ cat <<EOF
 Next, run these ON THE UAT VM to start (and, on first deploy, seed) the stack:
 
   cd ${UAT_REMOTE_DIR}
-  UAT_IMAGE_TAG=${UAT_IMAGE_TAG} docker compose --env-file .env.uat -f docker-compose.uat.yml up -d
+  docker compose --env-file .env.uat -f docker-compose.uat.yml up -d
 
   # First deploy only — create the admin and lock open signup:
   set -a && . ./.env.uat && set +a && bash scripts/uat/seed-admin.sh
