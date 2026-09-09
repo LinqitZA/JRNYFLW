@@ -5,6 +5,13 @@ ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
+# redis-memory-server's postinstall compiles the latest stable Redis (and its
+# bundled modules) from source purely to warm a test-only binary cache. That
+# needs cmake/pkg-config we don't ship, and "latest stable" drifts under us.
+# The server is only ever constructed for AP_QUEUE_MODE=MEMORY, which no image
+# build or deployed stack uses.
+ENV REDISMS_DISABLE_POSTINSTALL=1
+
 # Install all system dependencies in a single layer with cache mounts
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
