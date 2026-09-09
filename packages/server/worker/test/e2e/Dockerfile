@@ -1,4 +1,4 @@
-FROM node:24.14.0-bullseye-slim
+FROM node:24.14.0-bookworm-slim
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \

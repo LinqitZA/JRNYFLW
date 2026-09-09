@@ -227,6 +227,7 @@ The dump is only restorable alongside the matching `AP_ENCRYPTION_KEY`.
 | Build killed around the `web` step | Out of RAM. Needs ~8 GB. |
 | App container restarts in a loop | `docker compose ... logs app` — usually a bad `AP_POSTGRES_PASSWORD` or a missing `AP_ENCRYPTION_KEY` in `.env.uat`. |
 | Builder loses live run updates / spinner hangs | nginx is missing the WebSocket upgrade headers — re-check step 7.3. |
+| `apt-get update` fails, exit 100, "Release file ... is expired" | The base image's Debian release reached end-of-life. Fixed by moving to `node:24.14.0-bookworm-slim` (Debian 12). Do **not** work around it with `Acquire::Check-Valid-Until "false"` — that pins the install to a distro receiving no security patches. |
 | `certbot` fails validation | DNS `A` record not resolving to this server yet, or port 80 blocked upstream. |
 | Compose recreated some other stack's containers | A second compose file in this directory without a top-level `name:`. `docker-compose.uat.yml` sets `name: jrnyflw-uat` for exactly this reason — never remove it. |
 
