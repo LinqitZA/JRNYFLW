@@ -134,6 +134,15 @@ set -a && . ./.env.uat && set +a && bash scripts/uat/seed-admin.sh
 
 Idempotent — safe to re-run; exits 0 if the owner already exists.
 
+The script does three things, because sign-up alone does not create a platform: it signs
+up (or signs in, if the admin already exists), then POSTs to `/api/v1/platforms/` to create
+the platform and its project, then locks registration. A partially seeded install — user
+created but no platform — is recovered automatically on re-run.
+
+The platform is named `JRNYFLW` unless you set `AP_UAT_PLATFORM_NAME` in `.env.uat`. It
+must match `SAFE_STRING_PATTERN` (`^[^./]+$`) — no dots or slashes, so a domain name is
+rejected.
+
 > **Caveat:** the script also POSTs `emailAuthEnabled=false` to "lock" open signup, but
 > that flag is a **no-op on Community edition** (`assertEmailAuthIsEnabled` returns early
 > for CE). Self-registration is instead gated by the invitation check
@@ -229,6 +238,7 @@ The dump is only restorable alongside the matching `AP_ENCRYPTION_KEY`.
 | Builder loses live run updates / spinner hangs | nginx is missing the WebSocket upgrade headers — re-check step 7.3. |
 | `apt-get update` fails, exit 100, "Release file ... is expired" | The base image's Debian release reached end-of-life. Fixed by moving to `node:24.14.0-bookworm-slim` (Debian 12). Do **not** work around it with `Acquire::Check-Valid-Until "false"` — that pins the install to a distro receiving no security patches. |
 | `bun install` fails on `redis-memory-server` postinstall (`cmake: not found`, `pkg-config: not found`) | Its postinstall compiles the latest stable Redis from source to warm a test-only cache. Suppressed by `REDISMS_DISABLE_POSTINSTALL=1`, set in the `base` stage of both Dockerfiles. Safe because the in-memory Redis is only used for `AP_QUEUE_MODE=MEMORY`, and the stack uses a real Redis container. |
+| `seed-admin.sh`: "could not parse token/platformId" | Old version of the script. Sign-up returns an ONBOARDING token with `platformId:null`; the platform is created by a separate `POST /api/v1/platforms/`. Pull the current script and re-run — it recovers a half-seeded install. |
 | `certbot` fails validation | DNS `A` record not resolving to this server yet, or port 80 blocked upstream. |
 | Compose recreated some other stack's containers | A second compose file in this directory without a top-level `name:`. `docker-compose.uat.yml` sets `name: jrnyflw-uat` for exactly this reason — never remove it. |
 
