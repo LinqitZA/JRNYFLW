@@ -61,7 +61,43 @@ async function call<T>(params: {
         queryParams: { ...(params.query ?? {}), GroupName: params.auth.groupName },
         body: params.body,
     });
+    throwIfResultSetError(response.body);
     return response.body;
 }
 
-export const nucleusClient = { joinUrl, isExpired, getToken, call };
+// Nucleus reports business failures as HTTP 200 with an error row, so without this a flow would carry on as if the call succeeded.
+function throwIfResultSetError(body: unknown): void {
+    if (typeof body !== 'object' || body === null || !('ResultSets' in body) || !Array.isArray(body.ResultSets)) {
+        return;
+    }
+    for (const resultSet of body.ResultSets) {
+        if (!Array.isArray(resultSet)) {
+            continue;
+        }
+        for (const row of resultSet) {
+            const message = errorMessageOf(row);
+            if (message !== undefined) {
+                throw new Error(`Nucleus error: ${message}`);
+            }
+        }
+    }
+}
+
+function errorMessageOf(row: unknown): string | undefined {
+    if (typeof row !== 'object' || row === null) {
+        return undefined;
+    }
+    for (const key of ERROR_KEYS) {
+        if (key in row) {
+            const value: unknown = Reflect.get(row, key);
+            if (typeof value === 'string' && value.trim() !== '') {
+                return value;
+            }
+        }
+    }
+    return undefined;
+}
+
+const ERROR_KEYS = ['Error', 'ErrorMessage'];
+
+export const nucleusClient = { joinUrl, isExpired, getToken, call, throwIfResultSetError };
