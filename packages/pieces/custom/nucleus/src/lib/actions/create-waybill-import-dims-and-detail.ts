@@ -17,9 +17,28 @@ export const createWaybillImportDimsAndDetail = createAction({
             required: true,
         }),
         itemCode: Property.ShortText({ displayName: 'Item Code', required: false }),
+        cartonsJson: Property.Json({
+            displayName: 'Cartons (JSON)',
+            description:
+                'The JRNY cartons array, e.g. the webhook\'s data.cartons. Maps barcode, lengthCm, widthCm, heightCm and grossWeightKg. Use this or Parcels, not both.',
+            required: false,
+        }),
+        itemsField: Property.StaticDropdown({
+            displayName: 'Items per Carton From',
+            description: 'Which JRNY carton field fills Nucleus "Items" when using Cartons (JSON).',
+            required: false,
+            defaultValue: 'unitsPacked',
+            options: {
+                options: [
+                    { label: 'Units packed (unitsPacked)', value: 'unitsPacked' },
+                    { label: 'Item count (itemCount)', value: 'itemCount' },
+                ],
+            },
+        }),
         parcels: Property.Array({
             displayName: 'Parcels',
-            required: true,
+            description: 'Enter parcels one by one. Use this or Cartons (JSON), not both.',
+            required: false,
             properties: {
                 parcelNo: Property.ShortText({
                     displayName: 'Parcel No',
@@ -36,7 +55,7 @@ export const createWaybillImportDimsAndDetail = createAction({
     },
     async run(context) {
         const p = context.propsValue;
-        const parcels = nucleusParcels.parseImportParcels(p.parcels ?? []);
+        const parcels = resolveParcels({ cartonsJson: p.cartonsJson, itemsField: p.itemsField, parcels: p.parcels });
         const query: Record<string, string> = {
             WaybillNo: p.waybillNo,
             ...nucleusParcels.packImportParcels(parcels),
@@ -53,3 +72,30 @@ export const createWaybillImportDimsAndDetail = createAction({
         });
     },
 });
+
+function resolveParcels({
+    cartonsJson,
+    itemsField,
+    parcels,
+}: {
+    cartonsJson: unknown;
+    itemsField: string | undefined;
+    parcels: unknown[] | undefined;
+}) {
+    const hasCartons = !isEmpty(cartonsJson);
+    const hasParcels = (parcels ?? []).length > 0;
+    if (hasCartons && hasParcels) {
+        throw new Error('Use either Cartons (JSON) or Parcels, not both');
+    }
+    if (hasCartons) {
+        return nucleusParcels.parseJrnyCartons({ value: cartonsJson, itemsField: itemsField === 'itemCount' ? 'itemCount' : 'unitsPacked' });
+    }
+    return nucleusParcels.parseImportParcels(parcels ?? []);
+}
+
+function isEmpty(value: unknown): boolean {
+    if (value === undefined || value === null || value === '') {
+        return true;
+    }
+    return typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0;
+}

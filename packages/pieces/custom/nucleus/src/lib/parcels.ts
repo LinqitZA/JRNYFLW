@@ -29,6 +29,28 @@ function parseImportParcels(rows: unknown[]): ImportParcel[] {
     });
 }
 
+function parseJrnyCartons({ value, itemsField }: { value: unknown; itemsField: JrnyItemsField }): ImportParcel[] {
+    const cartons = typeof value === 'string' ? parseJson(value) : value;
+    if (!Array.isArray(cartons)) {
+        throw new Error('Cartons (JSON) must be an array of JRNY cartons');
+    }
+    const rows = cartons.map((carton, index) => {
+        if (typeof carton !== 'object' || carton === null) {
+            throw new Error(`Carton ${index + 1} is not a valid carton`);
+        }
+        const record: Record<string, unknown> = { ...carton };
+        return {
+            parcelNo: record['barcode'],
+            items: record[itemsField],
+            length: record['lengthCm'],
+            width: record['widthCm'],
+            height: record['heightCm'],
+            kgs: record['grossWeightKg'],
+        };
+    });
+    return parseImportParcels(rows);
+}
+
 function packImportParcels(parcels: ImportParcel[]): Record<string, string> {
     if (parcels.length === 0) {
         throw new Error('At least one parcel is required');
@@ -51,6 +73,14 @@ function packImportParcels(parcels: ImportParcel[]): Record<string, string> {
     };
 }
 
+function parseJson(text: string): unknown {
+    try {
+        return JSON.parse(text);
+    } catch {
+        throw new Error('Cartons (JSON) is not valid JSON');
+    }
+}
+
 function toNumber({ value, field, index }: { value: unknown; field: string; index: number }): number {
     const num = typeof value === 'number' ? value : typeof value === 'string' && value.trim() !== '' ? Number(value) : NaN;
     if (!Number.isFinite(num)) {
@@ -59,7 +89,8 @@ function toNumber({ value, field, index }: { value: unknown; field: string; inde
     return num;
 }
 
-export const nucleusParcels = { packParcels, parseImportParcels, packImportParcels };
+export const nucleusParcels = { packParcels, parseImportParcels, parseJrnyCartons, packImportParcels };
 
 type Parcel = { parcelNo: string; items: number; length: number; width: number; height: number; weight: number };
+type JrnyItemsField = 'unitsPacked' | 'itemCount';
 type ImportParcel = { parcelNo: string | undefined; items: number; length: number; width: number; height: number; kgs: number };

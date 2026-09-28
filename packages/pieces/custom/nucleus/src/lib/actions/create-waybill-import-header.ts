@@ -11,7 +11,11 @@ export const createWaybillImportHeader = createAction({
         'Stage a waybill header for track-and-trace (CreateWaybillImportHeader). Follow with "Add Staged Waybill Parcels (Import Dims & Detail)" for the same waybill number.',
     props: {
         waybillNo: Property.ShortText({ displayName: 'Waybill Number', required: true }),
-        waybillDate: Property.ShortText({ displayName: 'Waybill Date (YYYY/MM/DD)', required: true }),
+        waybillDate: Property.ShortText({
+            displayName: 'Waybill Date',
+            description: 'YYYY/MM/DD. YYYY-MM-DD and ISO timestamps are converted automatically.',
+            required: true,
+        }),
         servCode: Property.ShortText({
             displayName: 'Service Code',
             description: 'From Get Service Codes (e.g. ECO, ONX).',
@@ -67,10 +71,10 @@ export const createWaybillImportHeader = createAction({
         const p = context.propsValue;
         const query: Record<string, string> = {
             WaybillNo: p.waybillNo,
-            WaybillNoDate: p.waybillDate,
+            WaybillNoDate: toNucleusDate(p.waybillDate),
             Serv_Code: p.servCode,
             NoParcels: String(p.noParcels),
-            Weight: String(p.weight),
+            Weight: toNucleusDecimal(p.weight),
             AccName: p.accName,
             Acc_TelNo: p.accTelNo,
             AccNum: p.accNum,
@@ -108,6 +112,16 @@ export const createWaybillImportHeader = createAction({
         });
     },
 });
+
+// Nucleus parses decimals with the server's South African culture, so "1.5" fails with "Failed to convert parameter value from a String to a Double".
+function toNucleusDecimal(value: number): string {
+    return String(value).replace('.', ',');
+}
+
+function toNucleusDate(value: string): string {
+    const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value.trim());
+    return match ? `${match[1]}/${match[2]}/${match[3]}` : value.trim();
+}
 
 // stp_CreateWaybillImportHeader declares these "optional" fields without defaults, so omitting one fails with "expects parameter ... which was not supplied".
 function always(key: string, value: string | undefined): Record<string, string> {
