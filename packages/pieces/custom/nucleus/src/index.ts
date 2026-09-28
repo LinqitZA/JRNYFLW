@@ -8,6 +8,7 @@ import { getTrackingByAccnum } from './lib/actions/get-tracking-by-accnum';
 import { getPodBulk } from './lib/actions/get-pod-bulk';
 import { getLabel } from './lib/actions/get-label';
 import { getHubCode } from './lib/actions/get-hub-code';
+import { findHubCodeForAddress } from './lib/actions/find-hub-code-for-address';
 import { getTracking } from './lib/actions/get-tracking';
 import { createTracking } from './lib/actions/create-tracking';
 import { getPodBulkExtra } from './lib/actions/get-pod-bulk-extra';
@@ -24,6 +25,7 @@ export const nucleus = createPiece({
     categories: [PieceCategory.SALES_AND_CRM],
     auth: nucleusAuth,
     actions: [
+        findHubCodeForAddress,
         getHubCode,
         createWaybill,
         createWaybillImportHeader,
