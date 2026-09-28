@@ -19,6 +19,20 @@ function createUpdateTriggerOperation(trigger: FlowTrigger): FlowOperationReques
     }
 }
 
+// UPDATE_TRIGGER keeps the replaced trigger's sample, which is empty on a fresh draft, so a draft made from a published version would otherwise lose its trigger sample.
+function createRestoreTriggerSampleDataOperations(trigger: FlowTrigger): FlowOperationRequest[] {
+    if (trigger.type !== FlowTriggerType.PIECE || isNil(trigger.settings.sampleData?.sampleDataFileId)) {
+        return []
+    }
+    return [{
+        type: FlowOperationType.UPDATE_SAMPLE_DATA_INFO,
+        request: {
+            stepName: trigger.name,
+            sampleDataSettings: trigger.settings.sampleData,
+        },
+    }]
+}
+
 function createChangeNameOperation(displayName: string): FlowOperationRequest {
     return {
         type: FlowOperationType.CHANGE_NAME,
@@ -142,6 +156,7 @@ function _importFlow(flowVersion: FlowVersion, request: ImportFlowRequest): Flow
         createChangeNameOperation(request.displayName),
         ...deleteOperations,
         createUpdateTriggerOperation(request.trigger),
+        ...createRestoreTriggerSampleDataOperations(request.trigger),
         ...importOperations,
         ..._getImportOperationsForNotes(flowVersion, request),
     ]
