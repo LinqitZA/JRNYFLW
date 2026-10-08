@@ -96,8 +96,8 @@ describe('packImportParcels', () => {
 });
 
 const JRNY_CARTONS = [
-    { barcode: 'CTN-AON-000032', widthCm: 10, heightCm: 10, lengthCm: 10, cartonSeq: 1, itemCount: 1, unitsPacked: 2, tareWeightKg: 0, grossWeightKg: 1, volumetricWeightKg: 0.2 },
-    { barcode: 'CTN-AON-000033', widthCm: 12, heightCm: 10, lengthCm: 15, cartonSeq: 2, itemCount: 1, unitsPacked: 2, tareWeightKg: 0, grossWeightKg: 0.5, volumetricWeightKg: 0.36 },
+    { barcode: 'CTN-AON-000032', widthCm: 10, heightCm: 10, lengthCm: 10, cartonSeq: 1, itemCount: 3, unitsPacked: 5, tareWeightKg: 0, grossWeightKg: 1, volumetricWeightKg: 0.2 },
+    { barcode: 'CTN-AON-000033', widthCm: 12, heightCm: 10, lengthCm: 15, cartonSeq: 2, itemCount: 4, unitsPacked: 6, tareWeightKg: 0, grossWeightKg: 0.5, volumetricWeightKg: 0.36 },
 ];
 
 describe('JRNY webhook inputs', () => {
@@ -111,20 +111,33 @@ describe('JRNY webhook inputs', () => {
         expect(lastRequest().queryParams.WaybillNoDate).toBe('2026/09/28');
     });
 
-    test('dims maps a JRNY cartons array, using unitsPacked for Items by default', async () => {
+    test('dims maps a JRNY cartons array, sending 1 item per carton by default', async () => {
         sendRequest.mockResolvedValueOnce({ body: { access_token: 'TOK', expires_in: 3599 } });
         sendRequest.mockResolvedValueOnce({ body: 'OK' });
         const ctx = { ...createMockActionContext({ propsValue: { waybillNo: 'W1', cartonsJson: JRNY_CARTONS } }), auth };
         await createWaybillImportDimsAndDetail.run(ctx);
         expect(lastRequest().queryParams).toEqual(expect.objectContaining({
-            ParcelNos: 'CTN-AON-000032,CTN-AON-000033', PcsCount: '2', Items: '2,2',
+            ParcelNos: 'CTN-AON-000032,CTN-AON-000033', PcsCount: '2', Items: '1,1',
             Length: '10,15', Width: '10,12', Height: '10,10', Kgs: '1,0.5',
         }));
     });
 
     test('dims can take Items from itemCount and accepts the cartons as a JSON string', () => {
         const parcels = nucleusParcels.parseJrnyCartons({ value: JSON.stringify(JRNY_CARTONS), itemsField: 'itemCount' });
-        expect(nucleusParcels.packImportParcels(parcels).Items).toBe('1,1');
+        expect(nucleusParcels.packImportParcels(parcels).Items).toBe('3,4');
+    });
+
+    test('dims can take Items from unitsPacked', () => {
+        const parcels = nucleusParcels.parseJrnyCartons({ value: JRNY_CARTONS, itemsField: 'unitsPacked' });
+        expect(nucleusParcels.packImportParcels(parcels).Items).toBe('5,6');
+    });
+
+    test('dims sends 1 item per carton even when the carton has no item fields', () => {
+        const parcels = nucleusParcels.parseJrnyCartons({
+            value: [{ barcode: 'C1', lengthCm: 1, widthCm: 1, heightCm: 1, grossWeightKg: 1 }],
+            itemsField: 'one',
+        });
+        expect(nucleusParcels.packImportParcels(parcels).Items).toBe('1');
     });
 
     test('dims rejects both Cartons (JSON) and Parcels at once', async () => {

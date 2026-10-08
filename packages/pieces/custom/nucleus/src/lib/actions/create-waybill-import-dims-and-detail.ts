@@ -25,11 +25,12 @@ export const createWaybillImportDimsAndDetail = createAction({
         }),
         itemsField: Property.StaticDropdown({
             displayName: 'Items per Carton From',
-            description: 'Which JRNY carton field fills Nucleus "Items" when using Cartons (JSON).',
+            description: 'What fills Nucleus "Items" when using Cartons (JSON). Nucleus expects 1 per carton.',
             required: false,
-            defaultValue: 'unitsPacked',
+            defaultValue: 'one',
             options: {
                 options: [
+                    { label: 'Always 1 (one per carton)', value: 'one' },
                     { label: 'Units packed (unitsPacked)', value: 'unitsPacked' },
                     { label: 'Item count (itemCount)', value: 'itemCount' },
                 ],
@@ -88,9 +89,13 @@ function resolveParcels({
         throw new Error('Use either Cartons (JSON) or Parcels, not both');
     }
     if (hasCartons) {
-        return nucleusParcels.parseJrnyCartons({ value: cartonsJson, itemsField: itemsField === 'itemCount' ? 'itemCount' : 'unitsPacked' });
+        return nucleusParcels.parseJrnyCartons({ value: cartonsJson, itemsField: toItemsField(itemsField) });
     }
     return nucleusParcels.parseImportParcels(parcels ?? []);
+}
+
+function toItemsField(value: string | undefined): 'one' | 'unitsPacked' | 'itemCount' {
+    return value === 'unitsPacked' || value === 'itemCount' ? value : 'one';
 }
 
 function isEmpty(value: unknown): boolean {

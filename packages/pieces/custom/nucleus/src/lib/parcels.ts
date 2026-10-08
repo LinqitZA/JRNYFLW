@@ -41,7 +41,7 @@ function parseJrnyCartons({ value, itemsField }: { value: unknown; itemsField: J
         const record: Record<string, unknown> = { ...carton };
         return {
             parcelNo: record['barcode'],
-            items: record[itemsField],
+            items: itemsField === 'one' ? 1 : record[itemsField],
             length: record['lengthCm'],
             width: record['widthCm'],
             height: record['heightCm'],
@@ -92,5 +92,5 @@ function toNumber({ value, field, index }: { value: unknown; field: string; inde
 export const nucleusParcels = { packParcels, parseImportParcels, parseJrnyCartons, packImportParcels };
 
 type Parcel = { parcelNo: string; items: number; length: number; width: number; height: number; weight: number };
-type JrnyItemsField = 'unitsPacked' | 'itemCount';
+type JrnyItemsField = 'one' | 'unitsPacked' | 'itemCount';
 type ImportParcel = { parcelNo: string | undefined; items: number; length: number; width: number; height: number; kgs: number };
