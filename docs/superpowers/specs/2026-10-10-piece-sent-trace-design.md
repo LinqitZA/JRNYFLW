@@ -143,10 +143,11 @@ The step name in `errorMessage` is written by hand per branch, so the shipping s
 ## Migration and rollout (PROD courier flow only)
 
 1. The user exports the PROD courier flow JSON.
-2. I rewrite every reference to an in-scope step from `{{step_N.X}}` to `{{step_N.output.X}}`, bump the step piece versions to 0.1.0, and add the Part 3 routers and failure branches. The result is reviewed before import.
+2. The migration tool rewrites every reference to an in-scope step from `{{step_N.X}}` to `{{step_N.output.X}}` and bumps those steps to 0.1.0. The output is reviewed before import.
 3. Before deploy, take the PROD DB backup (runbook command), then deploy at a quiet time.
 4. Import the rewritten flow as the draft and publish it straight away.
 5. Any run that fails in the gap between deploy and publish is retried with "From failed step".
+6. Then add the Part 3 routers and failure branches in the draft, re-test the steps, and publish again. Doing this after the first publish keeps the window where the live flow is broken as short as possible.
 
 ## Risks
 
