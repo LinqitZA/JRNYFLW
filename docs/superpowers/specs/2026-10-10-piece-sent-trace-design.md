@@ -51,9 +51,9 @@ Every in-scope action returns a wrapper instead of the raw API response:
 Rules:
 
 - `sent` lists every HTTP call the action made, in order, including the Nucleus `POST /token` login when a fresh token was needed. A cached token means no login entry.
-- **Redaction.** These values are always replaced with `"[redacted]"`: the `Authorization` header (all pieces), Shoprite's `Authentication` header, the Nucleus `password` in the token request body, and `access_token` in the token response. Connection secrets never appear anywhere in a step result. `GroupName`, `ContractID` and `UIUser` are not secrets and stay visible, since they are often what's wrong.
+- **Redaction.** These values are always replaced with `"[redacted]"`: the `Authorization` header (all pieces), Shoprite's `Authentication` header, the Nucleus `password` in the token request body, and `access_token` in the token response. Connection secrets never appear anywhere in a step result. As a second guard, each action passes its connection secrets to the helper, which replaces any occurrence of them (4+ characters) in `sent` and in error messages. This matters because `HttpError` messages embed the request body, so a failed Nucleus `/token` call would otherwise put the password in the step's error. `GroupName`, `ContractID` and `UIUser` are not secrets and stay visible, since they are often what's wrong.
 - **Size.** A request body over 50 KB is cut to its first 50 KB followed by `…[truncated, N KB]`. Response bodies are not copied into `sent`; the response is already `output`.
-- `status` is the HTTP status, including error statuses. `status` is `null` and `error` is set on the `SentCall` when no response came back (timeout, DNS, connection reset).
+- `status` is the HTTP status, including error statuses. Network errors and timeouts reach us from `@activepieces/pieces-common` as an `HttpError` with status 500 and no response body, so they are recorded that way. `status` is `null` and `error` is set on the `SentCall` only when the call threw something other than an `HttpError`.
 - **When the step stops the flow** (the default, see Part 3), the thrown error message keeps its current text and gains a final line `Sent: <JSON of sent>`, so run history shows the calls on failed steps too.
 
 This is a breaking change for any flow that references a step's fields: `{{step_3.waybillNo}}` becomes `{{step_3.output.waybillNo}}`. Each piece goes to version 0.1.0.
@@ -62,11 +62,12 @@ This is a breaking change for any flow that references a step's fields: `{{step_
 
 ### Shared helper: `@jrnyflw/piece-trace`
 
-A small workspace package at `packages/pieces/custom/trace`. It is a plain library, not a piece, so it is not listed in `AP_DEV_PIECES`. Each of the three pieces adds it as a `workspace:*` dependency, the same way they depend on `@activepieces/pieces-common`.
+A small workspace package at `packages/pieces/custom/trace`. It is a plain library, not a piece, so it is not listed in `AP_DEV_PIECES`. Each of the three pieces adds it as a `workspace:*` dependency, the same way they depend on `@activepieces/pieces-common`. Its build does not copy `package.json` into `dist`, so the dev-piece loader (which scans `dist/package.json` files by name) never mistakes it for a piece. Piece tests resolve it to its TypeScript source through a vitest alias, so the existing `vi.mock('@activepieces/pieces-common')` mocks also apply inside the helper.
 
 ```ts
 const result = await pieceTrace.run({
     onFailure: context.propsValue.onFailure,
+    secrets: nucleusClient.secretsOf(auth),
     work: async (trace) => {
         const res = await trace.send(request); // replaces httpClient.sendRequest
         return res.body;
@@ -76,7 +77,7 @@ const result = await pieceTrace.run({
 
 - `trace.send(request)` calls `httpClient.sendRequest`, records a redacted `SentCall`, and rethrows any error after recording it (including `HttpError` status and body).
 - `pieceTrace.run({ onFailure, work })` returns `{ ok: true, sent, output }` on success. On failure it either throws the error with the `Sent:` line appended, or returns the Part 3 failure result.
-- Redaction lives in the helper: a fixed list of header names, plus a per-call `redactBody` option the Nucleus token request uses.
+- Redaction lives in the helper: a fixed list of header names (`Authorization`, `Authentication`, and any `authentication` option on the request), the secrets scrub above, plus a per-call `bodyForTrace` option the Nucleus token request uses to record its form body with the password replaced.
 - The helper exports `pieceTrace.onFailureProperty()` so every action declares the Part 3 setting the same way.
 
 **Packaging check (first task of the plan).** Confirm that a dev piece in the UAT image resolves `@jrnyflw/piece-trace` at runtime, and that the build filter `./packages/pieces/custom/*` builds `trace` before the pieces. If it can't be made to resolve cleanly, fall back to copying the helper into each piece as `src/lib/trace.ts`, with the shared tests duplicated. The design is otherwise unchanged.
