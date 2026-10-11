@@ -8006,7 +8006,7 @@
     },
     "packages/pieces/custom/jrny": {
       "name": "@jrnyflw/jrny",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": {
         "@activepieces/pieces-common": "workspace:*",
         "@activepieces/pieces-framework": "workspace:*",
@@ -8029,7 +8029,7 @@
     },
     "packages/pieces/custom/nucleus": {
       "name": "@jrnyflw/nucleus",
-      "version": "0.0.1",
+      "version": "0.0.5",
       "dependencies": {
         "@activepieces/pieces-common": "workspace:*",
         "@activepieces/pieces-framework": "workspace:*",
@@ -8047,6 +8047,18 @@
         "@activepieces/pieces-common": "workspace:*",
         "@activepieces/pieces-framework": "workspace:*",
         "@activepieces/shared": "workspace:*",
+        "tslib": "2.6.2",
+      },
+      "devDependencies": {
+        "vitest": "3.0.8",
+      },
+    },
+    "packages/pieces/custom/trace": {
+      "name": "@jrnyflw/piece-trace",
+      "version": "0.1.0",
+      "dependencies": {
+        "@activepieces/pieces-common": "workspace:*",
+        "@activepieces/pieces-framework": "workspace:*",
         "tslib": "2.6.2",
       },
       "devDependencies": {
@@ -8290,7 +8302,7 @@
     },
     "packages/shared": {
       "name": "@activepieces/shared",
-      "version": "0.72.0",
+      "version": "0.72.1",
       "dependencies": {
         "dayjs": "1.11.9",
         "deepmerge-ts": "7.1.0",
@@ -10637,6 +10649,8 @@
     "@jrnyflw/mapper": ["@jrnyflw/mapper@workspace:packages/pieces/custom/mapper"],
 
     "@jrnyflw/nucleus": ["@jrnyflw/nucleus@workspace:packages/pieces/custom/nucleus"],
+
+    "@jrnyflw/piece-trace": ["@jrnyflw/piece-trace@workspace:packages/pieces/custom/trace"],
 
     "@jrnyflw/shoprite": ["@jrnyflw/shoprite@workspace:packages/pieces/custom/shoprite"],
 

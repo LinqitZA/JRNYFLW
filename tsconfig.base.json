@@ -1400,6 +1400,9 @@
       "@jrnyflw/excel": [
         "packages/pieces/custom/excel/src/index.ts"
       ],
+      "@jrnyflw/piece-trace": [
+        "packages/pieces/custom/trace/src/index.ts"
+      ],
       "@jrnyflw/jrny": [
         "packages/pieces/custom/jrny/src/index.ts"
       ],
