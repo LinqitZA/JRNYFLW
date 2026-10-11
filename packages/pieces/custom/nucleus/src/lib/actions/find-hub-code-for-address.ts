@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 import { nucleusHubCodes } from '../hub-codes';
 
 export const findHubCodeForAddress = createAction({
@@ -19,15 +20,22 @@ export const findHubCodeForAddress = createAction({
             description: 'Used to narrow down matches that span more than one hub.',
             required: false,
         }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
         const auth = context.auth.props;
-        return nucleusHubCodes.resolveHubCode({
-            address: context.propsValue,
-            lookup: async (query) =>
-                nucleusHubCodes.parseHubRows(
-                    await nucleusClient.call({ auth, store: context.store, method: HttpMethod.GET, path: 'GetHubCode', query }),
-                ),
+        const { onFailure, ...address } = context.propsValue;
+        return pieceTrace.run({
+            onFailure,
+            secrets: nucleusClient.secretsOf(auth),
+            work: async (trace) =>
+                nucleusHubCodes.resolveHubCode({
+                    address,
+                    lookup: async (query) =>
+                        nucleusHubCodes.parseHubRows(
+                            await nucleusClient.call({ trace, auth, store: context.store, method: HttpMethod.GET, path: 'GetHubCode', query }),
+                        ),
+                }),
         });
     },
 });

@@ -35,7 +35,7 @@ describe('getHubCode', () => {
         const result = await getHubCode.run(ctx);
         expect(lastRequest().url).toBe('https://api/GetHubCode');
         expect(lastRequest().queryParams).toEqual({ Suburb: 'Airlie', GroupName: 'G' });
-        expect(result).toEqual({ ResultSets: [[{ HubCode: 'CPT', Suburb: 'AIRLIE' }]] });
+        expect(result.output).toEqual({ ResultSets: [[{ HubCode: 'CPT', Suburb: 'AIRLIE' }]] });
     });
 
     test('rejects a lookup with no filters', async () => {

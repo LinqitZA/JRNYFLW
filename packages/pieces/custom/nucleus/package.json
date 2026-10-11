@@ -1,6 +1,6 @@
 {
   "name": "@jrnyflw/nucleus",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "scripts": {
@@ -12,6 +12,7 @@
     "@activepieces/pieces-common": "workspace:*",
     "@activepieces/pieces-framework": "workspace:*",
     "@activepieces/shared": "workspace:*",
+    "@jrnyflw/piece-trace": "workspace:*",
     "tslib": "2.6.2"
   },
   "devDependencies": {

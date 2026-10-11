@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 import { nucleusParcels } from '../parcels';
 
 export const createWaybillImportDimsAndDetail = createAction({
@@ -53,23 +54,25 @@ export const createWaybillImportDimsAndDetail = createAction({
                 kgs: Property.Number({ displayName: 'Weight (kg)', required: true }),
             },
         }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
+        const auth = context.auth.props;
         const p = context.propsValue;
-        const parcels = resolveParcels({ cartonsJson: p.cartonsJson, itemsField: p.itemsField, parcels: p.parcels });
-        const query: Record<string, string> = {
-            WaybillNo: p.waybillNo,
-            ...nucleusParcels.packImportParcels(parcels),
-            ItemCode: p.itemCode ?? '',
-            FileName: '',
-            Status: '',
-        };
-        return nucleusClient.call({
-            auth: context.auth.props,
-            store: context.store,
-            method: HttpMethod.POST,
-            path: 'CreateWaybillImportDimsAndDetail',
-            query,
+        return pieceTrace.run({
+            onFailure: p.onFailure,
+            secrets: nucleusClient.secretsOf(auth),
+            work: async (trace) => {
+                const parcels = resolveParcels({ cartonsJson: p.cartonsJson, itemsField: p.itemsField, parcels: p.parcels });
+                const query: Record<string, string> = {
+                    WaybillNo: p.waybillNo,
+                    ...nucleusParcels.packImportParcels(parcels),
+                    ItemCode: p.itemCode ?? '',
+                    FileName: '',
+                    Status: '',
+                };
+                return nucleusClient.call({ trace, auth, store: context.store, method: HttpMethod.POST, path: 'CreateWaybillImportDimsAndDetail', query });
+            },
         });
     },
 });

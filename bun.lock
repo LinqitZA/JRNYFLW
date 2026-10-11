@@ -8029,11 +8029,12 @@
     },
     "packages/pieces/custom/nucleus": {
       "name": "@jrnyflw/nucleus",
-      "version": "0.0.5",
+      "version": "0.1.0",
       "dependencies": {
         "@activepieces/pieces-common": "workspace:*",
         "@activepieces/pieces-framework": "workspace:*",
         "@activepieces/shared": "workspace:*",
+        "@jrnyflw/piece-trace": "workspace:*",
         "tslib": "2.6.2",
       },
       "devDependencies": {

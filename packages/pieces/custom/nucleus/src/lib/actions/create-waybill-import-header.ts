@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const createWaybillImportHeader = createAction({
     auth: nucleusAuth,
@@ -66,49 +67,51 @@ export const createWaybillImportHeader = createAction({
         carrier: Property.ShortText({ displayName: 'Carrier', required: false }),
         accNum2: Property.ShortText({ displayName: 'Account Number 2', required: false }),
         filename: Property.ShortText({ displayName: 'Filename', required: false }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
+        const auth = context.auth.props;
         const p = context.propsValue;
-        const query: Record<string, string> = {
-            WaybillNo: p.waybillNo,
-            WaybillNoDate: toNucleusDate(p.waybillDate),
-            Serv_Code: p.servCode,
-            NoParcels: String(p.noParcels),
-            Weight: toNucleusDecimal(p.weight),
-            AccName: p.accName,
-            Acc_TelNo: p.accTelNo,
-            AccNum: p.accNum,
-            Orig_Code: p.origCode,
-            Acc_Address01: p.accAddress1,
-            Acc_Address02: p.accAddress2,
-            Acc_Address03: p.accAddress3,
-            Acc_Address04: p.accAddress4,
-            Acc_PostalCode: p.accPostalCode,
-            Dest_Name: p.destName,
-            Contact_Name: p.contactName,
-            Contact_TelNo: p.contactTelNo,
-            Dest_Code: p.destCode,
-            Dest_Address01: p.destAddress1,
-            Dest_Address02: p.destAddress2,
-            Dest_Address03: p.destAddress3,
-            Dest_Address04: p.destAddress4,
-            Dest_PostalCode: p.destPostalCode,
-            ...always('Dest_AccNum', p.destAccNum),
-            ...always('CustomerPONumber', p.customerPONumber),
-            ...always('Reference', p.reference),
-            ...always('Instruct', p.instruct),
-            ...always('Cost_Centre', p.costCentre),
-            ...always('Route_Code', p.routeCode),
-            ...always('Carrier', p.carrier),
-            ...always('AccNum2', p.accNum2),
-            ...always('Filename', p.filename),
-        };
-        return nucleusClient.call({
-            auth: context.auth.props,
-            store: context.store,
-            method: HttpMethod.POST,
-            path: 'CreateWaybillImportHeader',
-            query,
+        return pieceTrace.run({
+            onFailure: p.onFailure,
+            secrets: nucleusClient.secretsOf(auth),
+            work: async (trace) => {
+                const query: Record<string, string> = {
+                    WaybillNo: p.waybillNo,
+                    WaybillNoDate: toNucleusDate(p.waybillDate),
+                    Serv_Code: p.servCode,
+                    NoParcels: String(p.noParcels),
+                    Weight: toNucleusDecimal(p.weight),
+                    AccName: p.accName,
+                    Acc_TelNo: p.accTelNo,
+                    AccNum: p.accNum,
+                    Orig_Code: p.origCode,
+                    Acc_Address01: p.accAddress1,
+                    Acc_Address02: p.accAddress2,
+                    Acc_Address03: p.accAddress3,
+                    Acc_Address04: p.accAddress4,
+                    Acc_PostalCode: p.accPostalCode,
+                    Dest_Name: p.destName,
+                    Contact_Name: p.contactName,
+                    Contact_TelNo: p.contactTelNo,
+                    Dest_Code: p.destCode,
+                    Dest_Address01: p.destAddress1,
+                    Dest_Address02: p.destAddress2,
+                    Dest_Address03: p.destAddress3,
+                    Dest_Address04: p.destAddress4,
+                    Dest_PostalCode: p.destPostalCode,
+                    ...always('Dest_AccNum', p.destAccNum),
+                    ...always('CustomerPONumber', p.customerPONumber),
+                    ...always('Reference', p.reference),
+                    ...always('Instruct', p.instruct),
+                    ...always('Cost_Centre', p.costCentre),
+                    ...always('Route_Code', p.routeCode),
+                    ...always('Carrier', p.carrier),
+                    ...always('AccNum2', p.accNum2),
+                    ...always('Filename', p.filename),
+                };
+                return nucleusClient.call({ trace, auth, store: context.store, method: HttpMethod.POST, path: 'CreateWaybillImportHeader', query });
+            },
         });
     },
 });

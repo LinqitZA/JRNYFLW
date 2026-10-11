@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 import { nucleusParcels } from '../parcels';
 
 export const createWaybill = createAction({
@@ -45,39 +46,46 @@ export const createWaybill = createAction({
                 weight: Property.Number({ displayName: 'Weight', required: true }),
             },
         }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
         const auth = context.auth.props;
         const p = context.propsValue;
-        const parcels = (p.parcels ?? []) as Array<{ parcelNo: string; items: number; length: number; width: number; height: number; weight: number }>;
-        const packed = nucleusParcels.packParcels(parcels);
-        const query: Record<string, string> = {
-            WAYBILL: p.waybill,
-            DATEWAY: p.dateWay,
-            BRANCH: p.branch,
-            ACCNUM: p.accNum,
-            SERV_C: p.servC,
-            CUSTNAME: p.custName,
-            SHIPNAME: p.shipName,
-            CONSIGNAME: p.consigName,
-            ...packed,
-            ...spread('SHIPTELNO', p.shipTel),
-            ...spread('SHIPADRES1', p.shipAddr1),
-            ...spread('SHIPADRES2', p.shipAddr2),
-            ...spread('SHIPADRES3', p.shipAddr3),
-            ...spread('SHIPADRES4', p.shipAddr4),
-            ...spread('SENDAREA', p.sendArea),
-            ...spread('CONNAME', p.conName),
-            ...spread('CONTELNO', p.conTel),
-            ...spread('CONADDR1', p.conAddr1),
-            ...spread('CONADDR2', p.conAddr2),
-            ...spread('CONADDR3', p.conAddr3),
-            ...spread('CONADDR4', p.conAddr4),
-            ...spread('DESTAREA', p.destArea),
-            ...spread('REFNUM', p.reference),
-            ...spread('MASSKG', p.massKg),
-        };
-        return nucleusClient.call({ auth, store: context.store, method: HttpMethod.POST, path: 'CreateWaybill_Inhouse', query });
+        return pieceTrace.run({
+            onFailure: p.onFailure,
+            secrets: nucleusClient.secretsOf(auth),
+            work: async (trace) => {
+                const parcels = (p.parcels ?? []) as Array<{ parcelNo: string; items: number; length: number; width: number; height: number; weight: number }>;
+                const packed = nucleusParcels.packParcels(parcels);
+                const query: Record<string, string> = {
+                    WAYBILL: p.waybill,
+                    DATEWAY: p.dateWay,
+                    BRANCH: p.branch,
+                    ACCNUM: p.accNum,
+                    SERV_C: p.servC,
+                    CUSTNAME: p.custName,
+                    SHIPNAME: p.shipName,
+                    CONSIGNAME: p.consigName,
+                    ...packed,
+                    ...spread('SHIPTELNO', p.shipTel),
+                    ...spread('SHIPADRES1', p.shipAddr1),
+                    ...spread('SHIPADRES2', p.shipAddr2),
+                    ...spread('SHIPADRES3', p.shipAddr3),
+                    ...spread('SHIPADRES4', p.shipAddr4),
+                    ...spread('SENDAREA', p.sendArea),
+                    ...spread('CONNAME', p.conName),
+                    ...spread('CONTELNO', p.conTel),
+                    ...spread('CONADDR1', p.conAddr1),
+                    ...spread('CONADDR2', p.conAddr2),
+                    ...spread('CONADDR3', p.conAddr3),
+                    ...spread('CONADDR4', p.conAddr4),
+                    ...spread('DESTAREA', p.destArea),
+                    ...spread('REFNUM', p.reference),
+                    ...spread('MASSKG', p.massKg),
+                };
+                return nucleusClient.call({ trace, auth, store: context.store, method: HttpMethod.POST, path: 'CreateWaybill_Inhouse', query });
+            },
+        });
     },
 });
 

@@ -22,6 +22,6 @@ describe('getPodBulk', () => {
         expect(lastCall.url).toBe('https://api/GetPODInformation_Bulk');
         expect(lastCall.queryParams).toEqual(expect.objectContaining({ waybillnumbers: 'W1,W2', GroupName: 'G' }));
         expect(lastCall.headers).toEqual(expect.objectContaining({ Authorization: 'Bearer TOK' }));
-        expect(result).toEqual([{ Waybill: 'W1', POD: 'signed' }]);
+        expect(result.output).toEqual([{ Waybill: 'W1', POD: 'signed' }]);
     });
 });

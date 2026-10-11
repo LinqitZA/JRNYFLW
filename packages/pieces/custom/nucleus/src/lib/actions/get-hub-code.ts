@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const getHubCode = createAction({
     auth: nucleusAuth,
@@ -14,19 +15,27 @@ export const getHubCode = createAction({
         suburb: Property.ShortText({ displayName: 'Suburb', required: false }),
         city: Property.ShortText({ displayName: 'City', required: false }),
         province: Property.ShortText({ displayName: 'Province', required: false }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
+        const auth = context.auth.props;
         const p = context.propsValue;
-        const query: Record<string, string> = {
-            ...spread('Postal', p.postal),
-            ...spread('Suburb', p.suburb),
-            ...spread('City', p.city),
-            ...spread('Province', p.province),
-        };
-        if (Object.keys(query).length === 0) {
-            throw new Error('Provide at least one of Postal Code, Suburb, City or Province');
-        }
-        return nucleusClient.call({ auth: context.auth.props, store: context.store, method: HttpMethod.GET, path: 'GetHubCode', query });
+        return pieceTrace.run({
+            onFailure: p.onFailure,
+            secrets: nucleusClient.secretsOf(auth),
+            work: async (trace) => {
+                const query: Record<string, string> = {
+                    ...spread('Postal', p.postal),
+                    ...spread('Suburb', p.suburb),
+                    ...spread('City', p.city),
+                    ...spread('Province', p.province),
+                };
+                if (Object.keys(query).length === 0) {
+                    throw new Error('Provide at least one of Postal Code, Suburb, City or Province');
+                }
+                return nucleusClient.call({ trace, auth, store: context.store, method: HttpMethod.GET, path: 'GetHubCode', query });
+            },
+        });
     },
 });
 

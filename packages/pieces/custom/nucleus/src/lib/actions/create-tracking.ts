@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const createTracking = createAction({
     auth: nucleusAuth,
@@ -26,15 +27,23 @@ export const createTracking = createAction({
             description: 'Person or company who actioned the event.',
             required: true,
         }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
+        const auth = context.auth.props;
         const p = context.propsValue;
-        return nucleusClient.call({
-            auth: context.auth.props,
-            store: context.store,
-            method: HttpMethod.POST,
-            path: 'createtrack',
-            query: { Waybill: p.waybill, DateStamp: p.dateStamp, EventCode: p.eventCode, ActionTaken: p.actionTaken, Person: p.person },
+        return pieceTrace.run({
+            onFailure: p.onFailure,
+            secrets: nucleusClient.secretsOf(auth),
+            work: (trace) =>
+                nucleusClient.call({
+                    trace,
+                    auth,
+                    store: context.store,
+                    method: HttpMethod.POST,
+                    path: 'createtrack',
+                    query: { Waybill: p.waybill, DateStamp: p.dateStamp, EventCode: p.eventCode, ActionTaken: p.actionTaken, Person: p.person },
+                }),
         });
     },
 });

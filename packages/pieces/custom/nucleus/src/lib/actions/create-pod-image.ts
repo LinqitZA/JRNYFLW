@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const createPodImage = createAction({
     auth: nucleusAuth,
@@ -35,17 +36,25 @@ export const createPodImage = createAction({
                 ],
             },
         }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
         const p = context.propsValue;
         const auth = context.auth.props;
-        const image = resolveImage({ source: p.source, fileBase64: p.file?.base64, signedUrl: p.signedUrl });
-        return nucleusClient.call({
-            auth,
-            store: context.store,
-            method: HttpMethod.POST,
-            path: 'createpodbase64',
-            body: { Waybill: p.waybill, Image: image.value, StringType: image.stringType, ImageFormat: p.imageFormat, GroupName: auth.groupName },
+        return pieceTrace.run({
+            onFailure: p.onFailure,
+            secrets: nucleusClient.secretsOf(auth),
+            work: async (trace) => {
+                const image = resolveImage({ source: p.source, fileBase64: p.file?.base64, signedUrl: p.signedUrl });
+                return nucleusClient.call({
+                    trace,
+                    auth,
+                    store: context.store,
+                    method: HttpMethod.POST,
+                    path: 'createpodbase64',
+                    body: { Waybill: p.waybill, Image: image.value, StringType: image.stringType, ImageFormat: p.imageFormat, GroupName: auth.groupName },
+                });
+            },
         });
     },
 });
