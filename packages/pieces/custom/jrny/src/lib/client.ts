@@ -1,19 +1,6 @@
-import {
-  AuthenticationType,
-  HttpError,
-  HttpMethod,
-  httpClient,
-} from '@activepieces/pieces-common';
+import { AuthenticationType, HttpError, HttpMethod } from '@activepieces/pieces-common';
+import { Tracer } from '@jrnyflw/piece-trace';
 import { JrnyAuth } from './auth';
-
-export type JrnyErrorEnvelope = {
-  error: {
-    code: string;
-    message: string;
-    details?: unknown;
-  };
-  requestId?: string;
-};
 
 export class JrnyApiError extends Error {
   public readonly httpStatus: number;
@@ -31,54 +18,31 @@ export class JrnyApiError extends Error {
   }
 }
 
-const trimTrailingSlash = (url: string): string =>
-  url.endsWith('/') ? url.slice(0, -1) : url;
-
-function joinUrl(base: string, path: string): string {
-  return `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
-}
-
-type JrnyRequest = {
-  auth: JrnyAuth;
-  method: HttpMethod;
-  path: string;
-  query?: Record<string, string>;
-  body?: unknown;
-};
-
-async function request<T>({ auth, method, path, query, body }: JrnyRequest): Promise<T> {
-  const response = await httpClient.sendRequest<T>({
-    method,
-    url: joinUrl(auth.baseUrl, path),
-    authentication: { type: AuthenticationType.BEARER_TOKEN, token: auth.bearerToken },
-    headers: { 'Content-Type': 'application/json' },
-    queryParams: query,
-    body,
+async function request<T>({ trace, auth, method, path, query, body }: JrnyRequest): Promise<T> {
+  const response = await trace.send<T>({
+    request: {
+      method,
+      url: joinUrl(auth.baseUrl, path),
+      authentication: { type: AuthenticationType.BEARER_TOKEN, token: auth.bearerToken },
+      headers: { 'Content-Type': 'application/json' },
+      queryParams: query,
+      body,
+    },
   });
   return response.body;
 }
 
-export const callJrny = async <TResponse>(
-  auth: JrnyAuth,
-  method: HttpMethod,
-  path: string,
-  body?: unknown,
-  extraHeaders: Record<string, string> = {},
-): Promise<TResponse> => {
+async function callJrny<T>({ trace, auth, method, path, body }: CallJrnyParams): Promise<T> {
   const url = `${trimTrailingSlash(auth.baseUrl)}${path}`;
   try {
-    const response = await httpClient.sendRequest<TResponse>({
-      method,
-      url,
-      authentication: {
-        type: AuthenticationType.BEARER_TOKEN,
-        token: auth.bearerToken,
+    const response = await trace.send<T>({
+      request: {
+        method,
+        url,
+        authentication: { type: AuthenticationType.BEARER_TOKEN, token: auth.bearerToken },
+        headers: { 'Content-Type': 'application/json' },
+        body,
       },
-      headers: {
-        'Content-Type': 'application/json',
-        ...extraHeaders,
-      },
-      body,
     });
     return response.body;
   } catch (err) {
@@ -88,28 +52,63 @@ export const callJrny = async <TResponse>(
       if (isJrnyErrorEnvelope(responseBody)) {
         throw new JrnyApiError(status, responseBody);
       }
-      throw new Error(
-        `JRNY API call to ${method} ${url} failed with HTTP ${status}: ${stringifyForLog(responseBody)}`,
-      );
+      throw new Error(`JRNY API call to ${method} ${url} failed with HTTP ${status}: ${stringifyForLog(responseBody)}`);
     }
     throw err;
   }
-};
+}
 
-const isJrnyErrorEnvelope = (value: unknown): value is JrnyErrorEnvelope => {
-  if (typeof value !== 'object' || value === null) return false;
-  const v = value as Record<string, unknown>;
-  if (typeof v.error !== 'object' || v.error === null) return false;
-  const e = v.error as Record<string, unknown>;
-  return typeof e.code === 'string' && typeof e.message === 'string';
-};
+function secretsOf(auth: JrnyAuth): string[] {
+  return [auth.bearerToken];
+}
 
-const stringifyForLog = (value: unknown): string => {
+function joinUrl(base: string, path: string): string {
+  return `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
+}
+
+function trimTrailingSlash(url: string): string {
+  return url.endsWith('/') ? url.slice(0, -1) : url;
+}
+
+function isJrnyErrorEnvelope(value: unknown): value is JrnyErrorEnvelope {
+  if (typeof value !== 'object' || value === null || !('error' in value)) return false;
+  const error: unknown = value.error;
+  if (typeof error !== 'object' || error === null || !('code' in error) || !('message' in error)) return false;
+  return typeof error.code === 'string' && typeof error.message === 'string';
+}
+
+function stringifyForLog(value: unknown): string {
   try {
     return JSON.stringify(value);
   } catch {
     return String(value);
   }
+}
+
+export const jrnyClient = { callJrny, request, joinUrl, secretsOf };
+
+type JrnyRequest = {
+  trace: Tracer;
+  auth: JrnyAuth;
+  method: HttpMethod;
+  path: string;
+  query?: Record<string, string>;
+  body?: unknown;
 };
 
-export const jrnyClient = { callJrny, request, joinUrl };
+type CallJrnyParams = {
+  trace: Tracer;
+  auth: JrnyAuth;
+  method: HttpMethod;
+  path: string;
+  body?: unknown;
+};
+
+export type JrnyErrorEnvelope = {
+  error: {
+    code: string;
+    message: string;
+    details?: unknown;
+  };
+  requestId?: string;
+};

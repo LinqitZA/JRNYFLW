@@ -1,0 +1,78 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest';
+
+const { sendRequest } = vi.hoisted(() => ({ sendRequest: vi.fn() }));
+vi.mock('@activepieces/pieces-common', async (orig) => {
+    const actual = await orig<typeof import('@activepieces/pieces-common')>();
+    return { ...actual, httpClient: { sendRequest } };
+});
+
+import { HttpError } from '@activepieces/pieces-common';
+import { createMockActionContext } from '@activepieces/pieces-framework';
+import { AxiosError, AxiosHeaders } from 'axios';
+import { courierResponse } from '../src/lib/actions/courier-response';
+import { buildJrnyAction } from '../src/lib/action-factory';
+import { jrnyOperations } from '../src/lib/operations';
+
+const TOKEN = 'jrny-bearer-123456';
+const auth = { props: { baseUrl: 'https://jrny/', entityId: 'ent-1', entityCode: 'ZA01', bearerToken: TOKEN } };
+
+describe('jrny trace', () => {
+    beforeEach(() => {
+        sendRequest.mockReset();
+    });
+
+    test('Courier Response records the PATCH with the bearer token redacted', async () => {
+        sendRequest.mockResolvedValueOnce({ status: 200, body: { courierStatus: 'failed' } });
+        const propsValue = { dispatchNumber: 'DN-000026', courierStatus: 'failed', errorMessage: 'Find Hub Code: ambiguous' };
+        const result = await courierResponse.run({ ...createMockActionContext({ propsValue }), auth });
+        expect(result).toEqual({
+            ok: true,
+            output: { courierStatus: 'failed' },
+            sent: [{
+                method: 'PATCH',
+                url: 'https://jrny/api/v1/integration/entities/ent-1/dispatch-notes/DN-000026/courier-response',
+                query: {},
+                headers: { 'Content-Type': 'application/json', Authorization: '[redacted]' },
+                body: { courierStatus: 'failed', errorMessage: 'Find Hub Code: ambiguous' },
+                status: 200,
+                durationMs: expect.any(Number),
+            }],
+        });
+        expect(JSON.stringify(result)).not.toContain(TOKEN);
+    });
+
+    test('continue mode returns a JRNY error envelope as data with its status', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('Conflict', 'ERR_BAD_REQUEST', config, undefined, {
+            status: 409, statusText: 'Conflict', headers: {}, config,
+            data: { error: { code: 'CONFLICT', message: 'Waybill number already in use' } },
+        })));
+        const propsValue = { dispatchNumber: 'DN-000026', courierStatus: 'booked', waybillNumber: 'AON-1', onFailure: 'continue' };
+        const result = await courierResponse.run({ ...createMockActionContext({ propsValue }), auth });
+        expect(result).toMatchObject({
+            ok: false,
+            output: null,
+            error: { message: 'JRNY API error 409 CONFLICT: Waybill number already in use', status: 409 },
+        });
+    });
+
+    test('generated actions record the call through the real client', async () => {
+        sendRequest.mockResolvedValueOnce({ status: 200, body: { code: 'ACME' } });
+        const action = buildJrnyAction({
+            name: 'get_customer', displayName: 'Get Customer', description: '', method: 'GET',
+            path: '/api/v1/integration/entities/{entityId}/customers/{code}', tag: 'x',
+            pathParams: ['code'], queryParams: [], hasBody: false,
+        });
+        const result = await action.run({ ...createMockActionContext({ propsValue: { code: 'ACME' } }), auth });
+        expect(result.output).toEqual({ code: 'ACME' });
+        expect(result.sent[0]).toMatchObject({ method: 'GET', url: 'https://jrny/api/v1/integration/entities/ent-1/customers/ACME', headers: { Authorization: '[redacted]' } });
+        expect(JSON.stringify(result)).not.toContain(TOKEN);
+    });
+
+    test('no JRNY operation already uses a parameter named onFailure', () => {
+        for (const op of jrnyOperations) {
+            expect(op.pathParams).not.toContain('onFailure');
+            expect(op.queryParams.map((q) => q.name)).not.toContain('onFailure');
+        }
+    });
+});

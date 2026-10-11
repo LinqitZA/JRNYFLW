@@ -8006,11 +8006,12 @@
     },
     "packages/pieces/custom/jrny": {
       "name": "@jrnyflw/jrny",
-      "version": "0.0.2",
+      "version": "0.1.0",
       "dependencies": {
         "@activepieces/pieces-common": "workspace:*",
         "@activepieces/pieces-framework": "workspace:*",
         "@activepieces/shared": "workspace:*",
+        "@jrnyflw/piece-trace": "workspace:*",
         "tslib": "2.6.2",
       },
     },

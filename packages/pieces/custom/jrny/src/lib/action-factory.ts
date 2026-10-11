@@ -2,6 +2,7 @@ import { createAction, InputPropertyMap, Property } from '@activepieces/pieces-f
 import { HttpMethod } from '@activepieces/pieces-common';
 import { jrnyAuth } from './auth';
 import { jrnyClient } from './client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 import { JrnyHttpMethod, JrnyOperation } from './operation-types';
 
 export function buildJrnyAction(op: JrnyOperation) {
@@ -19,6 +20,7 @@ export function buildJrnyAction(op: JrnyOperation) {
       required: true,
     });
   }
+  props['onFailure'] = pieceTrace.onFailureProperty();
   return createAction({
     auth: jrnyAuth,
     name: op.name,
@@ -28,23 +30,30 @@ export function buildJrnyAction(op: JrnyOperation) {
     async run(context) {
       const connection = context.auth.props;
       const values = context.propsValue;
-      let path = op.path.replace('{entityId}', encodeURIComponent(connection.entityId));
-      for (const p of op.pathParams) {
-        path = path.replace(`{${p}}`, encodeURIComponent(stringifyValue(values[p])));
-      }
-      const query: Record<string, string> = {};
-      for (const q of op.queryParams) {
-        const v = values[q.name];
-        if (v !== undefined && v !== '') {
-          query[q.name] = stringifyValue(v);
-        }
-      }
-      return jrnyClient.request({
-        auth: connection,
-        method: METHODS[op.method],
-        path,
-        query,
-        body: op.hasBody ? values['body'] : undefined,
+      return pieceTrace.run({
+        onFailure: values['onFailure'],
+        secrets: jrnyClient.secretsOf(connection),
+        work: async (trace) => {
+          let path = op.path.replace('{entityId}', encodeURIComponent(connection.entityId));
+          for (const p of op.pathParams) {
+            path = path.replace(`{${p}}`, encodeURIComponent(stringifyValue(values[p])));
+          }
+          const query: Record<string, string> = {};
+          for (const q of op.queryParams) {
+            const v = values[q.name];
+            if (v !== undefined && v !== '') {
+              query[q.name] = stringifyValue(v);
+            }
+          }
+          return jrnyClient.request({
+            trace,
+            auth: connection,
+            method: METHODS[op.method],
+            path,
+            query,
+            body: op.hasBody ? values['body'] : undefined,
+          });
+        },
       });
     },
   });

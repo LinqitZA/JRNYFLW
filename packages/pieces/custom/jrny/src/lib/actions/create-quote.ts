@@ -1,7 +1,8 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { jrnyAuth } from '../auth';
-import { callJrny } from '../client';
+import { jrnyClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const createQuote = createAction({
   auth: jrnyAuth,
@@ -107,37 +108,43 @@ export const createQuote = createAction({
       required: false,
       defaultValue: false,
     }),
+    onFailure: pieceTrace.onFailureProperty(),
   },
   async run(context) {
     const auth = context.auth.props;
     const p = context.propsValue;
+    return pieceTrace.run({
+      onFailure: p.onFailure,
+      secrets: jrnyClient.secretsOf(auth),
+      work: async (trace) => {
+        const lines = (p.lines ?? []) as Array<{
+          stockCode: string;
+          qty: number;
+          unitPrice?: number;
+          uom?: string;
+        }>;
 
-    const lines = (p.lines ?? []) as Array<{
-      stockCode: string;
-      qty: number;
-      unitPrice?: number;
-      uom?: string;
-    }>;
+        const body: Record<string, unknown> = {
+          customer: { code: p.customerCode },
+          lines: lines.map((l) => ({
+            stockCode: l.stockCode,
+            qty: l.qty,
+            ...(l.unitPrice !== undefined && l.unitPrice !== null ? { unitPrice: l.unitPrice } : {}),
+            ...(l.uom ? { uom: l.uom } : {}),
+          })),
+        };
 
-    const body: Record<string, unknown> = {
-      customer: { code: p.customerCode },
-      lines: lines.map((l) => ({
-        stockCode: l.stockCode,
-        qty: l.qty,
-        ...(l.unitPrice !== undefined && l.unitPrice !== null ? { unitPrice: l.unitPrice } : {}),
-        ...(l.uom ? { uom: l.uom } : {}),
-      })),
-    };
+        if (p.notes) body['notes'] = p.notes;
+        if (p.externalReference) body['externalReference'] = p.externalReference;
+        if (p.autoConvert) body['autoConvert'] = true;
 
-    if (p.notes) body['notes'] = p.notes;
-    if (p.externalReference) body['externalReference'] = p.externalReference;
-    if (p.autoConvert) body['autoConvert'] = true;
+        const deliveryAddress = buildDeliveryAddress(p);
+        if (deliveryAddress) body['deliveryAddress'] = deliveryAddress;
 
-    const deliveryAddress = buildDeliveryAddress(p);
-    if (deliveryAddress) body['deliveryAddress'] = deliveryAddress;
-
-    const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/quotations`;
-    return callJrny(auth, HttpMethod.POST, path, body);
+        const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/quotations`;
+        return jrnyClient.callJrny({ trace, auth, method: HttpMethod.POST, path, body });
+      },
+    });
   },
 });
 

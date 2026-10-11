@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
 
 const { request } = vi.hoisted(() => ({ request: vi.fn() }));
-vi.mock('../src/lib/client', () => ({ jrnyClient: { request } }));
+vi.mock('../src/lib/client', () => ({ jrnyClient: { request, secretsOf: () => [] } }));
 
 import { createMockActionContext } from '@activepieces/pieces-framework';
 import { buildJrnyAction } from '../src/lib/action-factory';
@@ -19,11 +19,12 @@ describe('buildJrnyAction', () => {
         const ctx = { ...createMockActionContext({ propsValue: { code: 'ACME', fromDate: '2026-01-01' } }), auth };
         const result = await action.run(ctx);
         expect(request).toHaveBeenCalledWith(expect.objectContaining({
+            trace: expect.anything(),
             method: 'GET',
             path: '/api/v1/integration/entities/ent-1/customers/ACME',
             query: { fromDate: '2026-01-01' },
         }));
-        expect(result).toEqual({ code: 'ACME' });
+        expect(result).toEqual({ ok: true, sent: [], output: { code: 'ACME' } });
     });
 
     test('POST with a body forwards the JSON body and omits empty optional query', async () => {
@@ -37,6 +38,7 @@ describe('buildJrnyAction', () => {
         const ctx = { ...createMockActionContext({ propsValue: { body, externalRef: '' } }), auth };
         await action.run(ctx);
         expect(request).toHaveBeenCalledWith(expect.objectContaining({
+            trace: expect.anything(),
             method: 'POST',
             path: '/api/v1/integration/entities/ent-1/sales-orders',
             body,

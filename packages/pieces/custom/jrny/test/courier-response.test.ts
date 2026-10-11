@@ -28,7 +28,7 @@ describe('courierResponse', () => {
         expect(lastRequest().url).toBe('https://jrny/api/v1/integration/entities/ent-1/dispatch-notes/DN-000026/courier-response');
         expect(lastRequest().authentication).toEqual(expect.objectContaining({ token: 'tok' }));
         expect(lastRequest().body).toEqual({ courierStatus: 'booked', waybillNumber: 'AON-000016' });
-        expect(result).toEqual({ dispatchNumber: 'DN-000026', courierStatus: 'booked' });
+        expect(result.output).toEqual({ dispatchNumber: 'DN-000026', courierStatus: 'booked' });
     });
 
     test('sends the error message with a failed response', async () => {

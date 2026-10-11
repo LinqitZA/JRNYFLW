@@ -1,7 +1,8 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { jrnyAuth } from '../auth';
-import { callJrny } from '../client';
+import { jrnyClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const courierResponse = createAction({
   auth: jrnyAuth,
@@ -50,25 +51,32 @@ export const courierResponse = createAction({
       description: 'For Failed. JRNY includes it in the failure notification but does not store it on the dispatch note.',
       required: false,
     }),
+    onFailure: pieceTrace.onFailureProperty(),
   },
   async run(context) {
     const auth = context.auth.props;
     const p = context.propsValue;
-    const body = {
-      courierStatus: p.courierStatus,
-      ...present('waybillNumber', p.waybillNumber),
-      ...present('trackingUrl', p.trackingUrl),
-      ...present('courierReference', p.courierReference),
-      ...present('bookedAt', p.bookedAt),
-      ...present('manifestNumber', p.manifestNumber),
-      ...present('manifestDate', p.manifestDate),
-      ...present('podSignedBy', p.podSignedBy),
-      ...present('podSignedAt', p.podSignedAt),
-      ...present('podNotes', p.podNotes),
-      ...present('errorMessage', p.errorMessage),
-    };
-    const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/dispatch-notes/${encodeURIComponent(p.dispatchNumber.trim())}/courier-response`;
-    return callJrny(auth, HttpMethod.PATCH, path, body);
+    return pieceTrace.run({
+      onFailure: p.onFailure,
+      secrets: jrnyClient.secretsOf(auth),
+      work: async (trace) => {
+        const body = {
+          courierStatus: p.courierStatus,
+          ...present('waybillNumber', p.waybillNumber),
+          ...present('trackingUrl', p.trackingUrl),
+          ...present('courierReference', p.courierReference),
+          ...present('bookedAt', p.bookedAt),
+          ...present('manifestNumber', p.manifestNumber),
+          ...present('manifestDate', p.manifestDate),
+          ...present('podSignedBy', p.podSignedBy),
+          ...present('podSignedAt', p.podSignedAt),
+          ...present('podNotes', p.podNotes),
+          ...present('errorMessage', p.errorMessage),
+        };
+        const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/dispatch-notes/${encodeURIComponent(p.dispatchNumber.trim())}/courier-response`;
+        return jrnyClient.callJrny({ trace, auth, method: HttpMethod.PATCH, path, body });
+      },
+    });
   },
 });
 
