@@ -198,6 +198,23 @@ DOCKER_BUILDKIT=1 docker build -f Dockerfile.uat -t jrnyflw-uat:latest .
 docker compose --env-file .env.uat -f docker-compose.uat.yml up -d
 ```
 
+### One-off: piece trace upgrade (jrny / nucleus / shoprite 0.1.0)
+
+These versions change what every JRNY, Nucleus and Shoprite step returns: the old fields move under `output`, next to `ok` and `sent`. Flows that reference these steps break until migrated.
+
+1. In the builder, open each affected flow and export it (flow menu → Export). Today that is only the PROD courier flow.
+2. On a workstation with the repo, run:
+   `npx tsx packages/pieces/custom/trace/tools/migrate-flow-cli.ts courier-flow.json courier-flow.migrated.json`
+   Check the printed step list and reference count, and skim the diff of the two files.
+3. Take the database backup (see "Backups"), then redeploy at a quiet time (see "Redeploy after a code change").
+4. As soon as the app is up: open the flow, import `courier-flow.migrated.json` (flow menu → Import), and publish.
+5. Any run that failed between the redeploy and the publish: open it in Runs and retry "From failed step".
+6. In the draft, click "Test step" on each JRNY/Nucleus step so the data selector shows the new shape.
+7. Add the failure handling, then publish again. After each Nucleus step:
+   - set "If the call fails" to "Continue and return the error";
+   - add a Router with a branch where `{{step_N.ok}}` is false;
+   - in that branch: JRNY "Courier Response" with Courier Status = Failed and Error Message = `<Step name>: {{step_N.error.message}}`, then a Code step that throws the same message so the run shows as failed.
+
 ### Never run this
 
 ```bash
