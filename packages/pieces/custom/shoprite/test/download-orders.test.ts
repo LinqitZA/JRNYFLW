@@ -25,6 +25,6 @@ describe('downloadOrders', () => {
             url: 'https://x/b2bservice/api/VendorOrder',
             headers: expect.objectContaining({ ContractID: 'c', UIUser: 'u' }),
         }));
-        expect(result).toEqual({ orderField: [] });
+        expect(result.output).toEqual({ orderField: [] });
     });
 });

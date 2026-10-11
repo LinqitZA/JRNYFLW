@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { shopriteAuth } from '../auth';
 import { shopriteClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const uploadInvoice = createAction({
     auth: shopriteAuth,
@@ -14,14 +15,21 @@ export const uploadInvoice = createAction({
             description: 'The full GS1 InvoiceMessageType JSON. Produce this with the Mapper step.',
             required: true,
         }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
-        const endpoint = context.auth.props.invoiceEndpoint ?? 'VendorInvoice';
-        return shopriteClient.call(
-            context.auth.props,
-            HttpMethod.POST,
-            `/api/${endpoint}`,
-            context.propsValue.invoiceMessage,
-        );
+        const auth = context.auth.props;
+        return pieceTrace.run({
+            onFailure: context.propsValue.onFailure,
+            secrets: shopriteClient.secretsOf(auth),
+            work: (trace) =>
+                shopriteClient.call({
+                    trace,
+                    auth,
+                    method: HttpMethod.POST,
+                    path: `/api/${auth.invoiceEndpoint ?? 'VendorInvoice'}`,
+                    body: context.propsValue.invoiceMessage,
+                }),
+        });
     },
 });

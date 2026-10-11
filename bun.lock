@@ -8044,11 +8044,12 @@
     },
     "packages/pieces/custom/shoprite": {
       "name": "@jrnyflw/shoprite",
-      "version": "0.0.1",
+      "version": "0.1.0",
       "dependencies": {
         "@activepieces/pieces-common": "workspace:*",
         "@activepieces/pieces-framework": "workspace:*",
         "@activepieces/shared": "workspace:*",
+        "@jrnyflw/piece-trace": "workspace:*",
         "tslib": "2.6.2",
       },
       "devDependencies": {

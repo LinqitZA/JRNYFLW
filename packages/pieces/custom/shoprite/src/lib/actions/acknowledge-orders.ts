@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { shopriteAuth } from '../auth';
 import { shopriteClient } from '../client';
+import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const acknowledgeOrders = createAction({
     auth: shopriteAuth,
@@ -15,9 +16,15 @@ export const acknowledgeOrders = createAction({
             required: true,
             defaultValue: 'Acknowledge',
         }),
+        onFailure: pieceTrace.onFailureProperty(),
     },
     async run(context) {
-        const action = encodeURIComponent(context.propsValue.action);
-        return shopriteClient.call(context.auth.props, HttpMethod.PUT, `/api/VendorOrder/${action}`);
+        const auth = context.auth.props;
+        return pieceTrace.run({
+            onFailure: context.propsValue.onFailure,
+            secrets: shopriteClient.secretsOf(auth),
+            work: (trace) =>
+                shopriteClient.call({ trace, auth, method: HttpMethod.PUT, path: `/api/VendorOrder/${encodeURIComponent(context.propsValue.action)}` }),
+        });
     },
 });
