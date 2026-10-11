@@ -9,7 +9,7 @@ export class JrnyApiError extends Error {
   public readonly requestId?: string;
 
   constructor(httpStatus: number, envelope: JrnyErrorEnvelope) {
-    super(`JRNY API error ${httpStatus} ${envelope.error.code}: ${envelope.error.message}`);
+    super(describeEnvelope({ httpStatus, envelope }));
     this.name = 'JrnyApiError';
     this.httpStatus = httpStatus;
     this.errorCode = envelope.error.code;
@@ -56,6 +56,13 @@ async function callJrny<T>({ trace, auth, method, path, body }: CallJrnyParams):
     }
     throw err;
   }
+}
+
+// Steps only surface the error message, so details and the request ID must be in it for anyone to see them in run history.
+function describeEnvelope({ httpStatus, envelope }: { httpStatus: number; envelope: JrnyErrorEnvelope }): string {
+  const details = envelope.error.details === undefined ? '' : ` Details: ${stringifyForLog(envelope.error.details)}`;
+  const requestId = envelope.requestId === undefined ? '' : ` (request ${envelope.requestId})`;
+  return `JRNY API error ${httpStatus} ${envelope.error.code}: ${envelope.error.message}${details}${requestId}`;
 }
 
 function secretsOf(auth: JrnyAuth): string[] {

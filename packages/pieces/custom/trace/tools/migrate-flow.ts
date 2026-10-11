@@ -1,24 +1,28 @@
 function migrate({ flow, pieceNames, pieceVersion }: MigrateParams): MigrateResult {
     const steps = new Set<string>();
-    collectSteps({ value: flow, pieceNames, steps });
+    const skipped = new Set<string>();
+    collectSteps({ value: flow, pieceNames, pieceVersion, steps, skipped });
     const ctx: RewriteContext = { steps, pieceNames, pieceVersion, references: 0 };
     const migrated = rewrite({ value: flow, ctx });
-    return { flow: migrated, steps: [...steps].sort(), references: ctx.references };
+    return { flow: migrated, steps: [...steps].sort(), skipped: [...skipped].sort(), references: ctx.references };
 }
 
-function collectSteps({ value, pieceNames, steps }: { value: unknown; pieceNames: string[]; steps: Set<string> }): void {
+function collectSteps({ value, pieceNames, pieceVersion, steps, skipped }: CollectParams): void {
     if (Array.isArray(value)) {
-        value.forEach((item) => collectSteps({ value: item, pieceNames, steps }));
+        value.forEach((item) => collectSteps({ value: item, pieceNames, pieceVersion, steps, skipped }));
         return;
     }
     if (!isRecord(value)) {
         return;
     }
-    const name = tracedStepName({ value, pieceNames });
+    const name = pieceStepName({ value, pieceNames });
     if (name !== null) {
-        steps.add(name);
+        const settings = value['settings'];
+        // Custom API Call output is unchanged, and a step already on the target version already returns the wrapper, so its ok/error/sent references are new-shape.
+        const keepsReferences = isRecord(settings) && (settings['actionName'] === 'custom_api_call' || settings['pieceVersion'] === pieceVersion);
+        (keepsReferences ? skipped : steps).add(name);
     }
-    Object.values(value).forEach((item) => collectSteps({ value: item, pieceNames, steps }));
+    Object.values(value).forEach((item) => collectSteps({ value: item, pieceNames, pieceVersion, steps, skipped }));
 }
 
 function rewrite({ value, ctx }: { value: unknown; ctx: RewriteContext }): unknown {
@@ -35,7 +39,7 @@ function rewrite({ value, ctx }: { value: unknown; ctx: RewriteContext }): unkno
         Object.entries(value).map(([key, item]): [string, unknown] => [key, rewrite({ value: item, ctx })]),
     );
     const settings = result['settings'];
-    if (tracedStepName({ value, pieceNames: ctx.pieceNames }) !== null && isRecord(settings)) {
+    if (pieceStepName({ value, pieceNames: ctx.pieceNames }) !== null && isRecord(settings)) {
         result['settings'] = { ...settings, pieceVersion: ctx.pieceVersion };
     }
     return result;
@@ -54,7 +58,7 @@ function rewriteText({ text, ctx }: { text: string; ctx: RewriteContext }): stri
     });
 }
 
-function tracedStepName({ value, pieceNames }: { value: Record<string, unknown>; pieceNames: string[] }): string | null {
+function pieceStepName({ value, pieceNames }: { value: Record<string, unknown>; pieceNames: string[] }): string | null {
     const name = value['name'];
     const settings = value['settings'];
     if (value['type'] !== 'PIECE' || typeof name !== 'string' || !isRecord(settings)) {
@@ -76,4 +80,5 @@ export const flowMigration = { migrate };
 
 type RewriteContext = { steps: Set<string>; pieceNames: string[]; pieceVersion: string; references: number };
 type MigrateParams = { flow: unknown; pieceNames: string[]; pieceVersion: string };
-type MigrateResult = { flow: unknown; steps: string[]; references: number };
+type CollectParams = { value: unknown; pieceNames: string[]; pieceVersion: string; steps: Set<string>; skipped: Set<string> };
+type MigrateResult = { flow: unknown; steps: string[]; skipped: string[]; references: number };

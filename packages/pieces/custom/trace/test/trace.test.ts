@@ -178,6 +178,22 @@ describe('pieceTrace.run', () => {
     });
 });
 
+describe('pieceTrace.run with engine errors', () => {
+    test('rethrows engine infrastructure errors unchanged, even in continue mode', async () => {
+        const engineError = Object.assign(new Error('Failed to read/write key "nucleus_token"'), { name: 'StorageError', type: 'ENGINE' });
+        for (const onFailure of ['stop', 'continue']) {
+            const thrown = await pieceTrace.run({
+                onFailure,
+                secrets: [],
+                work: async () => {
+                    throw engineError;
+                },
+            }).then(() => null, (e: unknown) => e);
+            expect(thrown).toBe(engineError);
+        }
+    });
+});
+
 describe('pieceTrace.onFailureProperty', () => {
     test('defaults to stopping the flow', () => {
         const prop = pieceTrace.onFailureProperty();

@@ -56,6 +56,21 @@ describe('jrny trace', () => {
         });
     });
 
+    test('keeps JRNY error details and request ID in the error message', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('Unprocessable', 'ERR_BAD_REQUEST', config, undefined, {
+            status: 422, statusText: 'Unprocessable', headers: {}, config,
+            data: { error: { code: 'VALIDATION', message: 'Invalid lines', details: { 'lines.2.stockCode': 'unknown' } }, requestId: 'req-42' },
+        })));
+        const propsValue = { dispatchNumber: 'DN-000026', courierStatus: 'failed', onFailure: 'continue' };
+        const result = await courierResponse.run({ ...createMockActionContext({ propsValue }), auth });
+        expect(result).toMatchObject({ ok: false, error: { status: 422 } });
+        const message = result.ok ? '' : result.error.message;
+        expect(message).toContain('JRNY API error 422 VALIDATION: Invalid lines');
+        expect(message).toContain('{"lines.2.stockCode":"unknown"}');
+        expect(message).toContain('req-42');
+    });
+
     test('generated actions record the call through the real client', async () => {
         sendRequest.mockResolvedValueOnce({ status: 200, body: { code: 'ACME' } });
         const action = buildJrnyAction({

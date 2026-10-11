@@ -12,4 +12,5 @@ const flow: unknown = JSON.parse(readFileSync(input, 'utf-8'));
 const result = flowMigration.migrate({ flow, pieceNames: PIECE_NAMES, pieceVersion: '0.1.0' });
 writeFileSync(output, `${JSON.stringify(result.flow, null, 2)}\n`);
 console.log(`Steps migrated: ${result.steps.join(', ') || 'none'}`);
+console.log(`Steps left as they are (Custom API Call or already on 0.1.0): ${result.skipped.join(', ') || 'none'}`);
 console.log(`References rewritten: ${result.references}`);

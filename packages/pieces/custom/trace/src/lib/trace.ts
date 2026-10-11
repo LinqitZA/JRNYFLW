@@ -11,6 +11,9 @@ async function run<T>({ onFailure, secrets, work }: RunParams<T>): Promise<Trace
         const output = await work(tracer);
         return { ok: true, sent: scrubSent({ sent, secrets: usableSecrets }), output };
     } catch (err) {
+        if (isEngineError(err)) {
+            throw err;
+        }
         const cleanSent = scrubSent({ sent, secrets: usableSecrets });
         const message = scrubText({ text: describeError(err), secrets: usableSecrets });
         if (onFailure === 'continue') {
@@ -99,6 +102,11 @@ function describeError(err: unknown): string {
         return `HTTP ${status}: ${typeof body === 'string' ? body : JSON.stringify(body)}`;
     }
     return err instanceof Error ? err.message : String(err);
+}
+
+// Engine infrastructure failures (e.g. the store API) must reach the engine as-is so it records an internal error, not a step failure the flow would report to JRNY.
+function isEngineError(err: unknown): boolean {
+    return typeof err === 'object' && err !== null && 'type' in err && err.type === 'ENGINE';
 }
 
 function httpFailureStatus(sent: SentCall[]): number | null {
