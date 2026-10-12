@@ -125,4 +125,18 @@ describe('nucleus trace', () => {
             { Suburb: 'Bellville', GroupName: 'G' },
         ]);
     });
+
+    test('Find Hub Code uses UNK by default when no hub is found', async () => {
+        sendRequest.mockImplementation(async (req: { url: string }) => (req.url.endsWith('/token') ? TOKEN_RESPONSE : { status: 200, body: { ResultSets: [[]] } }));
+        const result = await findHubCodeForAddress.run({ ...createMockActionContext({ propsValue: { suburb: 'Atlantis' } }), auth });
+        expect(result.ok).toBe(true);
+        expect(result.output).toEqual(expect.objectContaining({ hubCode: 'UNK', matchedOn: 'fallback' }));
+    });
+
+    test('Find Hub Code set to Fail reports a missing hub as a failure', async () => {
+        sendRequest.mockImplementation(async (req: { url: string }) => (req.url.endsWith('/token') ? TOKEN_RESPONSE : { status: 200, body: { ResultSets: [[]] } }));
+        const propsValue = { suburb: 'Atlantis', ifNotFound: 'fail', onFailure: 'continue' };
+        const result = await findHubCodeForAddress.run({ ...createMockActionContext({ propsValue }), auth });
+        expect(result).toMatchObject({ ok: false, output: null, error: { message: 'No single Nucleus hub code found for this address (tried Suburb=Atlantis).' } });
+    });
 });

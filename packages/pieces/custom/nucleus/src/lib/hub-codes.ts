@@ -1,4 +1,15 @@
-async function resolveHubCode({ address, lookup }: { address: HubAddress; lookup: HubLookup }): Promise<HubResolution> {
+async function resolveHubCode({ address, lookup, ifNotFound }: ResolveParams): Promise<HubResolution> {
+    const result = await findSingleHub({ address, lookup });
+    if ('hubCode' in result) {
+        return result;
+    }
+    if (ifNotFound === 'unknown') {
+        return { hubCode: UNKNOWN_HUB_CODE, matchedOn: 'fallback', candidates: [], reason: result.reason };
+    }
+    throw new Error(result.reason);
+}
+
+async function findSingleHub({ address, lookup }: Omit<ResolveParams, 'ifNotFound'>): Promise<HubResolution | { reason: string }> {
     const suburb = clean(address.suburb);
     const postalCode = clean(address.postalCode);
     const city = clean(address.city);
@@ -9,7 +20,7 @@ async function resolveHubCode({ address, lookup }: { address: HubAddress; lookup
         ...(city ? [{ matchedOn: 'city' as const, query: { City: city } }] : []),
     ];
     if (attempts.length === 0) {
-        throw new Error('Provide at least a Suburb, Postal Code or City to find a hub code');
+        return { reason: 'Provide at least a Suburb, Postal Code or City to find a hub code' };
     }
     const ambiguous: string[] = [];
     for (const attempt of attempts) {
@@ -24,7 +35,7 @@ async function resolveHubCode({ address, lookup }: { address: HubAddress; lookup
     }
     const tried = attempts.map((a) => describe(a.query)).join('; ');
     const detail = ambiguous.length > 0 ? ` Ambiguous: ${ambiguous.join('; ')}.` : '';
-    throw new Error(`No single Nucleus hub code found for this address (tried ${tried}).${detail}`);
+    return { reason: `No single Nucleus hub code found for this address (tried ${tried}).${detail}` };
 }
 
 function parseHubRows(body: unknown): HubRow[] {
@@ -74,12 +85,17 @@ function describe(query: Record<string, string>): string {
 }
 
 const HUB_ROW_KEYS = ['HubCode', 'Suburb', 'City', 'Province', 'PostalCode'];
+// Nucleus accepts UNK as the hub code when the destination hub is not known.
+const UNKNOWN_HUB_CODE = 'UNK';
 
 export const nucleusHubCodes = { resolveHubCode, parseHubRows };
 
 type Attempt = { matchedOn: HubMatch; query: Record<string, string> };
-type HubMatch = 'suburb_and_postal_code' | 'suburb' | 'postal_code' | 'city';
+type HubMatch = 'suburb_and_postal_code' | 'suburb' | 'postal_code' | 'city' | 'fallback';
+type ResolveParams = { address: HubAddress; lookup: HubLookup; ifNotFound: IfHubNotFound };
 type HubLookup = (query: Record<string, string>) => Promise<HubRow[]>;
 type HubAddress = { suburb?: string; postalCode?: string; city?: string; province?: string };
 type HubRow = { HubCode: string; Suburb: string; City: string; Province: string; PostalCode: string };
-type HubResolution = { hubCode: string; matchedOn: HubMatch; candidates: HubRow[] };
+type HubResolution = { hubCode: string; matchedOn: HubMatch; candidates: HubRow[]; reason?: string };
+
+export type IfHubNotFound = 'unknown' | 'fail';

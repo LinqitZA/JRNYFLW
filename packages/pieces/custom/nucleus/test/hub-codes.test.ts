@@ -24,7 +24,7 @@ beforeEach(() => {
 
 describe('resolveHubCode', () => {
     test('uses suburb + postal code when both match the same row', async () => {
-        const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Sandton', postalCode: '2146' }, lookup });
+        const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Sandton', postalCode: '2146' }, lookup, ifNotFound: 'fail' });
         expect(result).toEqual(expect.objectContaining({ hubCode: 'JNB', matchedOn: 'suburb_and_postal_code' }));
         expect(queries).toHaveLength(1);
     });
@@ -33,39 +33,77 @@ describe('resolveHubCode', () => {
         const result = await nucleusHubCodes.resolveHubCode({
             address: { suburb: 'Goodwood', postalCode: '7460', city: 'Cape Town', province: 'Western Cape' },
             lookup,
+            ifNotFound: 'fail',
         });
         expect(result).toEqual(expect.objectContaining({ hubCode: 'CPT', matchedOn: 'suburb' }));
     });
 
     test('never sends city or province to Nucleus alongside the suburb', async () => {
-        await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Goodwood', city: 'Cape Town', province: 'Western Cape' }, lookup });
+        await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Goodwood', city: 'Cape Town', province: 'Western Cape' }, lookup, ifNotFound: 'fail' });
         expect(queries[0]).toEqual({ Suburb: 'Goodwood' });
     });
 
     test('fails rather than guess when a postal code spans several hubs', async () => {
-        await expect(nucleusHubCodes.resolveHubCode({ address: { suburb: 'Nowhere', postalCode: '7460' }, lookup })).rejects.toThrow(
+        await expect(nucleusHubCodes.resolveHubCode({ address: { suburb: 'Nowhere', postalCode: '7460' }, lookup, ifNotFound: 'fail' })).rejects.toThrow(
             'Postal=7460 matches hubs CPT, WC1',
         );
     });
 
     test('uses the province to settle a postal code that spans provinces', async () => {
-        const result = await nucleusHubCodes.resolveHubCode({ address: { postalCode: '0299', province: 'North-West' }, lookup });
+        const result = await nucleusHubCodes.resolveHubCode({ address: { postalCode: '0299', province: 'North-West' }, lookup, ifNotFound: 'fail' });
         expect(result).toEqual(expect.objectContaining({ hubCode: 'NW1', matchedOn: 'postal_code' }));
     });
 
     test('ignores a province that matches none of the candidates', async () => {
-        const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Sandton', province: 'Gauteng Province' }, lookup });
+        const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Sandton', province: 'Gauteng Province' }, lookup, ifNotFound: 'fail' });
         expect(result.hubCode).toBe('JNB');
     });
 
     test('reports every attempt when nothing matches', async () => {
-        await expect(nucleusHubCodes.resolveHubCode({ address: { suburb: 'Atlantis', postalCode: '9999' }, lookup })).rejects.toThrow(
+        await expect(nucleusHubCodes.resolveHubCode({ address: { suburb: 'Atlantis', postalCode: '9999' }, lookup, ifNotFound: 'fail' })).rejects.toThrow(
             'tried Suburb=Atlantis + Postal=9999; Suburb=Atlantis; Postal=9999',
         );
     });
 
     test('requires at least one address field', async () => {
-        await expect(nucleusHubCodes.resolveHubCode({ address: { province: 'Gauteng' }, lookup })).rejects.toThrow('at least a Suburb');
+        await expect(nucleusHubCodes.resolveHubCode({ address: { province: 'Gauteng' }, lookup, ifNotFound: 'fail' })).rejects.toThrow('at least a Suburb');
+    });
+
+    describe('when told to use UNK', () => {
+        test('returns UNK with the reason when nothing matches', async () => {
+            const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Atlantis', postalCode: '9999' }, lookup, ifNotFound: 'unknown' });
+            expect(result).toEqual({
+                hubCode: 'UNK',
+                matchedOn: 'fallback',
+                candidates: [],
+                reason: 'No single Nucleus hub code found for this address (tried Suburb=Atlantis + Postal=9999; Suburb=Atlantis; Postal=9999).',
+            });
+        });
+
+        test('returns UNK when the address spans several hubs', async () => {
+            const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Nowhere', postalCode: '7460' }, lookup, ifNotFound: 'unknown' });
+            expect(result).toEqual(expect.objectContaining({ hubCode: 'UNK', matchedOn: 'fallback' }));
+            expect(result.reason).toContain('Ambiguous: Postal=7460 matches hubs CPT, WC1');
+        });
+
+        test('returns UNK without calling Nucleus when the address is blank', async () => {
+            const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: ' ', province: 'Gauteng' }, lookup, ifNotFound: 'unknown' });
+            expect(result).toEqual(expect.objectContaining({ hubCode: 'UNK', matchedOn: 'fallback', reason: 'Provide at least a Suburb, Postal Code or City to find a hub code' }));
+            expect(queries).toHaveLength(0);
+        });
+
+        test('still returns the real hub code when one is found', async () => {
+            const result = await nucleusHubCodes.resolveHubCode({ address: { suburb: 'Sandton' }, lookup, ifNotFound: 'unknown' });
+            expect(result).toEqual(expect.objectContaining({ hubCode: 'JNB', matchedOn: 'suburb' }));
+            expect(result).not.toHaveProperty('reason');
+        });
+
+        test('does not hide a failed lookup', async () => {
+            const failing = async () => {
+                throw new Error('HTTP 500 with no response body');
+            };
+            await expect(nucleusHubCodes.resolveHubCode({ address: { suburb: 'Sandton' }, lookup: failing, ifNotFound: 'unknown' })).rejects.toThrow('HTTP 500');
+        });
     });
 });
 

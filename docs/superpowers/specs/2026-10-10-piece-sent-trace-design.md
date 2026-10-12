@@ -134,6 +134,8 @@ The same check follows each later Nucleus step in the flow (for example the impo
 
 The step name in `errorMessage` is written by hand per branch, so the shipping screen says which stage failed.
 
+**Unresolved hub codes (added 2026-10-12).** Nucleus accepts `UNK` as the hub code when the destination hub is unknown. Find Hub Code has an **If no hub code is found** setting, which defaults to **Use UNK (Unknown)**. When the address matches no hub, or more than one, the step succeeds with `{ hubCode: "UNK", matchedOn: "fallback", candidates: [], reason }` and booking carries on. `reason` is the text the step would otherwise have failed with. Failed calls to Nucleus still count as failures. So in the courier flow, Find Hub Code's `ok: false` branch only catches Nucleus or login problems. A flow can also route on `{{find_hub.output.matchedOn}}` equal to `fallback` to tell JRNY that a dispatch was booked with `UNK`.
+
 ### JRNY team (raised by the user, not built here)
 
 - The dispatch stays in `awaiting_booking` when booking fails. The failure is shown on the dispatch shipping screen.
