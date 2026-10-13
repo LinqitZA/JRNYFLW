@@ -7993,6 +7993,20 @@
         "vitest": "3.0.8",
       },
     },
+    "packages/pieces/custom/aon-portal": {
+      "name": "@jrnyflw/aon-portal",
+      "version": "0.1.0",
+      "dependencies": {
+        "@activepieces/pieces-common": "workspace:*",
+        "@activepieces/pieces-framework": "workspace:*",
+        "@activepieces/shared": "workspace:*",
+        "@jrnyflw/piece-trace": "workspace:*",
+        "tslib": "2.6.2",
+      },
+      "devDependencies": {
+        "vitest": "3.0.8",
+      },
+    },
     "packages/pieces/custom/excel": {
       "name": "@jrnyflw/excel",
       "version": "0.0.1",
@@ -10644,6 +10658,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.9", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.0.3", "@jridgewell/sourcemap-codec": "^1.4.10" } }, "sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ=="],
+
+    "@jrnyflw/aon-portal": ["@jrnyflw/aon-portal@workspace:packages/pieces/custom/aon-portal"],
 
     "@jrnyflw/excel": ["@jrnyflw/excel@workspace:packages/pieces/custom/excel"],
 
