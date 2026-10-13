@@ -9,7 +9,7 @@ export const courierResponse = createAction({
   name: 'courier_response',
   displayName: 'Courier Response',
   description:
-    'Report a courier booking, tracking update, POD or failure back to a JRNY dispatch note. Blank fields keep their current value on the dispatch note. The dispatch must be ready_to_dispatch, dispatched or invoiced.',
+    'Report a courier booking, tracking update, POD or failure back to a JRNY dispatch note. Blank fields keep their current value. The courier status only moves forward: sending the same or an earlier status is recorded but not applied (applied: false), so re-sending is safe. Failed records the error without changing the status.',
   props: {
     dispatchNumber: Property.ShortText({
       displayName: 'Dispatch Number',
@@ -22,6 +22,7 @@ export const courierResponse = createAction({
       options: {
         options: [
           { label: 'Booked', value: 'booked' },
+          { label: 'Manifested', value: 'manifested' },
           { label: 'Collected', value: 'collected' },
           { label: 'In Transit', value: 'in_transit' },
           { label: 'Delivered', value: 'delivered' },
@@ -46,9 +47,31 @@ export const courierResponse = createAction({
     podSignedBy: Property.ShortText({ displayName: 'POD Signed By', description: 'Max 255.', required: false }),
     podSignedAt: Property.ShortText({ displayName: 'POD Signed At', description: 'ISO timestamp.', required: false }),
     podNotes: Property.LongText({ displayName: 'POD Notes', required: false }),
+    statusAt: Property.ShortText({
+      displayName: 'Status At',
+      description: 'ISO timestamp of when this status happened at the courier, e.g. the POD signature time for Delivered.',
+      required: false,
+    }),
+    hubCode: Property.ShortText({ displayName: 'Hub Code', description: 'The courier hub the booking went to. Max 20.', required: false }),
+    courierWarning: Property.LongText({
+      displayName: 'Courier Warning',
+      description: 'A booking someone needs to look at, e.g. booked with hub UNK. A later Booked response without one clears it.',
+      required: false,
+    }),
+    podUrl: Property.ShortText({ displayName: 'POD URL', description: 'http(s) link to the POD. Max 2000.', required: false }),
+    grnNumber: Property.ShortText({
+      displayName: 'GRN Number',
+      description: "The customer's GRN, when the driver captured it. Max 60. JRNY never overwrites a GRN entered by hand.",
+      required: false,
+    }),
     errorMessage: Property.LongText({
       displayName: 'Error Message',
-      description: 'For Failed. JRNY includes it in the failure notification but does not store it on the dispatch note.',
+      description: 'For Failed. Stored on the dispatch note and shown to the JRNY user. "<Step>: <reason>" also gives JRNY the failed step.',
+      required: false,
+    }),
+    failedStep: Property.ShortText({
+      displayName: 'Failed Step',
+      description: 'For Failed. The step that failed, max 60. Leave blank to let JRNY take it from the Error Message prefix.',
       required: false,
     }),
     onFailure: pieceTrace.onFailureProperty(),
@@ -71,7 +94,13 @@ export const courierResponse = createAction({
           ...present('podSignedBy', p.podSignedBy),
           ...present('podSignedAt', p.podSignedAt),
           ...present('podNotes', p.podNotes),
+          ...present('statusAt', p.statusAt),
+          ...present('hubCode', p.hubCode),
+          ...present('courierWarning', p.courierWarning),
+          ...present('podUrl', p.podUrl),
+          ...present('grnNumber', p.grnNumber),
           ...present('errorMessage', p.errorMessage),
+          ...present('failedStep', p.failedStep),
         };
         const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/dispatch-notes/${encodeURIComponent(p.dispatchNumber.trim())}/courier-response`;
         return jrnyClient.callJrny({ trace, auth, method: HttpMethod.PATCH, path, body });
