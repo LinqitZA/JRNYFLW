@@ -2,8 +2,8 @@ import { describe, expect, test } from 'vitest';
 import { jrnyOperations } from '../src/lib/operations';
 
 describe('jrnyOperations manifest', () => {
-    test('contains all 88 operations', () => {
-        expect(jrnyOperations.length).toBe(88);
+    test('contains all 89 operations', () => {
+        expect(jrnyOperations.length).toBe(89);
     });
     test('action names are unique', () => {
         const names = jrnyOperations.map((o) => o.name);
@@ -20,5 +20,9 @@ describe('jrnyOperations manifest', () => {
     test('listProducts exposes its query params', () => {
         const op = jrnyOperations.find((o) => o.name === 'list_products');
         expect(op?.queryParams.map((q) => q.name)).toEqual(expect.arrayContaining(['search', 'cursor', 'limit']));
+    });
+    test('listDispatchNotes exposes the courier filters', () => {
+        const op = jrnyOperations.find((o) => o.name === 'list_dispatch_notes');
+        expect(op?.queryParams.map((q) => q.name)).toEqual(expect.arrayContaining(['courierCode', 'courierStatus', 'podMissing', 'grnMissing']));
     });
 });

@@ -71,6 +71,54 @@ describe('jrny trace', () => {
         expect(message).toContain('req-42');
     });
 
+    test('continue mode gives the JRNY error code, every code in the details, and the details', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('Bad Request', 'ERR_BAD_REQUEST', config, undefined, {
+            status: 400, statusText: 'Bad Request', headers: {}, config,
+            data: {
+                error: {
+                    code: 'VALIDATION_ERROR',
+                    message: 'Validation failed for 2 line items',
+                    details: { lines: [
+                        { index: 19, stockCode: 'AA402860', code: 'STOCK_ITEM_NOT_FOUND', message: "Stock item 'AA402860' not found" },
+                        { index: 20, stockCode: '6003501', code: 'STOCK_ITEM_NOT_FOUND', message: "Stock item '6003501' not found" },
+                        { index: 21, addressCode: 'S0110', code: 'ADDRESS_NOT_FOUND', message: 'unknown address' },
+                    ] },
+                },
+                requestId: 'f5758e53',
+            },
+        })));
+        const propsValue = { dispatchNumber: 'DN-000026', courierStatus: 'booked', onFailure: 'continue' };
+        const result = await courierResponse.run({ ...createMockActionContext({ propsValue }), auth });
+        expect(result).toMatchObject({
+            ok: false,
+            error: {
+                status: 400,
+                code: 'VALIDATION_ERROR',
+                codes: ['VALIDATION_ERROR', 'STOCK_ITEM_NOT_FOUND', 'ADDRESS_NOT_FOUND'],
+                details: { lines: [{ stockCode: 'AA402860' }, { stockCode: '6003501' }, { addressCode: 'S0110' }] },
+            },
+        });
+    });
+
+    test('generated actions describe JRNY error envelopes the same way as the curated ones', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('Unprocessable', 'ERR_BAD_REQUEST', config, undefined, {
+            status: 422, statusText: 'Unprocessable', headers: {}, config,
+            data: { error: { code: 'CREDIT_CHECK_FAILED', message: 'Over the credit limit' }, requestId: 'req-7' },
+        })));
+        const action = buildJrnyAction({
+            name: 'confirm_sales_order', displayName: 'Confirm Sales Order', description: '', method: 'POST',
+            path: '/api/v1/integration/entities/{entityId}/sales-orders/{orderNumber}/confirm', tag: 'x',
+            pathParams: ['orderNumber'], queryParams: [], hasBody: false,
+        });
+        const result = await action.run({ ...createMockActionContext({ propsValue: { orderNumber: 'SO-1', onFailure: 'continue' } }), auth });
+        expect(result).toMatchObject({
+            ok: false,
+            error: { message: 'JRNY API error 422 CREDIT_CHECK_FAILED: Over the credit limit (request req-7)', status: 422, code: 'CREDIT_CHECK_FAILED', codes: ['CREDIT_CHECK_FAILED'] },
+        });
+    });
+
     test('generated actions record the call through the real client', async () => {
         sendRequest.mockResolvedValueOnce({ status: 200, body: { code: 'ACME' } });
         const action = buildJrnyAction({

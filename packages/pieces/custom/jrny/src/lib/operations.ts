@@ -342,6 +342,19 @@ export const jrnyOperations: JrnyOperation[] = [
     "hasBody": false
   },
   {
+    "name": "send_test_event",
+    "displayName": "Send Test Event",
+    "description": "Send a test event with sample payload to a webhook subscription",
+    "method": "POST",
+    "path": "/api/v1/admin/integration/webhooks/{entityId}/{subscriptionId}/test-event",
+    "tag": "Integration - Webhook Subscriptions",
+    "pathParams": [
+      "subscriptionId"
+    ],
+    "queryParams": [],
+    "hasBody": false
+  },
+  {
     "name": "list_entities",
     "displayName": "List Entities",
     "description": "List entities accessible to the API key",
@@ -473,6 +486,22 @@ export const jrnyOperations: JrnyOperation[] = [
         "required": false
       },
       {
+        "name": "courierCode",
+        "required": false
+      },
+      {
+        "name": "courierStatus",
+        "required": false
+      },
+      {
+        "name": "podMissing",
+        "required": false
+      },
+      {
+        "name": "grnMissing",
+        "required": false
+      },
+      {
         "name": "cursor",
         "required": false
       },
@@ -507,7 +536,7 @@ export const jrnyOperations: JrnyOperation[] = [
       "dispatchNumber"
     ],
     "queryParams": [],
-    "hasBody": false
+    "hasBody": true
   },
   {
     "name": "list_customers",

@@ -178,6 +178,43 @@ describe('pieceTrace.run', () => {
         });
     });
 
+    test('continue: passes on an error code, codes and details, with secrets scrubbed', async () => {
+        const failure = Object.assign(new Error('Validation failed'), {
+            code: 'VALIDATION_ERROR',
+            codes: ['VALIDATION_ERROR', 'STOCK_ITEM_NOT_FOUND'],
+            details: { lines: [{ stockCode: 'AA402860', note: 'key hunter22' }] },
+        });
+        const result = await pieceTrace.run({
+            onFailure: 'continue',
+            secrets: ['hunter22'],
+            work: async () => {
+                throw failure;
+            },
+        });
+        expect(result).toMatchObject({
+            ok: false,
+            error: {
+                message: 'Validation failed',
+                status: null,
+                code: 'VALIDATION_ERROR',
+                codes: ['VALIDATION_ERROR', 'STOCK_ITEM_NOT_FOUND'],
+                details: { lines: [{ stockCode: 'AA402860', note: 'key [redacted]' }] },
+            },
+        });
+    });
+
+    test('continue: ignores code, codes and details of the wrong type', async () => {
+        const failure = Object.assign(new Error('odd'), { code: 42, codes: 'X', details: undefined });
+        const result = await pieceTrace.run({
+            onFailure: 'continue',
+            secrets: [],
+            work: async () => {
+                throw failure;
+            },
+        });
+        expect(result).toEqual({ ok: false, sent: [], output: null, error: { message: 'odd', status: null } });
+    });
+
     test('continue: a failure before any call returns an empty sent list', async () => {
         const result = await pieceTrace.run({
             onFailure: 'continue',
