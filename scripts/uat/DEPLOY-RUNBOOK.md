@@ -11,7 +11,7 @@ The image is **built on the customer's server** from a clone of the repo, so
 
 | File | Role |
 |---|---|
-| `Dockerfile.uat` | All-in-one image. Keeps the custom pieces (jrny, nucleus, shoprite, aon-portal, mapper, excel, data-mapper). **Not** the base `Dockerfile`, which deletes them. |
+| `Dockerfile.uat` | All-in-one image. Keeps the custom pieces (jrny, nucleus, shoprite, aon-portal, ms-graph-mail, mapper, excel, data-mapper). **Not** the base `Dockerfile`, which deletes them. |
 | `docker-compose.uat.yml` | app + postgres + redis. Compose project `jrnyflw-uat`. App binds `127.0.0.1` only; Postgres/Redis get no host ports. |
 | `.env.uat.example` | Template for `.env.uat` — secrets, DB creds, `AP_DEV_PIECES`, admin seed vars. |
 | `scripts/uat/seed-admin.sh` | Creates the platform owner on first boot. Idempotent. |
@@ -251,7 +251,7 @@ The dump is only restorable alongside the matching `AP_ENCRYPTION_KEY`.
 
 | Symptom | Cause / fix |
 |---|---|
-| A custom piece is missing from the piece list | `AP_DEV_PIECES` in `.env.uat` uses **dist folder names**, not package names (for example `aon-portal` for the AON Customer Portal piece, `nucleus`, `jrny`, `shoprite`). Confirm the folder exists in the image: `docker exec jrnyflw-uat-app ls packages/pieces/custom` |
+| A custom piece is missing from the piece list | `AP_DEV_PIECES` in `.env.uat` uses **dist folder names**, not package names (for example `aon-portal` for the AON Customer Portal piece, `ms-graph-mail` for MS Graph Mail, `nucleus`, `jrny`, `shoprite`). Confirm the folder exists in the image: `docker exec jrnyflw-uat-app ls packages/pieces/custom` |
 | Build killed around the `web` step | Out of RAM. Needs ~8 GB. |
 | App container restarts in a loop | `docker compose ... logs app` — usually a bad `AP_POSTGRES_PASSWORD` or a missing `AP_ENCRYPTION_KEY` in `.env.uat`. |
 | Builder loses live run updates / spinner hangs | nginx is missing the WebSocket upgrade headers — re-check step 7.3. |

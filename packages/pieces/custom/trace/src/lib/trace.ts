@@ -28,7 +28,7 @@ function onFailureProperty() {
     return Property.StaticDropdown<OnFailure>({
         displayName: 'If the call fails',
         description:
-            'Continue makes this step succeed with { ok: false, error } so a Router can handle the failure. If you continue, end the failure branch with a step that fails the run, or the run will show as successful.',
+            'Continue makes this step succeed with { ok: false, error } so a Router can handle the failure, and the run shows as successful. To still fail the run, end the failure branch with a step that fails, but not inside a loop, where that stops the remaining items.',
         required: false,
         defaultValue: 'stop',
         options: {
