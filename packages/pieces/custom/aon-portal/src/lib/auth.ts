@@ -19,7 +19,7 @@ export const aonPortalAuth = PieceAuth.CustomAuth({
         if (result.ok) {
             return { valid: true };
         }
-        if (result.error.status === 401) {
+        if (result.error.status !== null && KEY_REJECTED.includes(result.error.status)) {
             return { valid: false, error: 'The portal rejected this API key' };
         }
         return { valid: false, error: `Could not reach the portal: ${result.error.message}` };
@@ -27,5 +27,7 @@ export const aonPortalAuth = PieceAuth.CustomAuth({
 });
 
 const ORDERS_PATH = '/api/erp/orders';
+// The portal answers a missing key with 401 and a wrong key with 403.
+const KEY_REJECTED = [401, 403];
 
 export type AonPortalAuth = { portalUrl: string; apiKey: string };

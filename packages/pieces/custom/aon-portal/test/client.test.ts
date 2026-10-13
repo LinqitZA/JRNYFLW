@@ -63,6 +63,11 @@ describe('aonPortalAuth.validate', () => {
         expect(await aonPortalAuth.validate?.({ auth, server })).toEqual({ valid: false, error: 'The portal rejected this API key' });
     });
 
+    test('explains a wrong key, which the portal answers with 403', async () => {
+        sendRequest.mockRejectedValueOnce(httpError({ status: 403, data: { error: 'Invalid API key', message: 'The provided API key is not valid.' } }));
+        expect(await aonPortalAuth.validate?.({ auth, server })).toEqual({ valid: false, error: 'The portal rejected this API key' });
+    });
+
     test('reports other failures with their status and never the key', async () => {
         sendRequest.mockRejectedValueOnce(httpError({ status: 502, data: '<html>Bad Gateway</html>' }));
         const result = await aonPortalAuth.validate?.({ auth, server });

@@ -30,7 +30,7 @@ Given by the portal team, and probed read-only against the live Shoprite portal 
 | List orders | `GET /api/erp/orders?status=<status>&page=<n>&limit=<n>` |
 | Acknowledge | `PUT /api/erp/orders/<id>/acknowledge` with JSON `{"erpOrderNumber": "<number>"}` |
 
-Auth is an `X-API-Key` header. A missing or wrong key returns 401 `{"error": "API key required", "message": "..."}`.
+Auth is an `X-API-Key` header. A missing key returns 401 `{"error": "API key required", "message": "..."}`; a wrong key returns 403 `{"error": "Invalid API key", "message": "The provided API key is not valid."}` (found in the live check on 2026-10-13).
 
 List response:
 
@@ -67,7 +67,7 @@ Observed behaviour:
 - **Portal URL**: for example `https://shoprite.accessoffice.co.za`. A trailing slash is ignored.
 - **API Key**: a secret.
 
-Saving a connection calls `GET /api/erp/orders?status=processing&limit=1`. A 401 fails validation with "The portal rejected this API key". Any other failure fails it with the status and the portal's message.
+Saving a connection calls `GET /api/erp/orders?status=processing&limit=1`. A 401 or 403 fails validation with "The portal rejected this API key". Any other failure fails it with the status and the portal's message.
 
 ### Actions
 
@@ -123,7 +123,7 @@ Unit tests, with `httpClient.sendRequest` mocked as in the other pieces:
 - Acknowledge sends `PUT …/<id>/acknowledge` with the trimmed `erpOrderNumber`.
 - Acknowledge rejects `10001` as an Order ID without calling the portal.
 - The API key appears nowhere in a successful result, in a 401 failure, or in continue mode's error.
-- Connection validation: 200 passes, 401 gives the API-key message.
+- Connection validation: 200 passes, 401 and 403 give the API-key message.
 - `piece-trace`: an `X-API-Key` header is recorded as `[redacted]` whatever its case.
 
 Live check, read-only: run List Orders against the Shoprite portal and confirm it returns the current `processing` orders. **Acknowledge Order is not run against the live portal.**

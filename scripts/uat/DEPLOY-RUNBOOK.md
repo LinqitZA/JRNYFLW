@@ -249,7 +249,7 @@ The dump is only restorable alongside the matching `AP_ENCRYPTION_KEY`.
 
 | Symptom | Cause / fix |
 |---|---|
-| A custom piece is missing from the piece list | `AP_DEV_PIECES` in `.env.uat` uses **dist folder names**, not package names. Confirm the folder exists in the image: `docker exec jrnyflw-uat-app ls packages/pieces/custom` |
+| A custom piece is missing from the piece list | `AP_DEV_PIECES` in `.env.uat` uses **dist folder names**, not package names (for example `aon-portal` for the AON Customer Portal piece, `nucleus`, `jrny`, `shoprite`). Confirm the folder exists in the image: `docker exec jrnyflw-uat-app ls packages/pieces/custom` |
 | Build killed around the `web` step | Out of RAM. Needs ~8 GB. |
 | App container restarts in a loop | `docker compose ... logs app` — usually a bad `AP_POSTGRES_PASSWORD` or a missing `AP_ENCRYPTION_KEY` in `.env.uat`. |
 | Builder loses live run updates / spinner hangs | nginx is missing the WebSocket upgrade headers — re-check step 7.3. |
