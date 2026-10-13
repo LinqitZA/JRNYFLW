@@ -11,7 +11,7 @@ The image is **built on the customer's server** from a clone of the repo, so
 
 | File | Role |
 |---|---|
-| `Dockerfile.uat` | All-in-one image. Keeps the custom pieces (jrny, nucleus, shoprite, mapper, excel, data-mapper). **Not** the base `Dockerfile`, which deletes them. |
+| `Dockerfile.uat` | All-in-one image. Keeps the custom pieces (jrny, nucleus, shoprite, aon-portal, mapper, excel, data-mapper). **Not** the base `Dockerfile`, which deletes them. |
 | `docker-compose.uat.yml` | app + postgres + redis. Compose project `jrnyflw-uat`. App binds `127.0.0.1` only; Postgres/Redis get no host ports. |
 | `.env.uat.example` | Template for `.env.uat` — secrets, DB creds, `AP_DEV_PIECES`, admin seed vars. |
 | `scripts/uat/seed-admin.sh` | Creates the platform owner on first boot. Idempotent. |
@@ -178,8 +178,8 @@ Firewall: only 80 and 443 need to be open. The app binds `127.0.0.1` only.
 ## Step 8 — Acceptance checks
 
 1. `https://$DOMAIN` loads; sign in with the admin email and the password from step 3.
-2. Create a flow, add a step, and confirm **jrny, nucleus, shoprite, mapper, excel,
-   data-mapper** all appear in the piece list.
+2. Create a flow, add a step, and confirm **jrny, nucleus, shoprite, AON Customer Portal,
+   mapper, excel, data-mapper** all appear in the piece list.
 3. In a logged-out private window, open `https://$DOMAIN/sign-up` and confirm a stranger
    cannot self-register (see the step 6 caveat).
 4. Hand over to the customer to create their JRNY / Nucleus / Shoprite connections in the
@@ -199,6 +199,8 @@ docker compose --env-file .env.uat -f docker-compose.uat.yml up -d
 ```
 
 ### One-off: piece trace upgrade (jrny / nucleus / shoprite 0.1.0)
+
+For the full release that contains this upgrade, follow `RELEASE-2026-10-13.md`.
 
 These versions change what every JRNY, Nucleus and Shoprite step returns: the old fields move under `output`, next to `ok` and `sent`. Flows that reference these steps break until migrated.
 
