@@ -8,6 +8,16 @@ export const nucleusAuth = PieceAuth.CustomAuth({
         username: Property.ShortText({ displayName: 'Username', required: true }),
         password: PieceAuth.SecretText({ displayName: 'Password', required: true }),
         groupName: Property.ShortText({ displayName: 'Group Name', description: 'GroupName provided by Winfreight; sent on every request.', required: true }),
+        trackingUrl: Property.ShortText({
+            displayName: 'Tracking URL',
+            description: 'Provided by Nucleus. The waybill number is added to the end to make each tracking link. Leave blank for no tracking links.',
+            required: false,
+        }),
+        podUrl: Property.ShortText({
+            displayName: 'POD URL',
+            description: 'Provided by Nucleus. The waybill number is added to the end to make each proof-of-delivery link. Leave blank for no POD links.',
+            required: false,
+        }),
     },
 });
 
@@ -16,4 +26,6 @@ export type NucleusAuth = {
     username: string;
     password: string;
     groupName: string;
+    trackingUrl?: string;
+    podUrl?: string;
 };

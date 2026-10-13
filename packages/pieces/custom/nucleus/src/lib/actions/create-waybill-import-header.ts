@@ -3,6 +3,7 @@ import { HttpMethod } from '@activepieces/pieces-common';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
 import { pieceTrace } from '@jrnyflw/piece-trace';
+import { nucleusPodStatus } from '../pod-status';
 
 export const createWaybillImportHeader = createAction({
     auth: nucleusAuth,
@@ -110,7 +111,15 @@ export const createWaybillImportHeader = createAction({
                     ...always('AccNum2', p.accNum2),
                     ...always('Filename', p.filename),
                 };
-                return nucleusClient.call({ trace, auth, store: context.store, method: HttpMethod.POST, path: 'CreateWaybillImportHeader', query });
+                const response = await nucleusClient.call<Record<string, unknown>>({
+                    trace,
+                    auth,
+                    store: context.store,
+                    method: HttpMethod.POST,
+                    path: 'CreateWaybillImportHeader',
+                    query,
+                });
+                return { ...response, trackingUrl: nucleusPodStatus.trackingUrlFor({ links: auth, waybill: p.waybillNo.trim() }) };
             },
         });
     },
