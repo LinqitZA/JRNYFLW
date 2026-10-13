@@ -1418,6 +1418,9 @@
       "@jrnyflw/aon-portal": [
         "packages/pieces/custom/aon-portal/src/index.ts"
       ],
+      "@jrnyflw/ms-graph-mail": [
+        "packages/pieces/custom/ms-graph-mail/src/index.ts"
+      ],
       "@activepieces/piece-meistertask": [
         "packages/pieces/community/meistertask/src/index.ts"
       ],
