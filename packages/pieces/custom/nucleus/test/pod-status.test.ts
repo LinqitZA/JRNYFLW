@@ -107,6 +107,26 @@ describe('getPodBulkExtra', () => {
         expect(result).toMatchObject({ ok: false, error: { message: 'Nucleus error: PLEASE PROVIDE A VALID GROUPNAME' } });
     });
 
+    test('splits long lists into calls of at most 50 waybills and merges the results in order', async () => {
+        const requested = Array.from({ length: 120 }, (_, i) => `W-${String(i).padStart(3, '0')}`);
+        sendRequest.mockImplementation(async (req: { url: string; queryParams: Record<string, string> }) => {
+            if (req.url.endsWith('/token')) {
+                return TOKEN_RESPONSE;
+            }
+            const asked = req.queryParams['waybillnumbers'].split(',');
+            if (asked.includes('W-060')) {
+                return { status: 200, body: { ResultSets: [[{ ErrorMessage: 'ERROR - Waybill/s - Does not Exist' }]] } };
+            }
+            return { status: 200, body: { ResultSets: [asked.map((w) => ({ ...IN_TRANSIT, waybill: w })), VALID] } };
+        });
+        const ctx = { ...createMockActionContext({ propsValue: { waybillNumbers: requested.join(',') } }), auth };
+        const result = await getPodBulkExtra.run(ctx);
+        const lookups = sendRequest.mock.calls.map((c) => c[0]).filter((req) => req.url.endsWith('/GetPODInformation_Bulk_Extra'));
+        expect(lookups.map((req) => req.queryParams['waybillnumbers'].split(',').length)).toEqual([50, 50, 20]);
+        expect(result.output?.waybills.map((w) => w.waybillNumber)).toEqual([...requested.slice(0, 50), ...requested.slice(100)]);
+        expect(result.output?.notFound).toEqual(requested.slice(50, 100));
+    });
+
     test('fails before calling Nucleus when the list has no waybill numbers', async () => {
         const ctx = { ...createMockActionContext({ propsValue: { waybillNumbers: ' , ', onFailure: 'continue' } }), auth };
         const result = await getPodBulkExtra.run(ctx);

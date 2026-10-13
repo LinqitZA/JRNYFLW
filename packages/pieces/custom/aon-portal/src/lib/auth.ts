@@ -17,7 +17,7 @@ export const aonPortalAuth = PieceAuth.CustomAuth({
             work: (trace) => aonPortalClient.call({ trace, auth, method: HttpMethod.GET, path: ORDERS_PATH, query: { status: 'processing', limit: '1' } }),
         });
         if (result.ok) {
-            return { valid: true };
+            return aonPortalClient.isOrderPage(result.output) ? { valid: true } : { valid: false, error: 'The Portal URL does not point at an AON portal API' };
         }
         if (result.error.status !== null && KEY_REJECTED.includes(result.error.status)) {
             return { valid: false, error: 'The portal rejected this API key' };

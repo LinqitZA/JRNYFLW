@@ -29,6 +29,7 @@ export const listOrders = createAction({
             secrets: aonPortalClient.secretsOf(auth),
             work: async (trace) => {
                 const orders: unknown[] = [];
+                const seen = new Set<string>();
                 for (let pageNumber = 1; ; pageNumber++) {
                     const body = await aonPortalClient.call<unknown>({
                         trace,
@@ -37,7 +38,7 @@ export const listOrders = createAction({
                         path: '/api/erp/orders',
                         query: { status, page: String(pageNumber), limit: String(PAGE_SIZE) },
                     });
-                    if (!isOrderPage(body)) {
+                    if (!aonPortalClient.isOrderPage(body)) {
                         throw new Error('Unexpected response from the portal');
                     }
                     if (body.pagination.totalPages > MAX_PAGES) {
@@ -45,7 +46,17 @@ export const listOrders = createAction({
                             `More than ${(MAX_PAGES * PAGE_SIZE).toLocaleString('en-US')} orders with status ${status}; narrow the status or ask for a date filter`,
                         );
                     }
-                    orders.push(...body.orders);
+                    // An order placed while paging shifts the rest down a page, so the same order can appear twice.
+                    for (const order of body.orders) {
+                        const id = orderIdOf(order);
+                        if (id !== undefined && seen.has(id)) {
+                            continue;
+                        }
+                        if (id !== undefined) {
+                            seen.add(id);
+                        }
+                        orders.push(order);
+                    }
                     if (pageNumber >= body.pagination.totalPages) {
                         return { orders, total: body.pagination.total };
                     }
@@ -55,20 +66,11 @@ export const listOrders = createAction({
     },
 });
 
-function isOrderPage(value: unknown): value is OrderPage {
-    if (typeof value !== 'object' || value === null || !('orders' in value) || !('pagination' in value)) {
-        return false;
+function orderIdOf(order: unknown): string | undefined {
+    if (typeof order !== 'object' || order === null || !('id' in order)) {
+        return undefined;
     }
-    const pagination: unknown = value.pagination;
-    return (
-        Array.isArray(value.orders) &&
-        typeof pagination === 'object' &&
-        pagination !== null &&
-        'totalPages' in pagination &&
-        typeof pagination.totalPages === 'number' &&
-        'total' in pagination &&
-        typeof pagination.total === 'number'
-    );
+    return typeof order.id === 'string' ? order.id : undefined;
 }
 
 const PAGE_SIZE = 50;
@@ -76,4 +78,3 @@ const PAGE_SIZE = 50;
 const MAX_PAGES = 100;
 
 type OrderStatus = 'processing' | 'acknowledged' | 'completed' | 'cancelled' | 'shipped' | 'on_hold';
-type OrderPage = { orders: unknown[]; pagination: { total: number; totalPages: number } };

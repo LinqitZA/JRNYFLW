@@ -25,6 +25,24 @@ function secretsOf(auth: AonPortalAuth): string[] {
     return [auth.apiKey];
 }
 
-export const aonPortalClient = { joinUrl, call, secretsOf };
+function isOrderPage(value: unknown): value is OrderPage {
+    if (typeof value !== 'object' || value === null || !('orders' in value) || !('pagination' in value)) {
+        return false;
+    }
+    const pagination: unknown = value.pagination;
+    return (
+        Array.isArray(value.orders) &&
+        typeof pagination === 'object' &&
+        pagination !== null &&
+        'totalPages' in pagination &&
+        typeof pagination.totalPages === 'number' &&
+        'total' in pagination &&
+        typeof pagination.total === 'number'
+    );
+}
+
+export const aonPortalClient = { joinUrl, call, secretsOf, isOrderPage };
+
+export type OrderPage = { orders: unknown[]; pagination: { total: number; totalPages: number } };
 
 type CallParams = { trace: Tracer; auth: AonPortalAuth; method: HttpMethod; path: string; query?: Record<string, string>; body?: unknown };

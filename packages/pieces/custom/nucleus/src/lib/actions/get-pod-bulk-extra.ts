@@ -1,6 +1,6 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
-import { tryCatch } from '@activepieces/shared';
+import { chunk, tryCatch } from '@activepieces/shared';
 import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
 import { pieceTrace } from '@jrnyflw/piece-trace';
@@ -26,27 +26,33 @@ export const getPodBulkExtra = createAction({
                 if (requested.length === 0) {
                     throw new Error('Provide at least one waybill number');
                 }
-                const { data: body, error } = await tryCatch(() =>
-                    nucleusClient.call({
-                        trace,
-                        auth,
-                        store: context.store,
-                        method: HttpMethod.GET,
-                        path: 'GetPODInformation_Bulk_Extra',
-                        query: { waybillnumbers: requested.join(',') },
-                    }),
-                );
-                if (error) {
-                    // Nucleus answers with an error row only when none of the waybills exist; a partly unknown list just omits them.
-                    if (error instanceof Error && NONE_EXIST.test(error.message)) {
-                        return { waybills: [], notFound: requested };
+                const rows: unknown[] = [];
+                for (const batch of chunk(requested, BATCH_SIZE)) {
+                    const { data: body, error } = await tryCatch(() =>
+                        nucleusClient.call({
+                            trace,
+                            auth,
+                            store: context.store,
+                            method: HttpMethod.GET,
+                            path: 'GetPODInformation_Bulk_Extra',
+                            query: { waybillnumbers: batch.join(',') },
+                        }),
+                    );
+                    if (error) {
+                        // Nucleus answers with an error row only when none of the waybills exist; a partly unknown list just omits them.
+                        if (error instanceof Error && NONE_EXIST.test(error.message)) {
+                            continue;
+                        }
+                        throw error;
                     }
-                    throw error;
+                    rows.push(...nucleusPodStatus.rowsOf(body));
                 }
-                return nucleusPodStatus.toPodStatuses({ requested, rows: nucleusPodStatus.rowsOf(body), links: auth });
+                return nucleusPodStatus.toPodStatuses({ requested, rows, links: auth });
             },
         });
     },
 });
 
 const NONE_EXIST = /Waybill\/s - Does not Exist/i;
+// The waybills go in the query string, so long lists are split to stay well under server URL limits.
+const BATCH_SIZE = 50;

@@ -43,6 +43,14 @@ describe('listOrders', () => {
         expect(JSON.stringify(result)).not.toContain(API_KEY);
     });
 
+    test('returns an order once even when a new order pushes it onto the next page', async () => {
+        sendRequest
+            .mockResolvedValueOnce(page({ page: 1, totalPages: 2, total: 3, orders: [{ id: 'new' }, { id: 'a' }] }))
+            .mockResolvedValueOnce(page({ page: 2, totalPages: 2, total: 3, orders: [{ id: 'a' }, { id: 'b' }] }));
+        const result = await run({});
+        expect(result.output?.orders).toEqual([{ id: 'new' }, { id: 'a' }, { id: 'b' }]);
+    });
+
     test('defaults to processing and returns an empty list when there are no orders', async () => {
         sendRequest.mockResolvedValueOnce(page({ page: 1, totalPages: 0, total: 0, orders: [] }));
         const result = await run({});

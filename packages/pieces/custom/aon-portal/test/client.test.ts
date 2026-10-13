@@ -58,6 +58,11 @@ describe('aonPortalAuth.validate', () => {
         expect(sendRequest.mock.calls[0][0].queryParams).toEqual({ status: 'processing', limit: '1' });
     });
 
+    test('rejects a URL that answers 200 but is not the portal API', async () => {
+        sendRequest.mockResolvedValueOnce({ status: 200, body: '<!doctype html><html>portal login</html>' });
+        expect(await aonPortalAuth.validate?.({ auth, server })).toEqual({ valid: false, error: 'The Portal URL does not point at an AON portal API' });
+    });
+
     test('explains a rejected key', async () => {
         sendRequest.mockRejectedValueOnce(httpError({ status: 401, data: { error: 'API key required' } }));
         expect(await aonPortalAuth.validate?.({ auth, server })).toEqual({ valid: false, error: 'The portal rejected this API key' });
