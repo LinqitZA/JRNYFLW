@@ -119,6 +119,20 @@ describe('jrny trace', () => {
         });
     });
 
+    test('says when JRNY gave no response body, e.g. it could not be reached', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('connect ETIMEDOUT', 'ETIMEDOUT', config)));
+        const action = buildJrnyAction({
+            name: 'list_quotations', displayName: 'List Quotations', description: '', method: 'GET',
+            path: '/api/v1/integration/entities/{entityId}/quotations', tag: 'x', pathParams: [], queryParams: [], hasBody: false,
+        });
+        const result = await action.run({ ...createMockActionContext({ propsValue: { onFailure: 'continue' } }), auth });
+        expect(result).toMatchObject({
+            ok: false,
+            error: { message: 'JRNY API call to GET https://jrny/api/v1/integration/entities/ent-1/quotations got no response body (HTTP 500, or JRNY could not be reached)' },
+        });
+    });
+
     test('generated actions record the call through the real client', async () => {
         sendRequest.mockResolvedValueOnce({ status: 200, body: { code: 'ACME' } });
         const action = buildJrnyAction({

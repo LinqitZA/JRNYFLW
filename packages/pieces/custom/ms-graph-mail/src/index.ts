@@ -2,7 +2,6 @@ import { createPiece } from '@activepieces/pieces-framework';
 import { PieceCategory } from '@activepieces/shared';
 import { msGraphMailAuth } from './lib/auth';
 import { sendEmail } from './lib/actions/send-email';
-import { customApiCall } from './lib/actions/custom-api-call';
 
 export const msGraphMail = createPiece({
     displayName: 'MS Graph Mail',
@@ -12,6 +11,6 @@ export const msGraphMail = createPiece({
     authors: ['jrnyflw'],
     categories: [PieceCategory.COMMUNICATION],
     auth: msGraphMailAuth,
-    actions: [sendEmail, customApiCall],
+    actions: [sendEmail],
     triggers: [],
 });

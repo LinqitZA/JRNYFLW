@@ -1,19 +1,9 @@
-import { HttpError, HttpMethod, HttpRequest, httpClient } from '@activepieces/pieces-common';
+import { HttpError, HttpMethod, HttpRequest } from '@activepieces/pieces-common';
 import { pieceTrace, Tracer } from '@jrnyflw/piece-trace';
 
 async function getToken({ trace, auth }: { trace: Tracer; auth: MsGraphMailAuth }): Promise<string> {
     try {
         const response = await trace.send<unknown>({ request: tokenRequest({ auth, secret: auth.clientSecret }), bodyForTrace: tokenForm({ auth, secret: pieceTrace.redacted }) });
-        return accessTokenOf(response.body);
-    } catch (err) {
-        throw new Error(describeTokenFailure(err));
-    }
-}
-
-// Custom API Call builds its own request outside the trace, so it needs a token without one.
-async function getUntracedToken({ auth }: { auth: MsGraphMailAuth }): Promise<string> {
-    try {
-        const response = await httpClient.sendRequest<unknown>(tokenRequest({ auth, secret: auth.clientSecret }));
         return accessTokenOf(response.body);
     } catch (err) {
         throw new Error(describeTokenFailure(err));
@@ -39,8 +29,9 @@ async function sendMail({ trace, auth, token, payload }: { trace: Tracer; auth: 
     }
 }
 
+// The token form carries the secret URL-encoded, so an error page that echoes the form shows that spelling instead.
 function secretsOf(auth: MsGraphMailAuth): string[] {
-    return [auth.clientSecret];
+    return [...new Set([auth.clientSecret, encodeURIComponent(auth.clientSecret)])];
 }
 
 function tokenRequest({ auth, secret }: { auth: MsGraphMailAuth; secret: string }): HttpRequest {
@@ -81,6 +72,9 @@ function describeTokenFailure(err: unknown): string {
         if (codes.some((code) => TENANT_UNKNOWN.includes(code))) {
             return 'Microsoft does not recognise this tenant ID';
         }
+        if (isBlank(body)) {
+            return `Could not get a token from Microsoft: ${noResponse(err.response.status)}`;
+        }
         return `Could not get a token from Microsoft: HTTP ${err.response.status}: ${JSON.stringify(body)}`;
     }
     return `Could not get a token from Microsoft: ${err instanceof Error ? err.message : String(err)}`;
@@ -106,7 +100,19 @@ function graphFailure({ err, sender }: { err: HttpError; sender: string }): Grap
     if (status === 404) {
         return new GraphError({ message: `The sender mailbox ${sender} was not found or has no Exchange Online mailbox`, code });
     }
+    if (isBlank(body)) {
+        return new GraphError({ message: `Microsoft Graph gave ${noResponse(status)}`, code });
+    }
     return new GraphError({ message: `HTTP ${status}: ${typeof body === 'string' ? body : JSON.stringify(body)}`, code });
+}
+
+// The HTTP client reports a call that never got an answer (timeout, DNS, blocked egress) as HTTP 500 with no body.
+function noResponse(status: number): string {
+    return `no response body (HTTP ${status}, or Microsoft could not be reached)`;
+}
+
+function isBlank(body: unknown): boolean {
+    return body === undefined || body === null || body === '';
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -130,6 +136,6 @@ const CLIENT_REJECTED = [7000215, 7000222, 700016];
 // 90002 tenant not found, 900023 not a valid tenant identifier.
 const TENANT_UNKNOWN = [90002, 900023];
 
-export const msGraphClient = { getToken, getUntracedToken, sendMail, secretsOf, graphBaseUrl: GRAPH_BASE_URL };
+export const msGraphClient = { getToken, sendMail, secretsOf };
 
 export type MsGraphMailAuth = { tenantId: string; clientId: string; clientSecret: string; senderMailbox: string };

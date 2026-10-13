@@ -49,10 +49,24 @@ describe('listCourierDispatches', () => {
 
     test('sends the courier code, POD and GRN filters and the from date', async () => {
         sendRequest.mockResolvedValueOnce(page({ data: [], cursor: null, hasMore: false }));
-        await run({ courierCode: ' NUCLEUS ', courierStatuses: ['delivered'], podMissing: true, grnMissing: true, fromDate: '2026-10-01' });
+        await run({ courierCode: ' NUCLEUS ', courierStatuses: ['booked'], podMissing: true, grnMissing: true, fromDate: '2026-10-01' });
         expect(queries()[0]).toEqual({
             courierCode: 'NUCLEUS', courierStatus: 'delivered', podMissing: 'true', grnMissing: 'true', fromDate: '2026-10-01', limit: '200',
         });
+    });
+
+    test('asks for delivered dispatches when only the GRN or POD check is ticked, whatever statuses are set', async () => {
+        sendRequest.mockResolvedValue(page({ data: [], cursor: null, hasMore: false }));
+        await run({ grnMissing: true });
+        await run({ podMissing: true, courierStatuses: ['booked', 'manifested', 'collected', 'in_transit'] });
+        expect(queries().map((q) => q.courierStatus)).toEqual(['delivered', 'delivered']);
+    });
+
+    test('accepts statuses given as a comma-separated dynamic value, and treats null as the default', async () => {
+        sendRequest.mockResolvedValue(page({ data: [], cursor: null, hasMore: false }));
+        await run({ courierStatuses: ' booked, collected ' });
+        await run({ courierStatuses: null });
+        expect(queries().map((q) => q.courierStatus)).toEqual(['booked,collected', 'booked,manifested,collected,in_transit']);
     });
 
     test('rejects a from date that is not YYYY-MM-DD before calling JRNY', async () => {

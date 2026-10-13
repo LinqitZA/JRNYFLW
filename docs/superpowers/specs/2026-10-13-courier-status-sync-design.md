@@ -51,6 +51,8 @@ The generated List Dispatch Notes returns one page, and its rows can't be matche
 - Stops with an error after 50 pages (10,000 dispatch notes) and asks for narrower filters. A sync that size means the filters are wrong.
 - Fails on a page that isn't `{ data: [], hasMore }`, with "Unexpected response from JRNY".
 - Rejects a From Date that isn't `YYYY-MM-DD` before calling JRNY.
+- With "Only delivered without a POD" or "… a GRN" ticked, it asks for `delivered` whatever Courier Statuses says. JRNY's checks only match delivered dispatches, so any other status would quietly return nothing.
+- Accepts Courier Statuses as a comma-separated dynamic value as well as the multi-select.
 
 **Output:**
 

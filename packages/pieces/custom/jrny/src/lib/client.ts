@@ -66,6 +66,10 @@ function toJrnyError({ err, method, url }: { err: unknown; method: HttpMethod; u
   if (isJrnyErrorEnvelope(responseBody)) {
     return new JrnyApiError(status, responseBody);
   }
+  // The HTTP client reports a call that never got an answer (timeout, DNS, refused) as HTTP 500 with no body.
+  if (responseBody === undefined || responseBody === null || responseBody === '') {
+    return new Error(`JRNY API call to ${method} ${url} got no response body (HTTP ${status}, or JRNY could not be reached)`);
+  }
   return new Error(`JRNY API call to ${method} ${url} failed with HTTP ${status}: ${stringifyForLog(responseBody)}`);
 }
 

@@ -31,12 +31,13 @@ export const listCourierDispatches = createAction({
     }),
     podMissing: Property.Checkbox({
       displayName: 'Only delivered without a POD',
+      description: 'Lists delivered dispatches only, whatever Courier Statuses says.',
       required: false,
       defaultValue: false,
     }),
     grnMissing: Property.Checkbox({
       displayName: 'Only delivered without a GRN',
-      description: 'Delivered to a customer that requires a GRN, with no GRN yet.',
+      description: 'Delivered to a customer that requires a GRN, with no GRN yet. Lists delivered dispatches only, whatever Courier Statuses says.',
       required: false,
       defaultValue: false,
     }),
@@ -81,7 +82,7 @@ export const listCourierDispatches = createAction({
 
 function buildFilters(p: {
   courierCode?: string;
-  courierStatuses?: unknown[];
+  courierStatuses?: unknown;
   podMissing?: boolean;
   grnMissing?: boolean;
   fromDate?: string;
@@ -91,7 +92,8 @@ function buildFilters(p: {
   if (fromDate !== '' && !ISO_DATE.test(fromDate)) {
     throw new Error('From Date must be YYYY-MM-DD, e.g. 2026-10-01');
   }
-  const statuses = p.courierStatuses === undefined || p.courierStatuses.length === 0 ? ON_THE_ROAD : p.courierStatuses.map(String);
+  // JRNY's POD and GRN checks only match delivered dispatches, so any other status would silently return nothing.
+  const statuses = p.podMissing || p.grnMissing ? ['delivered'] : chosenStatuses(p.courierStatuses);
   return {
     ...(courierCode === '' ? {} : { courierCode }),
     courierStatus: statuses.join(','),
@@ -99,6 +101,14 @@ function buildFilters(p: {
     ...(p.grnMissing ? { grnMissing: 'true' } : {}),
     ...(fromDate === '' ? {} : { fromDate }),
   };
+}
+
+// A dynamic value arrives as text rather than the multi-select's array.
+function chosenStatuses(value: unknown): string[] {
+  const statuses = (Array.isArray(value) ? value.map(String) : typeof value === 'string' ? value.split(',') : [])
+    .map((status) => status.trim())
+    .filter((status) => status !== '');
+  return statuses.length === 0 ? ON_THE_ROAD : statuses;
 }
 
 // Couriers return waybills upper-cased, so the index is too; the first dispatch wins if JRNY ever holds a waybill twice.

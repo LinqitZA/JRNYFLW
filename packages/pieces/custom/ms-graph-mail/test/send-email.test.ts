@@ -135,6 +135,32 @@ describe('sendEmail', () => {
         expect(result.ok ? '' : result.error.message).toContain('At least one recipient is not valid.');
     });
 
+    test('says when Microsoft could not be reached for a token', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('getaddrinfo ENOTFOUND', 'ENOTFOUND', config)));
+        const result = await run({ ...BASIC, onFailure: 'continue' });
+        expect(result).toMatchObject({ ok: false, error: { message: 'Could not get a token from Microsoft: no response body (HTTP 500, or Microsoft could not be reached)' } });
+    });
+
+    test('says when Graph gave no response body to the send', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockResolvedValueOnce(tokenOk()).mockRejectedValueOnce(new HttpError({}, new AxiosError('socket hang up', 'ECONNRESET', config)));
+        const result = await run({ ...BASIC, onFailure: 'continue' });
+        expect(result).toMatchObject({ ok: false, error: { message: 'Microsoft Graph gave no response body (HTTP 500, or Microsoft could not be reached)' } });
+    });
+
+    test('scrubs the URL-encoded form of a secret with special characters', async () => {
+        const secret = 'ab+cd/ef=gh';
+        const encoded = encodeURIComponent(secret);
+        sendRequest.mockRejectedValueOnce(httpError({ status: 502, data: `proxy refused form client_secret=${encoded}` }));
+        const result = await sendEmail.run({
+            ...createMockActionContext({ propsValue: { ...BASIC, onFailure: 'continue' } }),
+            auth: { props: { ...auth.props, clientSecret: secret } },
+        });
+        expect(JSON.stringify(result)).not.toContain(encoded);
+        expect(JSON.stringify(result)).not.toContain(secret);
+    });
+
     test('explains a rejected client secret on the token request', async () => {
         sendRequest.mockRejectedValueOnce(httpError({ status: 401, data: { error: 'invalid_client', error_description: 'AADSTS7000215: Invalid client secret provided.', error_codes: [7000215] } }));
         const result = await run({ ...BASIC, onFailure: 'continue' });

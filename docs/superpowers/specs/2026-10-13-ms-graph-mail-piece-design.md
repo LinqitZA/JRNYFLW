@@ -18,7 +18,7 @@ This piece sends mail **as the application**, from one shared mailbox. It uses M
 
 1. Create an app registration (single tenant) and a client secret.
 2. Add the Microsoft Graph **application** permission **Mail.Send** and grant admin consent.
-3. Recommended: limit the app to the sending mailbox with an Exchange application access policy (or RBAC for Applications). Otherwise Mail.Send lets it send as any mailbox in the tenant.
+3. **Limit the app to the sending mailbox** with an Exchange application access policy (or RBAC for Applications). Without that, Mail.Send lets the app send as any mailbox in the tenant. The piece only ever sends as the connection's Sender Mailbox, but anyone holding the secret could do more.
 
 ## Connection
 
@@ -73,9 +73,9 @@ Validate can't check Mail.Send consent or the mailbox, because that would need e
 | 404 `ErrorInvalidUser` / `MailboxNotEnabledForRESTAPI` | "The sender mailbox <sender> was not found or has no Exchange Online mailbox" |
 | Anything else | `HTTP <status>: <body>` from the trace library |
 
-### Custom API Call
+### No Custom API Call
 
-`createCustomApiCallAction` against `https://graph.microsoft.com/v1.0`. Its auth mapping fetches a token and sets `Authorization: Bearer …`. It's for anything else Graph allows under the app's permissions.
+The other pieces have one, but here it would hand a token that can send as any mailbox to whatever URL a flow builder enters. That includes absolute URLs outside Graph, and other users' `/sendMail`. Left out on purpose (review finding, 2026-10-13).
 
 ## Not included
 
@@ -92,6 +92,6 @@ Unit tests, with the HTTP client mocked:
 - the token request (form body, URL with the tenant) and the trace redaction of the secret;
 - the Graph 403/404 messages;
 - Validate's three AADSTS cases and a bad sender address;
-- the Custom API Call auth mapping.
+- the HTTP client's failure log line staying on the engine's redaction list. The request body holds the client secret.
 
 No live test until the AON M365 admin provides an app registration.
