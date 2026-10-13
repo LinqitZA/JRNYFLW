@@ -147,7 +147,7 @@ function scrubText({ text, secrets }: { text: string; secrets: string[] }): stri
 }
 
 const REDACTED = '[redacted]';
-const REDACTED_HEADERS = ['authorization', 'authentication'];
+const REDACTED_HEADERS = ['authorization', 'authentication', 'x-api-key'];
 const MAX_BODY_CHARS = 50 * 1024;
 // Shorter values would scrub ordinary text such as single letters out of URLs and messages.
 const MIN_SECRET_LENGTH = 4;

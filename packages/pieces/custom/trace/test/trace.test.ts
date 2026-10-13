@@ -69,6 +69,18 @@ describe('pieceTrace.run', () => {
         expect(result.sent[1].headers).toEqual({ Authorization: '[redacted]' });
     });
 
+    test('redacts an X-API-Key header whatever its case', async () => {
+        sendRequest.mockResolvedValue({ status: 200, body: {} });
+        const result = await pieceTrace.run({
+            onFailure: undefined,
+            secrets: [],
+            work: async (trace) => {
+                await trace.send({ request: { method: HttpMethod.GET, url: 'https://api/a', headers: { 'X-API-Key': 'k1', 'x-api-key': 'k2', Accept: 'application/json' } } });
+            },
+        });
+        expect(result.sent[0].headers).toEqual({ 'X-API-Key': '[redacted]', 'x-api-key': '[redacted]', Accept: 'application/json' });
+    });
+
     test('records bodyForTrace instead of the real body', async () => {
         sendRequest.mockResolvedValue({ status: 200, body: {} });
         const result = await pieceTrace.run({
