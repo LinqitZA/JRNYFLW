@@ -1,0 +1,347 @@
+{
+  "name": "Courier Status Sync (Nucleus → JRNY)",
+  "type": "SHARED",
+  "summary": "",
+  "description": "Polls Nucleus PODs for JRNY dispatches still on the road and sends Manifested and Delivered back to JRNY.",
+  "tags": [],
+  "blogUrl": "",
+  "metadata": {
+    "externalId": "courierStatusSyncV1xxxx"
+  },
+  "author": "JRNYFLW Admin",
+  "categories": [],
+  "pieces": [
+    "@activepieces/piece-schedule",
+    "@jrnyflw/jrny",
+    "@jrnyflw/nucleus"
+  ],
+  "status": "PUBLISHED",
+  "flows": [
+    {
+      "displayName": "Courier Status Sync (Nucleus → JRNY)",
+      "valid": true,
+      "schemaVersion": "20",
+      "notes": [],
+      "trigger": {
+        "name": "trigger",
+        "displayName": "Every 2 hours, 06:00–20:00",
+        "type": "PIECE_TRIGGER",
+        "valid": true,
+        "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+        "settings": {
+          "pieceName": "@activepieces/piece-schedule",
+          "pieceVersion": "0.1.17",
+          "triggerName": "cron_expression",
+          "input": {
+            "cronExpression": "0 6-20/2 * * *",
+            "timezone": "Africa/Johannesburg"
+          },
+          "propertySettings": {
+            "cronExpression": {
+              "type": "MANUAL"
+            },
+            "timezone": {
+              "type": "MANUAL"
+            }
+          },
+          "sampleData": {}
+        },
+        "nextAction": {
+          "name": "step_1",
+          "displayName": "List Courier Dispatches",
+          "type": "PIECE",
+          "valid": true,
+          "skip": false,
+          "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+          "settings": {
+            "pieceName": "@jrnyflw/jrny",
+            "pieceVersion": "0.1.0",
+            "actionName": "list_courier_dispatches",
+            "input": {
+              "auth": "{{connections['zUdid6sSxBplkZ3IlsoHU']}}",
+              "courierCode": "",
+              "courierStatuses": [
+                "booked",
+                "manifested",
+                "collected",
+                "in_transit"
+              ],
+              "podMissing": false,
+              "grnMissing": false,
+              "onFailure": "stop"
+            },
+            "propertySettings": {
+              "courierCode": {
+                "type": "MANUAL"
+              },
+              "courierStatuses": {
+                "type": "MANUAL"
+              },
+              "podMissing": {
+                "type": "MANUAL"
+              },
+              "grnMissing": {
+                "type": "MANUAL"
+              },
+              "onFailure": {
+                "type": "MANUAL"
+              }
+            },
+            "sampleData": {},
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_2",
+            "displayName": "Anything to check?",
+            "type": "ROUTER",
+            "valid": true,
+            "skip": false,
+            "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+            "settings": {
+              "executionType": "EXECUTE_FIRST_MATCH",
+              "branches": [
+                {
+                  "branchType": "CONDITION",
+                  "branchName": "Dispatches on the road",
+                  "conditions": [
+                    [
+                      {
+                        "operator": "NUMBER_IS_GREATER_THAN",
+                        "firstValue": "{{step_1['output']['count']}}",
+                        "secondValue": "0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "branchType": "FALLBACK",
+                  "branchName": "Otherwise"
+                }
+              ]
+            },
+            "children": [
+              {
+                "name": "step_3",
+                "displayName": "Get PODs Extra (Bulk)",
+                "type": "PIECE",
+                "valid": true,
+                "skip": false,
+                "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+                "settings": {
+                  "pieceName": "@jrnyflw/nucleus",
+                  "pieceVersion": "0.1.0",
+                  "actionName": "get_pod_bulk_extra",
+                  "input": {
+                    "auth": "{{connections['YSbdy9sUhS8K1POILQqQG']}}",
+                    "waybillNumbers": "{{step_1['output']['waybills']}}",
+                    "onFailure": "stop"
+                  },
+                  "propertySettings": {
+                    "waybillNumbers": {
+                      "type": "MANUAL"
+                    },
+                    "onFailure": {
+                      "type": "MANUAL"
+                    }
+                  },
+                  "sampleData": {},
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {
+                      "value": false
+                    },
+                    "continueOnFailure": {
+                      "value": false
+                    }
+                  }
+                },
+                "nextAction": {
+                  "name": "step_4",
+                  "displayName": "Each waybill",
+                  "type": "LOOP_ON_ITEMS",
+                  "valid": true,
+                  "skip": false,
+                  "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+                  "settings": {
+                    "items": "{{step_3['output']['waybills']}}"
+                  },
+                  "firstLoopAction": {
+                    "name": "step_5",
+                    "displayName": "What changed?",
+                    "type": "ROUTER",
+                    "valid": true,
+                    "skip": false,
+                    "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+                    "settings": {
+                      "executionType": "EXECUTE_FIRST_MATCH",
+                      "branches": [
+                        {
+                          "branchType": "CONDITION",
+                          "branchName": "Delivered",
+                          "conditions": [
+                            [
+                              {
+                                "operator": "BOOLEAN_IS_TRUE",
+                                "firstValue": "{{step_4['item']['delivered']}}"
+                              }
+                            ]
+                          ]
+                        },
+                        {
+                          "branchType": "CONDITION",
+                          "branchName": "Manifested",
+                          "conditions": [
+                            [
+                              {
+                                "operator": "EXISTS",
+                                "firstValue": "{{step_4['item']['manifestDate']}}"
+                              },
+                              {
+                                "operator": "TEXT_EXACTLY_MATCHES",
+                                "firstValue": "{{step_1['output']['byWaybill'][step_4['item']['waybillNumber']]['courierStatus']}}",
+                                "secondValue": "booked",
+                                "caseSensitive": false
+                              }
+                            ]
+                          ]
+                        },
+                        {
+                          "branchType": "FALLBACK",
+                          "branchName": "Otherwise"
+                        }
+                      ]
+                    },
+                    "children": [
+                      {
+                        "name": "step_6",
+                        "displayName": "Courier Response: Delivered",
+                        "type": "PIECE",
+                        "valid": true,
+                        "skip": false,
+                        "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+                        "settings": {
+                          "pieceName": "@jrnyflw/jrny",
+                          "pieceVersion": "0.1.0",
+                          "actionName": "courier_response",
+                          "input": {
+                            "auth": "{{connections['zUdid6sSxBplkZ3IlsoHU']}}",
+                            "dispatchNumber": "{{step_1['output']['byWaybill'][step_4['item']['waybillNumber']]['dispatchNumber']}}",
+                            "courierStatus": "delivered",
+                            "podSignedBy": "{{step_4['item']['podSignedBy']}}",
+                            "podSignedAt": "{{step_4['item']['podSignedAt']}}",
+                            "statusAt": "{{step_4['item']['podSignedAt']}}",
+                            "manifestDate": "{{step_4['item']['manifestDate']}}",
+                            "podUrl": "{{step_4['item']['podUrl']}}",
+                            "trackingUrl": "{{step_4['item']['trackingUrl']}}",
+                            "grnNumber": "{{step_4['item']['grvNumber']}}",
+                            "onFailure": "continue"
+                          },
+                          "propertySettings": {
+                            "dispatchNumber": {
+                              "type": "MANUAL"
+                            },
+                            "courierStatus": {
+                              "type": "MANUAL"
+                            },
+                            "podSignedBy": {
+                              "type": "MANUAL"
+                            },
+                            "podSignedAt": {
+                              "type": "MANUAL"
+                            },
+                            "statusAt": {
+                              "type": "MANUAL"
+                            },
+                            "manifestDate": {
+                              "type": "MANUAL"
+                            },
+                            "podUrl": {
+                              "type": "MANUAL"
+                            },
+                            "trackingUrl": {
+                              "type": "MANUAL"
+                            },
+                            "grnNumber": {
+                              "type": "MANUAL"
+                            },
+                            "onFailure": {
+                              "type": "MANUAL"
+                            }
+                          },
+                          "sampleData": {},
+                          "errorHandlingOptions": {
+                            "retryOnFailure": {
+                              "value": false
+                            },
+                            "continueOnFailure": {
+                              "value": false
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "name": "step_7",
+                        "displayName": "Courier Response: Manifested",
+                        "type": "PIECE",
+                        "valid": true,
+                        "skip": false,
+                        "lastUpdatedDate": "2026-10-14T04:01:05.627Z",
+                        "settings": {
+                          "pieceName": "@jrnyflw/jrny",
+                          "pieceVersion": "0.1.0",
+                          "actionName": "courier_response",
+                          "input": {
+                            "auth": "{{connections['zUdid6sSxBplkZ3IlsoHU']}}",
+                            "dispatchNumber": "{{step_1['output']['byWaybill'][step_4['item']['waybillNumber']]['dispatchNumber']}}",
+                            "courierStatus": "manifested",
+                            "manifestDate": "{{step_4['item']['manifestDate']}}",
+                            "trackingUrl": "{{step_4['item']['trackingUrl']}}",
+                            "onFailure": "continue"
+                          },
+                          "propertySettings": {
+                            "dispatchNumber": {
+                              "type": "MANUAL"
+                            },
+                            "courierStatus": {
+                              "type": "MANUAL"
+                            },
+                            "manifestDate": {
+                              "type": "MANUAL"
+                            },
+                            "trackingUrl": {
+                              "type": "MANUAL"
+                            },
+                            "onFailure": {
+                              "type": "MANUAL"
+                            }
+                          },
+                          "sampleData": {},
+                          "errorHandlingOptions": {
+                            "retryOnFailure": {
+                              "value": false
+                            },
+                            "continueOnFailure": {
+                              "value": false
+                            }
+                          }
+                        }
+                      },
+                      null
+                    ]
+                  }
+                }
+              },
+              null
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
