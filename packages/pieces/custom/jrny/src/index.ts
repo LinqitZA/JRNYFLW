@@ -6,6 +6,7 @@ import { buildJrnyAction } from './lib/action-factory';
 import { createQuote } from './lib/actions/create-quote';
 import { courierResponse } from './lib/actions/courier-response';
 import { customApiCall } from './lib/actions/custom-api-call';
+import { listCourierDispatches } from './lib/actions/list-courier-dispatches';
 
 const generatedActions = jrnyOperations
   .filter((op) => op.name !== 'create_quotation' && op.name !== 'courier_response')
@@ -20,6 +21,6 @@ export const jrny = createPiece({
   authors: ['jrnyflw'],
   categories: [PieceCategory.SALES_AND_CRM, PieceCategory.ACCOUNTING],
   auth: jrnyAuth,
-  actions: [createQuote, courierResponse, ...generatedActions, customApiCall],
+  actions: [createQuote, courierResponse, listCourierDispatches, ...generatedActions, customApiCall],
   triggers: [],
 });

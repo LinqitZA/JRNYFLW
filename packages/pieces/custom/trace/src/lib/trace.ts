@@ -17,7 +17,8 @@ async function run<T>({ onFailure, secrets, work }: RunParams<T>): Promise<Trace
         const cleanSent = scrubSent({ sent, secrets: usableSecrets });
         const message = scrubText({ text: describeError(err), secrets: usableSecrets });
         if (onFailure === 'continue') {
-            return { ok: false, sent: cleanSent, output: null, error: { message, status: httpFailureStatus(cleanSent) } };
+            const error = { message, status: httpFailureStatus(cleanSent), ...errorFacts({ err, secrets: usableSecrets }) };
+            return { ok: false, sent: cleanSent, output: null, error };
         }
         throw new Error(`${message}\nSent: ${JSON.stringify(cleanSent)}`);
     }
@@ -27,7 +28,7 @@ function onFailureProperty() {
     return Property.StaticDropdown<OnFailure>({
         displayName: 'If the call fails',
         description:
-            'Continue makes this step succeed with { ok: false, error } so a Router can handle the failure. If you continue, end the failure branch with a step that fails the run, or the run will show as successful.',
+            'Continue makes this step succeed with { ok: false, error } so a Router can handle the failure, and the run shows as successful. To still fail the run, end the failure branch with a step that fails, but not inside a loop, where that stops the remaining items.',
         required: false,
         defaultValue: 'stop',
         options: {
@@ -104,6 +105,21 @@ function describeError(err: unknown): string {
     return err instanceof Error ? err.message : String(err);
 }
 
+// A client error can carry an API's error code and details so a Router can branch on them instead of searching the message.
+function errorFacts({ err, secrets }: { err: unknown; secrets: string[] }): Pick<TraceError, 'code' | 'codes' | 'details'> {
+    if (typeof err !== 'object' || err === null) {
+        return {};
+    }
+    const code = 'code' in err && typeof err.code === 'string' ? err.code : undefined;
+    const codes = 'codes' in err && Array.isArray(err.codes) ? err.codes.filter((c): c is string => typeof c === 'string') : undefined;
+    const details = 'details' in err && err.details !== undefined ? scrubValue({ value: err.details, secrets }) : undefined;
+    return {
+        ...(code === undefined ? {} : { code }),
+        ...(codes === undefined ? {} : { codes }),
+        ...(details === undefined ? {} : { details }),
+    };
+}
+
 // Engine infrastructure failures (e.g. the store API) must reach the engine as-is so it records an internal error, not a step failure the flow would report to JRNY.
 function isEngineError(err: unknown): boolean {
     return typeof err === 'object' && err !== null && 'type' in err && err.type === 'ENGINE';
@@ -169,7 +185,7 @@ export type SentCall = {
     durationMs: number;
     error?: string;
 };
-export type TraceError = { message: string; status: number | null };
+export type TraceError = { message: string; status: number | null; code?: string; codes?: string[]; details?: unknown };
 export type TraceResult<T> =
     | { ok: true; sent: SentCall[]; output: T }
     | { ok: false; sent: SentCall[]; output: null; error: TraceError };

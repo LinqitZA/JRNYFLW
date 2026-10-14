@@ -10,4 +10,5 @@ export const DEFAULT_MCP_DATA = {
 
 export const ERROR_MESSAGES_TO_REDACT = [
     'HttpClient#sendRequest',
+    'HttpClient#(sanitized error message)',
 ]
