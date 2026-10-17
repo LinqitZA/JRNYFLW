@@ -108,6 +108,22 @@ export const createQuote = createAction({
       required: false,
       defaultValue: false,
     }),
+    autoConfirm: Property.Checkbox({
+      displayName: 'Auto-confirm Sales Order',
+      description: 'Confirm the sales order straight away (runs the credit check). Needs Auto-convert and a Delivery Date. Can be set from a field, e.g. {{step_N.output.clean}}.',
+      required: false,
+      defaultValue: false,
+    }),
+    deliveryDate: Property.ShortText({
+      displayName: 'Delivery Date',
+      description: 'Required delivery date, YYYY-MM-DD.',
+      required: false,
+    }),
+    idempotencyKey: Property.ShortText({
+      displayName: 'Idempotency Key',
+      description: 'The same key twice creates one quote, e.g. shoprite-{{orderNumber}}.',
+      required: false,
+    }),
     onFailure: pieceTrace.onFailureProperty(),
   },
   async run(context) {
@@ -117,6 +133,18 @@ export const createQuote = createAction({
       onFailure: p.onFailure,
       secrets: jrnyClient.secretsOf(auth),
       work: async (trace) => {
+        const autoConvert = isOn(p.autoConvert);
+        const autoConfirm = isOn(p.autoConfirm);
+        const deliveryDate = (p.deliveryDate ?? '').trim();
+        if (deliveryDate !== '' && !/^\d{4}-\d{2}-\d{2}$/.test(deliveryDate)) {
+          throw new Error('Delivery Date must be YYYY-MM-DD, e.g. 2026-10-19');
+        }
+        if (autoConfirm && !autoConvert) {
+          throw new Error('Auto-confirm needs Auto-convert to Sales Order turned on');
+        }
+        if (autoConfirm && deliveryDate === '') {
+          throw new Error('Auto-confirm needs a Delivery Date');
+        }
         const lines = (p.lines ?? []) as Array<{
           stockCode: string;
           qty: number;
@@ -136,13 +164,17 @@ export const createQuote = createAction({
 
         if (p.notes) body['notes'] = p.notes;
         if (p.externalReference) body['externalReference'] = p.externalReference;
-        if (p.autoConvert) body['autoConvert'] = true;
+        if (autoConvert) body['autoConvert'] = true;
+        if (autoConfirm) body['autoConfirm'] = true;
+        if (deliveryDate !== '') body['deliveryDate'] = deliveryDate;
 
         const deliveryAddress = buildDeliveryAddress(p);
         if (deliveryAddress) body['deliveryAddress'] = deliveryAddress;
 
         const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/quotations`;
-        return jrnyClient.callJrny({ trace, auth, method: HttpMethod.POST, path, body });
+        const idempotencyKey = (p.idempotencyKey ?? '').trim();
+        const headers = idempotencyKey === '' ? undefined : { 'Idempotency-Key': idempotencyKey };
+        return jrnyClient.callJrny({ trace, auth, method: HttpMethod.POST, path, body, headers });
       },
     });
   },
@@ -182,3 +214,8 @@ const buildDeliveryAddress = (
   }
   return inline;
 };
+
+// A checkbox set from an expression arrives as the text "true" or "false".
+function isOn(value: unknown): boolean {
+  return value === true || value === 'true';
+}

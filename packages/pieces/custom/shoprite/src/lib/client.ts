@@ -16,12 +16,13 @@ function joinUrl(base: string, path: string): string {
     return `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
 }
 
-async function call<T>({ trace, auth, method, path, body }: { trace: Tracer; auth: ShopriteAuth; method: HttpMethod; path: string; body?: unknown }): Promise<T> {
+async function call<T>({ trace, auth, method, path, body, query, headers }: CallParams): Promise<T> {
     const response = await trace.send<T>({
         request: {
             method,
             url: joinUrl(auth.baseUrl, path),
-            headers: buildHeaders(auth),
+            headers: { ...buildHeaders(auth), ...headers },
+            queryParams: query,
             body,
         },
     });
@@ -34,3 +35,13 @@ function secretsOf(auth: ShopriteAuth): string[] {
 }
 
 export const shopriteClient = { buildHeaders, joinUrl, call, secretsOf };
+
+type CallParams = {
+    trace: Tracer;
+    auth: ShopriteAuth;
+    method: HttpMethod;
+    path: string;
+    body?: unknown;
+    query?: Record<string, string>;
+    headers?: Record<string, string>;
+};

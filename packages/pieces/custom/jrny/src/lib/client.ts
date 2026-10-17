@@ -1,4 +1,4 @@
-import { AuthenticationType, HttpError, HttpMethod } from '@activepieces/pieces-common';
+import { AuthenticationType, HttpError, HttpMethod, HttpRequest } from '@activepieces/pieces-common';
 import { Tracer } from '@jrnyflw/piece-trace';
 import { JrnyAuth } from './auth';
 
@@ -21,40 +21,45 @@ export class JrnyApiError extends Error {
 }
 
 async function request<T>({ trace, auth, method, path, query, body }: JrnyRequest): Promise<T> {
+  return send<T>({ trace, auth, method, url: joinUrl(auth.baseUrl, path), query, body });
+}
+
+async function callJrny<T>({ trace, auth, method, path, body, headers }: CallJrnyParams): Promise<T> {
+  return send<T>({ trace, auth, method, url: `${trimTrailingSlash(auth.baseUrl)}${path}`, body, headers });
+}
+
+// A missing record and a route JRNY has not deployed yet both answer 404; to a lookup both mean "not there".
+async function find<T>({ trace, auth, path }: { trace: Tracer; auth: JrnyAuth; path: string }): Promise<T | null> {
   const url = joinUrl(auth.baseUrl, path);
   try {
-    const response = await trace.send<T>({
-      request: {
-        method,
-        url,
-        authentication: { type: AuthenticationType.BEARER_TOKEN, token: auth.bearerToken },
-        headers: { 'Content-Type': 'application/json' },
-        queryParams: query,
-        body,
-      },
-    });
+    const response = await trace.send<T>({ request: buildRequest({ auth, method: HttpMethod.GET, url }) });
+    return response.body;
+  } catch (err) {
+    if (err instanceof HttpError && err.response?.status === 404) {
+      return null;
+    }
+    throw toJrnyError({ err, method: HttpMethod.GET, url });
+  }
+}
+
+async function send<T>({ trace, auth, method, url, query, body, headers }: SendParams): Promise<T> {
+  try {
+    const response = await trace.send<T>({ request: buildRequest({ auth, method, url, query, body, headers }) });
     return response.body;
   } catch (err) {
     throw toJrnyError({ err, method, url });
   }
 }
 
-async function callJrny<T>({ trace, auth, method, path, body }: CallJrnyParams): Promise<T> {
-  const url = `${trimTrailingSlash(auth.baseUrl)}${path}`;
-  try {
-    const response = await trace.send<T>({
-      request: {
-        method,
-        url,
-        authentication: { type: AuthenticationType.BEARER_TOKEN, token: auth.bearerToken },
-        headers: { 'Content-Type': 'application/json' },
-        body,
-      },
-    });
-    return response.body;
-  } catch (err) {
-    throw toJrnyError({ err, method, url });
-  }
+function buildRequest({ auth, method, url, query, body, headers }: Omit<SendParams, 'trace'>): HttpRequest {
+  return {
+    method,
+    url,
+    authentication: { type: AuthenticationType.BEARER_TOKEN, token: auth.bearerToken },
+    headers: { 'Content-Type': 'application/json', ...headers },
+    queryParams: query,
+    body,
+  };
 }
 
 function toJrnyError({ err, method, url }: { err: unknown; method: HttpMethod; url: string }): unknown {
@@ -118,7 +123,7 @@ function stringifyForLog(value: unknown): string {
   }
 }
 
-export const jrnyClient = { callJrny, request, joinUrl, secretsOf };
+export const jrnyClient = { callJrny, request, find, joinUrl, secretsOf };
 
 type JrnyRequest = {
   trace: Tracer;
@@ -135,6 +140,17 @@ type CallJrnyParams = {
   method: HttpMethod;
   path: string;
   body?: unknown;
+  headers?: Record<string, string>;
+};
+
+type SendParams = {
+  trace: Tracer;
+  auth: JrnyAuth;
+  method: HttpMethod;
+  url: string;
+  query?: Record<string, string>;
+  body?: unknown;
+  headers?: Record<string, string>;
 };
 
 export type JrnyErrorEnvelope = {
