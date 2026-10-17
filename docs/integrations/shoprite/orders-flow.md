@@ -3,6 +3,12 @@
 
 Design: `docs/superpowers/specs/2026-10-17-shoprite-orders-design.md`.
 
+**Importable version:** `docs/integrations/shoprite/shoprite-orders.flow.json`. It's built by `bunx tsx scripts/uat/gen-shoprite-orders-flow.ts docs/integrations/shoprite/shoprite-orders.flow.json`, which also checks every field against the pieces.
+
+After importing:
+1. **Pick both connections on every Shoprite and JRNY step.** The file has placeholders on purpose, so it can never land on production JRNY by accident.
+2. **Check step 10's Sales Order Number.** It's set to `{{step_8['output']['salesOrder']['salesOrderNumber']}}`. Check the real field with Test step on step 8.
+
 **Until the switch-over:**
 - use the JRNY **dev** connection;
 - never add Shoprite **Acknowledge Orders**;
@@ -20,7 +26,7 @@ Design: `docs/superpowers/specs/2026-10-17-shoprite-orders-design.md`.
 | 7 | Router | `{{step_6.ok}}` is true AND `{{step_6.output.lineCount}}` > 0 |
 | 8 | JRNY · Create Quote | Customer `SHOE100`; Delivery Address by code `{{step_6.output.addressCode}}`; Lines in list-mapper mode from `step_6.output.lines` (stockCode, qty, unitPrice); External Reference `{{step_3.item.orderNumber}}`; Delivery Date `{{step_3.item.deliveryDate}}`; Notes `{{step_6.output.notes}}`; Auto-convert on; Auto-confirm `{{step_6.output.clean}}`; Idempotency Key `shoprite-{{step_3.item.orderNumber}}`. If the call fails: Continue |
 | 9 | Router | `{{step_8.ok}}` is true AND `{{step_6.output.clean}}` is true |
-| 10 | JRNY · Generate Pick | Sales Order Number from step 8's output (find the field with Test step, under `salesOrder`). If the call fails: Continue |
+| 10 | JRNY · Generate Pick | Sales Order Number `{{step_8['output']['salesOrder']['salesOrderNumber']}}` (confirm the field with Test step on step 8). If the call fails: Continue |
 
 **Test it like this:**
 1. Test step 1 against production. It's read-only.

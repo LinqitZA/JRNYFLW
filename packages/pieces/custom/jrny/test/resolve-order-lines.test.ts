@@ -139,9 +139,16 @@ describe('resolveOrderLines', () => {
         expect(result.output).toMatchObject({ lines: [{ stockCode: '1/SEALS', qty: 20 }] });
     });
 
-    test('leaves the unit price out when the line has none, so JRNY prices it', async () => {
-        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/CSL1388`]: product('CSL1388') });
-        const result = await run({ lines: [{ stockCode: 'CSL1388', quantity: 1, unitPrice: null, reference: '1' }] });
-        expect(result.output?.lines[0]).toEqual({ stockCode: 'CSL1388', qty: 1, reference: '1', matchedBy: 'stockCode' });
+    // The builder's list mapper reads each field as its own list and skips items missing the key, so a missing unitPrice would shift prices onto other lines.
+    test('a line with no unit price keeps the key as null, so the list mapper stays aligned and JRNY prices it', async () => {
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/CSL1388`]: product('CSL1388'), [`${BASE}/products/SC007`]: product('SC007') });
+        const result = await run({ lines: [
+            { stockCode: 'CSL1388', quantity: 1, unitPrice: null, reference: '1' },
+            { stockCode: 'SC007', quantity: 2, unitPrice: 64.5, reference: '2' },
+        ] });
+        expect(result.output?.lines).toEqual([
+            { stockCode: 'CSL1388', qty: 1, unitPrice: null, reference: '1', matchedBy: 'stockCode' },
+            { stockCode: 'SC007', qty: 2, unitPrice: 64.5, reference: '2', matchedBy: 'stockCode' },
+        ]);
     });
 });

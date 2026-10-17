@@ -88,7 +88,8 @@ async function resolveLine({ line, reference, lookup }: { line: InputLine; refer
   if (!product.isActive) {
     return drop('inactive in JRNY');
   }
-  return { stockCode: product.stockCode, qty: line.quantity, ...(line.unitPrice === null ? {} : { unitPrice: line.unitPrice }), reference, matchedBy };
+  // unitPrice stays as null rather than absent: the builder's list mapper skips items missing a key, which would misalign the prices.
+  return { stockCode: product.stockCode, qty: line.quantity, unitPrice: line.unitPrice, reference, matchedBy };
 }
 
 function productLookup({ trace, auth, entity }: { trace: Tracer; auth: JrnyAuth; entity: string }): ProductLookup {
@@ -174,5 +175,5 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 type InputLine = { stockCode: string | null; barcode: string | null; quantity: number | null; unitPrice: number | null; description: string | null; reference: string | null };
 type Product = { stockCode: string; isActive: boolean };
 type ProductLookup = (query: { kind: 'stockCode' | 'barcode'; value: string }) => Promise<Product | null>;
-type ResolvedLine = { stockCode: string; qty: number; unitPrice?: number; reference: string; matchedBy: 'stockCode' | 'barcode' };
+type ResolvedLine = { stockCode: string; qty: number; unitPrice: number | null; reference: string; matchedBy: 'stockCode' | 'barcode' };
 type DroppedLine = { reference: string; description: string | null; stockCode: string | null; barcode: string | null; reason: string };
