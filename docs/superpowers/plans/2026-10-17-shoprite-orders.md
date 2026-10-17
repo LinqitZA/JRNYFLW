@@ -616,7 +616,9 @@ function run(props: Record<string, unknown>) {
 }
 
 describe('resolveOrderLines', () => {
-    beforeEach(() => sendRequest.mockReset());
+    beforeEach(() => {
+        sendRequest.mockReset();
+    });
 
     test('a stock code JRNY knows goes through, with Shoprite\'s price', async () => {
         routes({ [ADDRESSES]: shoe100, [`${BASE}/products/CSL1388`]: product('CSL1388') });
@@ -1204,7 +1206,9 @@ function run(propsValue: Record<string, unknown>) {
 }
 
 describe('generatePick', () => {
-    beforeEach(() => sendRequest.mockReset());
+    beforeEach(() => {
+        sendRequest.mockReset();
+    });
 
     test('POSTs generate-pick for the sales order and returns the pick', async () => {
         sendRequest.mockResolvedValueOnce({ status: 201, body: { pickNumber: 'PK-1', lines: [] } });
