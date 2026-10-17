@@ -24,11 +24,16 @@ export const resolveOrderLines = createAction({
       properties: {
         stockCode: Property.ShortText({ displayName: 'Stock Code', required: false }),
         barcode: Property.ShortText({ displayName: 'Barcode', description: 'Used exactly as given when the stock code is not found.', required: false }),
-        quantity: Property.Number({ displayName: 'Quantity', required: true }),
+        quantity: Property.Number({ displayName: 'Quantity', description: 'A line without a quantity is left out.', required: false }),
         unitPrice: Property.Number({ displayName: 'Unit Price (excl. VAT)', required: false }),
         description: Property.ShortText({ displayName: 'Description', required: false }),
         reference: Property.ShortText({ displayName: 'Reference', description: 'e.g. the order line number', required: false }),
       },
+    }),
+    warnings: Property.Array({
+      displayName: 'Warnings',
+      description: 'Problems found on the incoming order, e.g. {{step_3.item.warnings}}. Each goes on the notes and keeps the order as a draft.',
+      required: false,
     }),
     onFailure: pieceTrace.onFailureProperty(),
   },
@@ -57,14 +62,15 @@ export const resolveOrderLines = createAction({
             lines.push(outcome);
           }
         }
+        const warnings = textsOf(p.warnings);
         return {
           addressCode,
           addressFallback,
           lines,
           lineCount: lines.length,
           dropped,
-          clean: !addressFallback && dropped.length === 0,
-          notes: notesFor({ prefix: (p.notePrefix ?? '').trim(), wanted, addressCode, addressFallback, dropped }),
+          clean: !addressFallback && dropped.length === 0 && warnings.length === 0,
+          notes: notesFor({ prefix: (p.notePrefix ?? '').trim(), wanted, addressCode, addressFallback, dropped, warnings }),
         };
       },
     });
@@ -135,10 +141,13 @@ function linesOf(value: unknown): InputLine[] {
   }));
 }
 
-function notesFor({ prefix, wanted, addressCode, addressFallback, dropped }: { prefix: string; wanted: string; addressCode: string; addressFallback: boolean; dropped: DroppedLine[] }): string {
+function notesFor({ prefix, wanted, addressCode, addressFallback, dropped, warnings }: { prefix: string; wanted: string; addressCode: string; addressFallback: boolean; dropped: DroppedLine[]; warnings: string[] }): string {
   const notes: string[] = [];
   if (prefix !== '') {
     notes.push(/[.!?]$/.test(prefix) ? prefix : `${prefix}.`);
+  }
+  for (const warning of warnings) {
+    notes.push(`Warning: ${/[.!?]$/.test(warning) ? warning : `${warning}.`}`);
   }
   if (addressFallback) {
     notes.push(`Delivery address ${wanted === '' ? '(blank)' : wanted} not found; used ${addressCode}.`);
@@ -148,6 +157,10 @@ function notesFor({ prefix, wanted, addressCode, addressFallback, dropped }: { p
     notes.push(`Not loaded: line ${line.reference}${line.description ? ` ${line.description}` : ''}${ids ? ` (${ids})` : ''}: ${line.reason}.`);
   }
   return notes.join('\n');
+}
+
+function textsOf(value: unknown): string[] {
+  return Array.isArray(value) ? value.flatMap((item) => textOf(item) ?? []) : [];
 }
 
 function textOf(value: unknown): string | null {

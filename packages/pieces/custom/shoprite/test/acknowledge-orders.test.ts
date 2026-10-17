@@ -59,3 +59,12 @@ describe('acknowledgeOrders', () => {
         expect(sendRequest).not.toHaveBeenCalled();
     });
 });
+
+describe('acknowledgeOrders guidance', () => {
+    // Acknowledging the whole download would also acknowledge orders that failed to load, and Shoprite would never return them again.
+    test('suggests acknowledging one loaded order, not the whole download', () => {
+        const help = acknowledgeOrders.props.orderNumbers.description ?? '';
+        expect(help).not.toContain('step_1.output.orderNumbers');
+        expect(help).toContain('only orders now in JRNY');
+    });
+});

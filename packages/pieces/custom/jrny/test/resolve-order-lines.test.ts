@@ -152,3 +152,32 @@ describe('resolveOrderLines', () => {
         ]);
     });
 });
+
+describe('resolveOrderLines guards against the engine', () => {
+    beforeEach(() => {
+        sendRequest.mockReset();
+    });
+
+    // The engine validates props before the action runs, so a required Quantity would stop the whole run on one bad line.
+    test('Quantity is optional, so a missing quantity is dropped by the action rather than failing the run', () => {
+        expect(resolveOrderLines.props.lines.properties?.quantity.required).toBe(false);
+    });
+
+    test('order warnings go on the notes and keep the order as a draft', async () => {
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/CSL1388`]: product('CSL1388') });
+        const result = await run({
+            warnings: ['Line 2 has a Trade Discount 1 of 5.00', 'Order type 221, not a normal order (220)'],
+            lines: [{ stockCode: 'CSL1388', quantity: 1, reference: '1' }],
+        });
+        expect(result.output).toMatchObject({ clean: false, lineCount: 1, dropped: [] });
+        expect(result.output?.notes).toBe(
+            'Shoprite PO 1221181491, TEST STORE (1608).\nWarning: Line 2 has a Trade Discount 1 of 5.00.\nWarning: Order type 221, not a normal order (220).',
+        );
+    });
+
+    test('no warnings leaves a clean order clean', async () => {
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/CSL1388`]: product('CSL1388') });
+        const result = await run({ warnings: [], lines: [{ stockCode: 'CSL1388', quantity: 1, reference: '1' }] });
+        expect(result.output).toMatchObject({ clean: true });
+    });
+});

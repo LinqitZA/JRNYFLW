@@ -13,7 +13,7 @@ export const acknowledgeOrders = createAction({
     props: {
         orderNumbers: Property.LongText({
             displayName: 'Order Numbers',
-            description: 'Shoprite order numbers separated by commas, spaces or new lines, e.g. {{step_1.output.orderNumbers}} or one order\'s number.',
+            description: 'Shoprite order numbers separated by commas, spaces or new lines. Acknowledge only orders now in JRNY, e.g. one loaded order\'s {{step_3.item.orderNumber}}: an acknowledged order is never downloaded again.',
             required: true,
         }),
         onFailure: pieceTrace.onFailureProperty(),
