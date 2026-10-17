@@ -263,6 +263,7 @@ The exact path to the sales order number in Create Quote's output is checked wit
 - `externalReference` becomes the invoice's `customerPoNumber`, so the invoice flow can find the Shoprite PO.
 - Past delivery dates are accepted, and JRNY notes them.
 - Picks: JRNY is adding `POST …/sales-orders/{orderNumber}/generate-pick` (Generate Pick, above). Confirming alone doesn't create the pick.
+- Acknowledge works per order: `PUT …/api/VendorOrder?action=Acknowledge` with an XML `<ArrayOfLong>` of order numbers. The Acknowledge Orders action now sends exactly that. It's still never used before the switch-over.
 
 ## Open questions
 
@@ -272,8 +273,7 @@ The exact path to the sales order number in Create Quote's output is checked wit
 3. Does List Quotations `externalRef` match exactly?
 
 **Shoprite:**
-4. Acknowledge Orders: the action code, and whether it acknowledges the whole downloaded batch or named orders.
-5. What an empty download looks like.
+4. What an empty download looks like.
 
 ## Testing
 
