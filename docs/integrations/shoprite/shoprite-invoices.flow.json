@@ -1,0 +1,408 @@
+{
+  "name": "Shoprite Invoices from JRNY",
+  "type": "SHARED",
+  "summary": "",
+  "description": "Sends delivered SHOE100 invoices from 2026-10-20 on to Shoprite as GS1 invoices and records sent or failed in JRNY. UNCONFIRMED invoices are never resent automatically.",
+  "tags": [],
+  "blogUrl": "",
+  "metadata": {
+    "externalId": "shopriteInvoicesV1xxxxx"
+  },
+  "author": "JRNYFLW Admin",
+  "categories": [],
+  "pieces": [
+    "@activepieces/piece-schedule",
+    "@jrnyflw/shoprite",
+    "@jrnyflw/jrny"
+  ],
+  "status": "PUBLISHED",
+  "flows": [
+    {
+      "displayName": "Shoprite Invoices from JRNY",
+      "valid": false,
+      "schemaVersion": "20",
+      "notes": [],
+      "trigger": {
+        "name": "trigger",
+        "displayName": "Hourly 07:00 to 19:00",
+        "type": "PIECE_TRIGGER",
+        "valid": true,
+        "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+        "settings": {
+          "pieceName": "@activepieces/piece-schedule",
+          "pieceVersion": "0.1.17",
+          "triggerName": "cron_expression",
+          "input": {
+            "cronExpression": "0 7-19 * * *",
+            "timezone": "Africa/Johannesburg"
+          },
+          "propertySettings": {
+            "cronExpression": {
+              "type": "MANUAL"
+            },
+            "timezone": {
+              "type": "MANUAL"
+            }
+          },
+          "sampleData": {}
+        },
+        "nextAction": {
+          "name": "step_1",
+          "displayName": "List Invoices Ready to Send",
+          "type": "PIECE",
+          "valid": false,
+          "skip": false,
+          "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+          "settings": {
+            "pieceName": "@jrnyflw/jrny",
+            "pieceVersion": "0.1.0",
+            "actionName": "list_invoices_ready_to_send",
+            "input": {
+              "auth": "{{connections['pick-the-jrny-production-connection']}}",
+              "customerCode": "SHOE100",
+              "fromDate": "2026-10-20",
+              "maxInvoices": 50,
+              "onFailure": "stop"
+            },
+            "propertySettings": {
+              "customerCode": {
+                "type": "MANUAL"
+              },
+              "fromDate": {
+                "type": "MANUAL"
+              },
+              "maxInvoices": {
+                "type": "MANUAL"
+              },
+              "onFailure": {
+                "type": "MANUAL"
+              }
+            },
+            "sampleData": {},
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_2",
+            "displayName": "Anything to send?",
+            "type": "ROUTER",
+            "valid": true,
+            "skip": false,
+            "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+            "settings": {
+              "executionType": "EXECUTE_FIRST_MATCH",
+              "branches": [
+                {
+                  "branchType": "CONDITION",
+                  "branchName": "Invoices to send",
+                  "conditions": [
+                    [
+                      {
+                        "operator": "NUMBER_IS_GREATER_THAN",
+                        "firstValue": "{{step_1['output']['count']}}",
+                        "secondValue": "0"
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "branchType": "FALLBACK",
+                  "branchName": "Otherwise"
+                }
+              ]
+            },
+            "children": [
+              {
+                "name": "step_3",
+                "displayName": "Each invoice",
+                "type": "LOOP_ON_ITEMS",
+                "valid": true,
+                "skip": false,
+                "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+                "settings": {
+                  "items": "{{step_1['output']['invoices']}}"
+                },
+                "firstLoopAction": {
+                  "name": "step_4",
+                  "displayName": "Clean?",
+                  "type": "ROUTER",
+                  "valid": true,
+                  "skip": false,
+                  "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+                  "settings": {
+                    "executionType": "EXECUTE_FIRST_MATCH",
+                    "branches": [
+                      {
+                        "branchType": "CONDITION",
+                        "branchName": "Clean",
+                        "conditions": [
+                          [
+                            {
+                              "operator": "BOOLEAN_IS_TRUE",
+                              "firstValue": "{{step_3['item']['clean']}}"
+                            }
+                          ]
+                        ]
+                      },
+                      {
+                        "branchType": "FALLBACK",
+                        "branchName": "Otherwise"
+                      }
+                    ]
+                  },
+                  "children": [
+                    {
+                      "name": "step_5",
+                      "displayName": "Send Invoice",
+                      "type": "PIECE",
+                      "valid": false,
+                      "skip": false,
+                      "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+                      "settings": {
+                        "pieceName": "@jrnyflw/shoprite",
+                        "pieceVersion": "0.1.0",
+                        "actionName": "send_invoice",
+                        "input": {
+                          "auth": "{{connections['pick-the-shoprite-connection']}}",
+                          "invoiceNumber": "{{step_3['item']['invoiceNumber']}}",
+                          "invoiceDate": "{{step_3['item']['invoiceDate']}}",
+                          "purchaseOrder": "{{step_3['item']['purchaseOrder']}}",
+                          "storeGln": "{{step_3['item']['storeGln']}}",
+                          "totalExclVat": "{{step_3['item']['totalExclVat']}}",
+                          "totalVat": "{{step_3['item']['totalVat']}}",
+                          "totalInclVat": "{{step_3['item']['totalInclVat']}}",
+                          "lines": {
+                            "lineNumber": "{{flattenNestedKeys(step_3, ['item', 'lines', 'lineNumber'])}}",
+                            "quantity": "{{flattenNestedKeys(step_3, ['item', 'lines', 'quantity'])}}",
+                            "lineTotalExclVat": "{{flattenNestedKeys(step_3, ['item', 'lines', 'lineTotalExclVat'])}}",
+                            "lineTotalInclVat": "{{flattenNestedKeys(step_3, ['item', 'lines', 'lineTotalInclVat'])}}",
+                            "description": "{{flattenNestedKeys(step_3, ['item', 'lines', 'description'])}}",
+                            "gtin": "{{flattenNestedKeys(step_3, ['item', 'lines', 'gtin'])}}"
+                          },
+                          "onFailure": "continue"
+                        },
+                        "propertySettings": {
+                          "invoiceNumber": {
+                            "type": "MANUAL"
+                          },
+                          "invoiceDate": {
+                            "type": "MANUAL"
+                          },
+                          "purchaseOrder": {
+                            "type": "MANUAL"
+                          },
+                          "storeGln": {
+                            "type": "MANUAL"
+                          },
+                          "totalExclVat": {
+                            "type": "MANUAL"
+                          },
+                          "totalVat": {
+                            "type": "MANUAL"
+                          },
+                          "totalInclVat": {
+                            "type": "MANUAL"
+                          },
+                          "lines": {
+                            "type": "DYNAMIC"
+                          },
+                          "onFailure": {
+                            "type": "MANUAL"
+                          }
+                        },
+                        "sampleData": {},
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {
+                            "value": false
+                          },
+                          "continueOnFailure": {
+                            "value": true
+                          }
+                        }
+                      },
+                      "nextAction": {
+                        "name": "step_6",
+                        "displayName": "Sent?",
+                        "type": "ROUTER",
+                        "valid": true,
+                        "skip": false,
+                        "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+                        "settings": {
+                          "executionType": "EXECUTE_FIRST_MATCH",
+                          "branches": [
+                            {
+                              "branchType": "CONDITION",
+                              "branchName": "Sent",
+                              "conditions": [
+                                [
+                                  {
+                                    "operator": "BOOLEAN_IS_TRUE",
+                                    "firstValue": "{{step_5['ok']}}"
+                                  }
+                                ]
+                              ]
+                            },
+                            {
+                              "branchType": "FALLBACK",
+                              "branchName": "Otherwise"
+                            }
+                          ]
+                        },
+                        "children": [
+                          {
+                            "name": "step_7",
+                            "displayName": "Record sent in JRNY",
+                            "type": "PIECE",
+                            "valid": false,
+                            "skip": false,
+                            "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+                            "settings": {
+                              "pieceName": "@jrnyflw/jrny",
+                              "pieceVersion": "0.1.0",
+                              "actionName": "record_invoice_result",
+                              "input": {
+                                "auth": "{{connections['pick-the-jrny-production-connection']}}",
+                                "invoiceNumber": "{{step_3['item']['invoiceNumber']}}",
+                                "status": "sent",
+                                "externalReference": "{{step_5['output']['invoiceRefNo']}}",
+                                "onFailure": "continue"
+                              },
+                              "propertySettings": {
+                                "invoiceNumber": {
+                                  "type": "MANUAL"
+                                },
+                                "status": {
+                                  "type": "MANUAL"
+                                },
+                                "externalReference": {
+                                  "type": "MANUAL"
+                                },
+                                "onFailure": {
+                                  "type": "MANUAL"
+                                }
+                              },
+                              "sampleData": {},
+                              "errorHandlingOptions": {
+                                "retryOnFailure": {
+                                  "value": false
+                                },
+                                "continueOnFailure": {
+                                  "value": true
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "step_8",
+                            "displayName": "Record failed in JRNY",
+                            "type": "PIECE",
+                            "valid": false,
+                            "skip": false,
+                            "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+                            "settings": {
+                              "pieceName": "@jrnyflw/jrny",
+                              "pieceVersion": "0.1.0",
+                              "actionName": "record_invoice_result",
+                              "input": {
+                                "auth": "{{connections['pick-the-jrny-production-connection']}}",
+                                "invoiceNumber": "{{step_3['item']['invoiceNumber']}}",
+                                "status": "failed",
+                                "errorCode": "{{step_5['error']['code']}}",
+                                "message": "{{step_5['error']['message']}}",
+                                "onFailure": "continue"
+                              },
+                              "propertySettings": {
+                                "invoiceNumber": {
+                                  "type": "MANUAL"
+                                },
+                                "status": {
+                                  "type": "MANUAL"
+                                },
+                                "errorCode": {
+                                  "type": "MANUAL"
+                                },
+                                "message": {
+                                  "type": "MANUAL"
+                                },
+                                "onFailure": {
+                                  "type": "MANUAL"
+                                }
+                              },
+                              "sampleData": {},
+                              "errorHandlingOptions": {
+                                "retryOnFailure": {
+                                  "value": false
+                                },
+                                "continueOnFailure": {
+                                  "value": true
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "name": "step_9",
+                      "displayName": "Record problem in JRNY",
+                      "type": "PIECE",
+                      "valid": false,
+                      "skip": false,
+                      "lastUpdatedDate": "2026-10-18T19:01:15.796Z",
+                      "settings": {
+                        "pieceName": "@jrnyflw/jrny",
+                        "pieceVersion": "0.1.0",
+                        "actionName": "record_invoice_result",
+                        "input": {
+                          "auth": "{{connections['pick-the-jrny-production-connection']}}",
+                          "invoiceNumber": "{{step_3['item']['invoiceNumber']}}",
+                          "status": "failed",
+                          "errorCode": "INVALID",
+                          "message": "{{step_3['item']['problem']}}",
+                          "onFailure": "continue"
+                        },
+                        "propertySettings": {
+                          "invoiceNumber": {
+                            "type": "MANUAL"
+                          },
+                          "status": {
+                            "type": "MANUAL"
+                          },
+                          "errorCode": {
+                            "type": "MANUAL"
+                          },
+                          "message": {
+                            "type": "MANUAL"
+                          },
+                          "onFailure": {
+                            "type": "MANUAL"
+                          }
+                        },
+                        "sampleData": {},
+                        "errorHandlingOptions": {
+                          "retryOnFailure": {
+                            "value": false
+                          },
+                          "continueOnFailure": {
+                            "value": true
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              null
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
