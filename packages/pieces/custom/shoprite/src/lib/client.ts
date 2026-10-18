@@ -1,4 +1,4 @@
-import { HttpMethod } from '@activepieces/pieces-common';
+import { HttpMethod, HttpResponse } from '@activepieces/pieces-common';
 import { Tracer } from '@jrnyflw/piece-trace';
 import { ShopriteAuth } from './auth';
 
@@ -16,8 +16,8 @@ function joinUrl(base: string, path: string): string {
     return `${base.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
 }
 
-async function call<T>({ trace, auth, method, path, body, query, headers }: CallParams): Promise<T> {
-    const response = await trace.send<T>({
+async function send<T>({ trace, auth, method, path, body, query, headers }: CallParams): Promise<HttpResponse<T>> {
+    return trace.send<T>({
         request: {
             method,
             url: joinUrl(auth.baseUrl, path),
@@ -26,6 +26,10 @@ async function call<T>({ trace, auth, method, path, body, query, headers }: Call
             body,
         },
     });
+}
+
+async function call<T>(params: CallParams): Promise<T> {
+    const response = await send<T>(params);
     return response.body;
 }
 
@@ -34,7 +38,7 @@ function secretsOf(auth: ShopriteAuth): string[] {
     return [auth.password, Buffer.from(`${auth.username}:${auth.password}`).toString('base64')];
 }
 
-export const shopriteClient = { buildHeaders, joinUrl, call, secretsOf };
+export const shopriteClient = { buildHeaders, joinUrl, call, send, secretsOf };
 
 type CallParams = {
     trace: Tracer;
