@@ -1,3 +1,7 @@
+# Own project name: this folder also holds docker-compose.yml, whose postgres/redis services would otherwise share the inferred
+# project "jrnyflw" and be replaced by these (and vice versa). Volume names are pinned so the existing dev data is kept.
+name: jrnyflw-dev
+
 services:
   postgres:
     image: postgres:17-alpine
@@ -31,4 +35,6 @@ services:
 
 volumes:
   jrnyflw_postgres_data:
+    name: jrnyflw_jrnyflw_postgres_data
   jrnyflw_redis_data:
+    name: jrnyflw_jrnyflw_redis_data
