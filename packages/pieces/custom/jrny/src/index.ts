@@ -9,6 +9,7 @@ import { customApiCall } from './lib/actions/custom-api-call';
 import { listCourierDispatches } from './lib/actions/list-courier-dispatches';
 import { resolveOrderLines } from './lib/actions/resolve-order-lines';
 import { generatePick } from './lib/actions/generate-pick';
+import { listInvoicesReady } from './lib/actions/list-invoices-ready';
 
 const CURATED = ['create_quotation', 'courier_response', 'generate_pick'];
 const generatedActions = jrnyOperations.filter((op) => !CURATED.includes(op.name)).map(buildJrnyAction);
@@ -22,6 +23,6 @@ export const jrny = createPiece({
   authors: ['jrnyflw'],
   categories: [PieceCategory.SALES_AND_CRM, PieceCategory.ACCOUNTING],
   auth: jrnyAuth,
-  actions: [createQuote, courierResponse, listCourierDispatches, resolveOrderLines, generatePick, ...generatedActions, customApiCall],
+  actions: [createQuote, courierResponse, listCourierDispatches, resolveOrderLines, generatePick, listInvoicesReady, ...generatedActions, customApiCall],
   triggers: [],
 });
