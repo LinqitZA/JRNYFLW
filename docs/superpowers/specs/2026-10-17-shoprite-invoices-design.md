@@ -5,7 +5,7 @@
 **Branch:** `shoprite-invoices`
 **Depends on:**
 - the Shoprite orders work (merged 9b7633f7e1): the `@jrnyflw/shoprite` client and the orders flow;
-- JRNY endpoints still being built: a ready-to-send invoice list, recording sent or failed, a GTIN on quotation lines and a GLN on delivery addresses.
+- JRNY endpoints still being built: a ready-to-send invoice list, recording sent or failed, the Shoprite GTIN on invoice lines and a GLN on delivery addresses.
 
 ## Purpose
 
@@ -201,13 +201,15 @@ Schedule: hourly, 07:00–19:00 Africa/Johannesburg (0 7-19 * * *)
 - **No emails yet.** IT notification steps get added once the MS Graph connection exists.
 - **Generator:** an importable flow JSON at `docs/integrations/shoprite/shoprite-invoices.flow.json`, built by `scripts/uat/gen-shoprite-invoices-flow.ts` with the same self-checks as the orders generator. It has placeholder connections and needs the JRNY action names, so it is built after the JRNY actions.
 
-## Change to the orders flow
+## GTINs: one per product
 
-Once JRNY accepts a GTIN on quotation lines:
-- Resolve Order Lines returns each line's `gtin` (the Shoprite GTIN, exactly as received);
-- the orders flow passes it to Create Quote.
+Shoprite orders each product against a single GTIN. So the GTIN is a property of the product in JRNY, not something carried through from each order:
+- **Order intake** (already built): Resolve Order Lines looks a line up by product code first, then by GTIN through JRNY's barcode lookup.
+- **Invoices:** JRNY sends the product's Shoprite GTIN on each invoice line, not the product's default barcode.
 
-This is a small follow-up task, blocked on JRNY.
+The orders flow needs no change.
+
+JRNY keeps several barcodes per product (`product_barcodes`, each with a barcode type and a unit), so JRNY must be able to pick the one Shoprite orders against. On JRNY dev, only 2 of 30 GTINs from a Shoprite order sample matched any JRNY barcode. So these GTINs have to be loaded into JRNY before the first invoice run.
 
 ## What we need from JRNY
 
@@ -221,7 +223,7 @@ This is a small follow-up task, blocked on JRNY.
      - `lines[]` with `lineNumber`, `quantity`, `lineTotalExclVat`, `lineTotalInclVat`, `description`, `stockCode`, `gtin`.
    - **Every key on every line, null when empty.** The flow's list mapper misaligns lines when a key is missing.
 2. **Record result:** `POST …/invoices/:invoiceNumber/delivery-result` with `{ channel: 'shoprite-b2b', result: 'sent' | 'failed', reference?, message?, at }`. Recording `sent` removes the invoice from the ready list. `failed` keeps it in the list and shows the message on the invoice.
-3. **A GTIN on quotation lines** (Create Quotation), kept on the sales order and invoice lines.
+3. **The Shoprite GTIN on each invoice line:** the product's barcode that Shoprite orders against, not its default barcode. JRNY needs a way to mark that barcode, for example a barcode type, and the GTINs loaded for every product Shoprite buys. The GTIN's unit must match the invoiced quantity's unit. A line with no Shoprite GTIN fails the check and is recorded as failed.
 4. **A GLN on customer delivery addresses,** which AON fills in once per Shoprite store.
 
 The endpoint paths above are suggestions. The JRNY team's actual paths win.
