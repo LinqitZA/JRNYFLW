@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 function check(input: InvoiceInput): Invoice {
     const problems: string[] = [];
     const invoiceNumber = requiredText({ value: input.invoiceNumber, label: 'Invoice Number', problems });
@@ -17,6 +19,134 @@ function check(input: InvoiceInput): Invoice {
 
 function isGln(text: string): boolean {
     return /^\d{13}$/.test(text) && hasValidCheckDigit(text);
+}
+
+function toXml({ invoice, supplier, invoiceRefNo, sentAt }: ToXmlParams): string {
+    const sast = new Date(sentAt.getTime() + SAST_OFFSET_MS).toISOString();
+    const sentTime = `${sast.slice(0, 19)}+02:00`;
+    const sentDay = `${sast.slice(0, 10)}T00:00:00+02:00`;
+    const number = xmlText(invoice.invoiceNumber);
+    const store = xmlText(invoice.storeGln);
+    const seller = xmlText(supplier.gln);
+    return [
+        `${XML_DECLARATION}${MESSAGE_OPEN}${SBDH_OPEN}`,
+        '  <HeaderVersion>3.2.0</HeaderVersion>',
+        '  <Sender>',
+        `    <Identifier Authority="SenderEAN">${seller}</Identifier>`,
+        '  </Sender>',
+        '  <Receiver>',
+        `    <Identifier Authority="ReceiverEAN">${store}</Identifier>`,
+        '  </Receiver>',
+        '  <DocumentIdentification>',
+        '    <Standard>Standard</Standard>',
+        '    <TypeVersion>3.2.0</TypeVersion>',
+        `    <InstanceIdentifier>${number}</InstanceIdentifier>`,
+        '    <Type>Invoice</Type>',
+        '    <MultipleType>false</MultipleType>',
+        `    <CreationDateAndTime>${sentTime}</CreationDateAndTime>`,
+        '  </DocumentIdentification>',
+        '  <Manifest />',
+        '</StandardBusinessDocumentHeader>',
+        '  <invoice xmlns="">',
+        `    <creationDateTime>${sentDay}</creationDateTime>`,
+        '    <documentStatusCode>ORIGINAL</documentStatusCode>',
+        '    <documentActionCode>ADD</documentActionCode>',
+        '    <documentStructureVersion>3.2.0</documentStructureVersion>',
+        '    <revisionNumber>1.0</revisionNumber>',
+        '    <documentEffectiveDate>',
+        `      <date>${xmlText(invoice.invoiceDate)}</date>`,
+        '    </documentEffectiveDate>',
+        '    <avpList>',
+        `      <eComStringAttributeValuePairList attributeName="InstanceIdentifier">${number}</eComStringAttributeValuePairList>`,
+        `      <eComStringAttributeValuePairList attributeName="InvoiceRefNo">${xmlText(invoiceRefNo)}</eComStringAttributeValuePairList>`,
+        '    </avpList>',
+        '    <InvoiceIdentification>',
+        `      <entityIdentification>${number}</entityIdentification>`,
+        '      <contentOwner>',
+        `        <gln>${seller}</gln>`,
+        '      </contentOwner>',
+        '    </InvoiceIdentification>',
+        '    <invoiceType>INVOICE</invoiceType>',
+        '    <invoiceCurrencyCode>ZAR</invoiceCurrencyCode>',
+        '    <countryOfSupplyOfGoods>ZA</countryOfSupplyOfGoods>',
+        '    <buyer>',
+        `      <gln>${store}</gln>`,
+        '    </buyer>',
+        '    <seller>',
+        `      <gln>${seller}</gln>`,
+        '      <organisationDetails>',
+        '        <legalRegistration>',
+        `          <legalRegistrationNumber>${xmlText(supplier.vatRegistrationNumber)}</legalRegistrationNumber>`,
+        '        </legalRegistration>',
+        '      </organisationDetails>',
+        '    </seller>',
+        '    <shipTo>',
+        `      <gln>${store}</gln>`,
+        '    </shipTo>',
+        '    <invoiceTotals>',
+        `      <totalInvoiceAmount currencyCode="ZAR">${money(invoice.totals.exclVatCents)}</totalInvoiceAmount>`,
+        `      <totalInvoiceAmountPayable currencyCode="ZAR">${money(invoice.totals.inclVatCents)}</totalInvoiceAmountPayable>`,
+        `      <totalVATAmount currencyCode="ZAR">${money(invoice.totals.vatCents)}</totalVATAmount>`,
+        '    </invoiceTotals>',
+        '    <purchaseOrder>',
+        `      <entityIdentification>${xmlText(invoice.purchaseOrder)}</entityIdentification>`,
+        '    </purchaseOrder>',
+        '    <invoice xmlns="">',
+        `      <entityIdentification>${number}</entityIdentification>`,
+        '      <contentOwner>',
+        `        <gln>${seller}</gln>`,
+        '      </contentOwner>',
+        '    </invoice>',
+        ...invoice.lines.flatMap(lineItem),
+        '  </invoice>',
+        '</invoiceMessage>',
+    ].join('\r\n');
+}
+
+// Name-based (UUID v5), so a resend of the same invoice carries the same reference instead of looking like a new invoice.
+function refNo({ supplierGln, invoiceNumber }: { supplierGln: string; invoiceNumber: string }): string {
+    const bytes = createHash('sha1')
+        .update(Buffer.from(URL_NAMESPACE.replace(/-/g, ''), 'hex'))
+        .update(`${supplierGln}:${invoiceNumber}`)
+        .digest()
+        .subarray(0, 16);
+    bytes[6] = (bytes[6] & 0x0f) | 0x50;
+    bytes[8] = (bytes[8] & 0x3f) | 0x80;
+    const hex = bytes.toString('hex');
+    return [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join('-');
+}
+
+function lineItem(line: InvoiceLine): string[] {
+    return [
+        '    <invoiceLineItem>',
+        `      <lineItemNumber>${line.lineNumber}</lineItemNumber>`,
+        `      <invoicedQuantity>${line.quantity.toFixed(6)}</invoicedQuantity>`,
+        `      <amountExclusiveAllowancesCharges currencyCode="ZAR">${money(line.exclVatCents)}</amountExclusiveAllowancesCharges>`,
+        `      <amountInclusiveAllowancesCharges currencyCode="ZAR">${money(line.inclVatCents)}</amountInclusiveAllowancesCharges>`,
+        `      <note languageCode="EN">${xmlText(line.description)}</note>`,
+        '      <transactionalTradeItem>',
+        `        <gtin>${line.gtin}</gtin>`,
+        '        <transactionalItemData>',
+        '          <transactionalItemWeight>',
+        '            <measurementValue measurementUnitCode="EA">0</measurementValue>',
+        '          </transactionalItemWeight>',
+        '        </transactionalItemData>',
+        '        <size>',
+        '          <sizeCode>1</sizeCode>',
+        '        </size>',
+        '      </transactionalTradeItem>',
+        '      <invoiceLineTaxInformation>',
+        `        <dutyFeeTaxAmount currencyCode="ZAR">${money(line.vatCents)}</dutyFeeTaxAmount>`,
+        '        <dutyFeeTaxCategoryCode>STANDARD</dutyFeeTaxCategoryCode>',
+        '        <dutyFeeTaxPercentage>15.00</dutyFeeTaxPercentage>',
+        '        <dutyFeeTaxTypeCode>VAT</dutyFeeTaxTypeCode>',
+        '      </invoiceLineTaxInformation>',
+        '    </invoiceLineItem>',
+    ];
+}
+
+function xmlText(text: string): string {
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 function requiredText({ value, label, problems }: FieldParams): string {
@@ -245,12 +375,20 @@ const TOTAL_LABELS: [keyof InvoiceTotals, string][] = [
     ['inclVatCents', 'Total Incl. VAT'],
 ];
 
-export const gs1Invoice = { check, isGln };
+// South Africa has no daylight saving, so a fixed offset is exact all year.
+const SAST_OFFSET_MS = 2 * 60 * 60 * 1000;
+const URL_NAMESPACE = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
+const XML_DECLARATION = '<?xml version="1.0" encoding="utf-8"?>';
+const MESSAGE_OPEN = '<invoiceMessage xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:gs1:ecom:invoice:xsd:3">';
+const SBDH_OPEN = '<StandardBusinessDocumentHeader xmlns="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader">';
+
+export const gs1Invoice = { check, isGln, toXml, refNo };
 
 type FieldParams = { value: unknown; label: string; problems: string[] };
 type NumberRead = { kind: 'missing' } | { kind: 'invalid' } | { kind: 'ok'; value: number };
 type ReadLineParams = { item: unknown; position: number; seen: Set<number>; problems: string[] };
 type LineVatParams = { label: string; exclVatCents: number | null; inclVatCents: number | null; problems: string[] };
+type ToXmlParams = { invoice: Invoice; supplier: Supplier; invoiceRefNo: string; sentAt: Date };
 
 export type InvoiceInput = {
     invoiceNumber?: unknown;
@@ -280,3 +418,4 @@ export type Invoice = {
     totals: InvoiceTotals;
     lines: InvoiceLine[];
 };
+export type Supplier = { gln: string; vatRegistrationNumber: string };
