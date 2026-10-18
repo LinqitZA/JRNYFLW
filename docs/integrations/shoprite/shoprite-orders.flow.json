@@ -27,7 +27,7 @@
         "displayName": "08:00 and 16:00",
         "type": "PIECE_TRIGGER",
         "valid": true,
-        "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+        "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
         "settings": {
           "pieceName": "@activepieces/piece-schedule",
           "pieceVersion": "0.1.17",
@@ -52,7 +52,7 @@
           "type": "PIECE",
           "valid": false,
           "skip": false,
-          "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+          "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
           "settings": {
             "pieceName": "@jrnyflw/shoprite",
             "pieceVersion": "0.1.0",
@@ -82,7 +82,7 @@
             "type": "ROUTER",
             "valid": true,
             "skip": false,
-            "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+            "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
             "settings": {
               "executionType": "EXECUTE_FIRST_MATCH",
               "branches": [
@@ -112,7 +112,7 @@
                 "type": "LOOP_ON_ITEMS",
                 "valid": true,
                 "skip": false,
-                "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                 "settings": {
                   "items": "{{step_1['output']['orders']}}"
                 },
@@ -122,17 +122,21 @@
                   "type": "PIECE",
                   "valid": false,
                   "skip": false,
-                  "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                  "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                   "settings": {
                     "pieceName": "@jrnyflw/jrny",
                     "pieceVersion": "0.1.0",
                     "actionName": "list_quotations",
                     "input": {
                       "auth": "{{connections['pick-the-jrny-dev-connection']}}",
+                      "customerCode": "SHOE100",
                       "externalRef": "{{step_3['item']['orderNumber']}}",
                       "onFailure": "continue"
                     },
                     "propertySettings": {
+                      "customerCode": {
+                        "type": "MANUAL"
+                      },
                       "externalRef": {
                         "type": "MANUAL"
                       },
@@ -156,7 +160,7 @@
                     "type": "ROUTER",
                     "valid": true,
                     "skip": false,
-                    "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                    "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                     "settings": {
                       "executionType": "EXECUTE_FIRST_MATCH",
                       "branches": [
@@ -189,7 +193,7 @@
                         "type": "PIECE",
                         "valid": false,
                         "skip": false,
-                        "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                        "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                         "settings": {
                           "pieceName": "@jrnyflw/jrny",
                           "pieceVersion": "0.1.0",
@@ -250,7 +254,7 @@
                           "type": "ROUTER",
                           "valid": true,
                           "skip": false,
-                          "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                          "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                           "settings": {
                             "executionType": "EXECUTE_FIRST_MATCH",
                             "branches": [
@@ -284,7 +288,7 @@
                               "type": "PIECE",
                               "valid": false,
                               "skip": false,
-                              "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                              "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                               "settings": {
                                 "pieceName": "@jrnyflw/jrny",
                                 "pieceVersion": "0.1.0",
@@ -362,7 +366,7 @@
                                 "type": "ROUTER",
                                 "valid": true,
                                 "skip": false,
-                                "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                                "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                                 "settings": {
                                   "executionType": "EXECUTE_FIRST_MATCH",
                                   "branches": [
@@ -395,7 +399,7 @@
                                     "type": "PIECE",
                                     "valid": false,
                                     "skip": false,
-                                    "lastUpdatedDate": "2026-10-18T09:52:01.748Z",
+                                    "lastUpdatedDate": "2026-10-18T19:02:31.469Z",
                                     "settings": {
                                       "pieceName": "@jrnyflw/jrny",
                                       "pieceVersion": "0.1.0",

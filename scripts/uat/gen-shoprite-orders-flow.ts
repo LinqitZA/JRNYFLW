@@ -5,12 +5,15 @@ import { downloadOrders } from '../../packages/pieces/custom/shoprite/src/lib/ac
 import { resolveOrderLines } from '../../packages/pieces/custom/jrny/src/lib/actions/resolve-order-lines'
 import { createQuote } from '../../packages/pieces/custom/jrny/src/lib/actions/create-quote'
 import { generatePick } from '../../packages/pieces/custom/jrny/src/lib/actions/generate-pick'
+import { acknowledgeOrders } from '../../packages/pieces/custom/shoprite/src/lib/actions/acknowledge-orders'
 import { jrnyOperations } from '../../packages/pieces/custom/jrny/src/lib/operations'
 
 // Placeholders on purpose: whoever imports must pick the connections, so the flow never lands on production JRNY by accident.
 const SHOPRITE = "{{connections['pick-the-shoprite-connection']}}"
-const JRNY = "{{connections['pick-the-jrny-dev-connection']}}"
 const now = new Date().toISOString()
+// The live flow acknowledges orders, so it is only for after the old platform has stopped reading the same Shoprite account.
+const live = process.argv.includes('--acknowledge')
+const JRNY = live ? "{{connections['pick-the-jrny-production-connection']}}" : "{{connections['pick-the-jrny-dev-connection']}}"
 const item = (path: string) => `{{step_3['item']${path}}}`
 const listOf = ({ step, path }: { step: string; path: string[] }) => `{{flattenNestedKeys(${step}, ['${path.join("', '")}'])}}`
 
@@ -22,17 +25,26 @@ function piece({ name, displayName, pieceName, actionName, input, dynamic = [], 
     }
 }
 
-function router({ name, displayName, branchName, conditions, child }: { name: string; displayName: string; branchName: string; conditions: unknown[]; child: unknown }) {
+// anyOf holds OR'd groups of AND'd conditions, for a branch that more than one outcome should take.
+function router({ name, displayName, branchName, conditions = [], anyOf, child, otherwise = null }: { name: string; displayName: string; branchName: string; conditions?: unknown[]; anyOf?: unknown[][]; child: unknown; otherwise?: unknown }) {
     return {
         name, displayName, type: 'ROUTER', valid: true, skip: false, lastUpdatedDate: now,
-        settings: { executionType: 'EXECUTE_FIRST_MATCH', branches: [{ branchType: 'CONDITION', branchName, conditions: [conditions] }, { branchType: 'FALLBACK', branchName: 'Otherwise' }] },
-        children: [child, null],
+        settings: { executionType: 'EXECUTE_FIRST_MATCH', branches: [{ branchType: 'CONDITION', branchName, conditions: anyOf ?? [conditions] }, { branchType: 'FALLBACK', branchName: 'Otherwise' }] },
+        children: [child, otherwise],
     }
+}
+
+// Acknowledged orders never download again, so an order is acknowledged only once it is in JRNY.
+function ack(name: string) {
+    return piece({ name, displayName: 'Acknowledge Order', pieceName: '@jrnyflw/shoprite', actionName: 'acknowledge_orders', inLoop: true, input: { auth: SHOPRITE, orderNumbers: item("['orderNumber']"), onFailure: 'continue' } })
 }
 
 const salesOrderNumber = "{{step_8['output']['salesOrder']['salesOrderNumber']}}"
 
 const pick = piece({ name: 'step_10', displayName: 'Generate Pick', pieceName: '@jrnyflw/jrny', actionName: 'generate_pick', inLoop: true, input: { auth: JRNY, salesOrderNumber, onFailure: 'continue' } })
+
+const ackExisting = ack('step_12')
+const ackNew = ack('step_14')
 
 const quote = {
     ...piece({
@@ -57,11 +69,24 @@ const quote = {
             onFailure: 'continue',
         },
     }),
-    nextAction: router({
-        name: 'step_9', displayName: 'Clean and created?', branchName: 'Generate the pick',
-        conditions: [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_8['ok']}}" }, { operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_6['output']['clean']}}" }],
-        child: pick,
-    }),
+    nextAction: {
+        ...router({
+            name: 'step_9', displayName: 'Clean and created?', branchName: 'Generate the pick',
+            conditions: [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_8['ok']}}" }, { operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_6['output']['clean']}}" }],
+            child: pick,
+        }),
+        // JRNY refuses a Shoprite order it already holds (including a cancelled one) with DUPLICATE_PORTAL_ORDER, so that also means "in JRNY".
+        ...(live ? {
+            nextAction: router({
+                name: 'step_13', displayName: 'In JRNY?', branchName: 'Acknowledge it',
+                anyOf: [
+                    [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_8['ok']}}" }],
+                    [{ operator: 'TEXT_EXACTLY_MATCHES', firstValue: "{{step_8['error']['code']}}", secondValue: 'DUPLICATE_PORTAL_ORDER', caseSensitive: true }],
+                ],
+                child: ackNew,
+            }),
+        } : {}),
+    },
 }
 
 const resolve = {
@@ -93,11 +118,16 @@ const resolve = {
 }
 
 const alreadyLoaded = {
-    ...piece({ name: 'step_4', displayName: 'Already loaded? (List Quotations)', pieceName: '@jrnyflw/jrny', actionName: 'list_quotations', inLoop: true, input: { auth: JRNY, externalRef: item("['orderNumber']"), onFailure: 'continue' } }),
+    ...piece({ name: 'step_4', displayName: 'Already loaded? (List Quotations)', pieceName: '@jrnyflw/jrny', actionName: 'list_quotations', inLoop: true, input: { auth: JRNY, customerCode: 'SHOE100', externalRef: item("['orderNumber']"), onFailure: 'continue' } }),
     nextAction: router({
         name: 'step_5', displayName: 'New order?', branchName: 'Not in JRNY yet',
         conditions: [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_4['ok']}}" }, { operator: 'LIST_IS_EMPTY', firstValue: "{{step_4['output']['data']}}" }],
         child: resolve,
+        otherwise: live ? router({
+            name: 'step_11', displayName: 'Already in JRNY?', branchName: 'Acknowledge it',
+            conditions: [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_4['ok']}}" }, { operator: 'LIST_IS_NOT_EMPTY', firstValue: "{{step_4['output']['data']}}" }],
+            child: ackExisting,
+        }) : null,
     }),
 }
 
@@ -123,11 +153,13 @@ const trigger = {
 }
 
 const template = {
-    name: 'Shoprite Orders → JRNY', type: 'SHARED', summary: '',
-    description: 'Downloads Shoprite B2B orders (read-only, never acknowledges) and loads each into JRNY: confirmed with a pick when clean, a draft with notes otherwise.',
-    tags: [], blogUrl: '', metadata: { externalId: 'shopriteOrdersV1xxxxxxx' }, author: 'JRNYFLW Admin', categories: [],
+    name: live ? 'Shoprite Orders → JRNY (live, acknowledges)' : 'Shoprite Orders → JRNY', type: 'SHARED', summary: '',
+    description: live
+        ? 'LIVE: downloads Shoprite B2B orders, loads each into JRNY (confirmed with a pick when clean, a draft with notes otherwise) and acknowledges every order now in JRNY. Run only once the old platform has stopped.'
+        : 'Downloads Shoprite B2B orders (read-only, never acknowledges) and loads each into JRNY: confirmed with a pick when clean, a draft with notes otherwise.',
+    tags: [], blogUrl: '', metadata: { externalId: live ? 'shopriteOrdersLiveV1xxx' : 'shopriteOrdersV1xxxxxxx' }, author: 'JRNYFLW Admin', categories: [],
     pieces: ['@activepieces/piece-schedule', '@jrnyflw/shoprite', '@jrnyflw/jrny'], status: 'PUBLISHED',
-    flows: [{ displayName: 'Shoprite Orders → JRNY', valid: false, schemaVersion: '20', notes: [], trigger }],
+    flows: [{ displayName: live ? 'Shoprite Orders → JRNY (live)' : 'Shoprite Orders → JRNY', valid: false, schemaVersion: '20', notes: [], trigger }],
 }
 
 const listQuotationParams = jrnyOperations.find((op) => op.name === 'list_quotations')?.queryParams.map((q) => q.name) ?? []
@@ -137,19 +169,26 @@ const propsOf: Record<string, string[]> = {
     create_quote: Object.keys(createQuote.props),
     generate_pick: Object.keys(generatePick.props),
     list_quotations: [...listQuotationParams, 'onFailure'],
+    acknowledge_orders: Object.keys(acknowledgeOrders.props),
 }
+const ackSteps = live ? [ackExisting, ackNew] : []
 const problems: string[] = []
-for (const step of [download, alreadyLoaded, resolve, quote, pick]) {
+for (const step of [download, alreadyLoaded, resolve, quote, pick, ...ackSteps]) {
     const known = propsOf[step.settings.actionName]
     for (const key of Object.keys(step.settings.input).filter((k) => k !== 'auth')) {
         if (!known.includes(key)) problems.push(`${step.name} (${step.settings.actionName}) has no prop ${key}`)
     }
 }
 // The engine checks props before a piece's own Continue handling runs, so only continueOnFailure keeps one bad order from stopping the loop.
-for (const step of [alreadyLoaded, resolve, quote, pick]) {
+for (const step of [alreadyLoaded, resolve, quote, pick, ...ackSteps]) {
     if (step.settings.errorHandlingOptions.continueOnFailure.value !== true) problems.push(`${step.name} must continue on failure: it runs inside the loop`)
 }
 if (resolve.settings.input.warnings === undefined) problems.push('step_6 must receive the order warnings')
+const acknowledging = ['step_12', 'step_14'].map((name) => findStep({ node: template.flows[0].trigger, name }))
+if (live && !acknowledging.every((step) => isRecord(step) && isRecord(step['settings']) && step['settings']['actionName'] === 'acknowledge_orders')) {
+    problems.push('live flow must acknowledge in step_12 and step_14')
+}
+if (!live && JSON.stringify(template).includes('acknowledge_orders')) problems.push('the dev flow must never acknowledge')
 const parsed = SharedTemplate.safeParse(template)
 if (!parsed.success) problems.push(JSON.stringify(parsed.error.issues, null, 2))
 if (problems.length > 0) {
@@ -158,3 +197,18 @@ if (problems.length > 0) {
 }
 writeFileSync(process.argv[2], JSON.stringify(template, null, 2) + '\n')
 console.log('valid, written to', process.argv[2])
+
+function findStep({ node, name }: { node: unknown; name: string }): unknown {
+    if (!isRecord(node)) return undefined
+    if (node['name'] === name) return node
+    const children = Array.isArray(node['children']) ? node['children'] : []
+    for (const next of [node['nextAction'], node['firstLoopAction'], ...children]) {
+        const found = findStep({ node: next, name })
+        if (found !== undefined) return found
+    }
+    return undefined
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value)
+}

@@ -250,7 +250,12 @@ The exact path to the sales order number in Create Quote's output is checked wit
   - the flow moves to the production JRNY connection;
   - an acknowledge step is added after the loop.
 
-  The acknowledge step's design waits on Shoprite's answers (below). The aim is to acknowledge only when every order in the batch was created, already existed, or was reported as having nothing loadable.
+  **Decided 2026-10-18 (live flow, `shoprite-orders.live.flow.json`):** acknowledge **per order**, inside the loop, when the order is in JRNY:
+  - found by the duplicate check (now filtered to customer `SHOE100` as well);
+  - created now, whether confirmed or draft;
+  - refused by JRNY as `DUPLICATE_PORTAL_ORDER`.
+
+  An order with nothing loadable, or whose quote failed for another reason, is **not** acknowledged. It downloads again every run until staff create it in JRNY with the Shoprite order number as External Reference and Portal Code `SHOPRITE`. A lost order costs more than a repeated one.
 
 ## Out of scope
 

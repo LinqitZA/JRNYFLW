@@ -20,7 +20,7 @@ After importing:
 | 1 | Shoprite · Download Orders | If the call fails: Stop |
 | 2 | Router | `{{step_1.output.count}}` > 0 |
 | 3 | Loop on Items | `{{step_1.output.orders}}` |
-| 4 | JRNY · List Quotations | External Ref = `{{step_3.item.orderNumber}}` |
+| 4 | JRNY · List Quotations | Customer Code `SHOE100`; External Ref = `{{step_3.item.orderNumber}}` |
 | 5 | Router | `{{step_4.output.data}}` list is empty, otherwise skip |
 | 6 | JRNY · Resolve Order Lines | Customer `SHOE100`; Delivery Address `{{step_3.item.store.branch}}`; Fallback `0001`; Note Prefix `Shoprite PO {{step_3.item.orderNumber}}, {{step_3.item.store.name}} ({{step_3.item.store.branch}})`; Lines in list-mapper mode from `step_3.item.lines`: Stock Code ← `supplierItemCode`, Barcode ← `gtin`, Quantity ← `quantity`, Unit Price ← `unitPriceExclVat`, Description ← `description`, Reference ← `lineNumber`; Warnings `{{step_3.item.warnings}}`. If the call fails: Continue |
 | 7 | Router | `{{step_6.ok}}` is true AND `{{step_6.output.lineCount}}` > 0 |
@@ -37,3 +37,35 @@ On steps 4, 6, 8 and 10, also turn on **Continue on Failure** in the step's erro
    - a confirmed sales order with a pick for the clean order;
    - a draft for the other, with the "Not loaded" note.
 4. Run the flow again: step 5 should skip both.
+
+## Live flow (switch-over)
+
+**File:** `docs/integrations/shoprite/shoprite-orders.live.flow.json`. Build it with:
+
+```bash
+bunx tsx scripts/uat/gen-shoprite-orders-flow.ts docs/integrations/shoprite/shoprite-orders.live.flow.json --acknowledge
+```
+
+It is the flow above plus acknowledging. An acknowledged order never downloads again, so:
+
+1. **The old platform must have stopped** downloading and acknowledging Shoprite orders before this flow is switched on.
+2. **Switch off or delete the dev flow,** so only one flow reads the Shoprite account.
+3. **Pick the production JRNY connection** on steps 4, 6, 8 and 10, and the Shoprite connection on steps 1, 12 and 14.
+
+| # | Step | Settings |
+| --- | --- | --- |
+| 11 | Router "Already in JRNY?" (step 5's Otherwise) | `{{step_4.ok}}` is true AND `{{step_4.output.data}}` is not empty |
+| 12 | Shoprite · Acknowledge Orders | Order Numbers `{{step_3.item.orderNumber}}`. If the call fails: Continue |
+| 13 | Router "In JRNY?" (after step 9) | `{{step_8.ok}}` is true, OR `{{step_8.error.code}}` is exactly `DUPLICATE_PORTAL_ORDER` |
+| 14 | Shoprite · Acknowledge Orders | As step 12 |
+
+Steps 12 and 14 have Continue on Failure on.
+
+**Acknowledged:** an order already in JRNY, an order created now (confirmed or draft), and an order JRNY refuses as a duplicate.
+
+**Never acknowledged, so it downloads again next run:**
+- an order with no loadable lines;
+- an order whose quote failed for any other reason (for example, the store wasn't found and the fallback address failed, or JRNY was down);
+- an order whose "Already loaded?" check failed.
+
+To clear an order with no loadable lines, create it in JRNY by hand with **External Reference = the Shoprite order number** and **Portal Code `SHOPRITE`**. The next run finds it, acknowledges it and stops downloading it.
