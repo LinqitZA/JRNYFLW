@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 const { sendRequest } = vi.hoisted(() => ({ sendRequest: vi.fn() }));
 vi.mock('@activepieces/pieces-common', async (orig) => {
@@ -6,7 +6,9 @@ vi.mock('@activepieces/pieces-common', async (orig) => {
     return { ...actual, httpClient: { sendRequest } };
 });
 
+import { HttpError } from '@activepieces/pieces-common';
 import { createMockActionContext } from '@activepieces/pieces-framework';
+import { AxiosError, AxiosHeaders } from 'axios';
 import { recordInvoiceResult } from '../src/lib/actions/record-invoice-result';
 
 const auth = { props: { baseUrl: 'https://jrny/', entityId: 'ent-1', entityCode: 'ZA01', bearerToken: 'jrny-bearer-123456' } };
@@ -18,6 +20,7 @@ function run(propsValue: Record<string, unknown>) {
 const sent = () => sendRequest.mock.calls[0][0];
 
 describe('recordInvoiceResult', () => {
+    afterEach(() => vi.useRealTimers());
     beforeEach(() => {
         sendRequest.mockReset();
         sendRequest.mockResolvedValue({ status: 200, body: { data: { documentNumber: 'INV/1', changed: true } } });
@@ -30,6 +33,23 @@ describe('recordInvoiceResult', () => {
         expect(sent().body).toEqual({ status: 'sent', externalReference: 'bdf32970-3709-5c4d-ba4c-fee13a0f11a9', occurredAt: expect.stringMatching(/Z$/) });
         expect(sent().headers['Idempotency-Key']).toBe('jrnyflw-test-run-id-invoice-INV/1-sent');
         expect(result).toMatchObject({ ok: true, output: { documentNumber: 'INV/1', changed: true } });
+    });
+
+    test('backs off on a 429 so a sent invoice is not left unsent', async () => {
+        vi.useFakeTimers();
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockReset();
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('Too Many Requests', 'ERR_BAD_REQUEST', config, undefined, {
+            status: 429, statusText: 'Too Many Requests', headers: {}, config,
+            data: { error: { code: 'RATE_LIMIT_EXCEEDED', message: 'slow down' } },
+        })));
+        sendRequest.mockResolvedValueOnce({ status: 200, body: { data: { documentNumber: 'INV/1', changed: true } } });
+        const pending = run({ status: 'sent', externalReference: 'ref-1' });
+        await vi.advanceTimersByTimeAsync(2000);
+        const result = await pending;
+        expect(result).toMatchObject({ ok: true, output: { changed: true } });
+        expect(sendRequest).toHaveBeenCalledTimes(2);
+        expect(sendRequest.mock.calls[1][0].headers['Idempotency-Key']).toBe(sendRequest.mock.calls[0][0].headers['Idempotency-Key']);
     });
 
     test('records failed as "CODE: message"', async () => {

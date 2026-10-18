@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { pieceTrace } from '@jrnyflw/piece-trace';
 import { jrnyAuth } from '../auth';
+import { jrnyBackoff } from '../backoff';
 import { jrnyClient } from '../client';
 
 export const recordInvoiceResult = createAction({
@@ -42,7 +43,8 @@ export const recordInvoiceResult = createAction({
         const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/invoices/${encodeURIComponent(invoiceNumber)}/api-delivery`;
         // Per run, so an engine retry of this step repeats safely while the next run's report is a new one.
         const headers = { 'Idempotency-Key': `jrnyflw-${context.run.id}-invoice-${invoiceNumber}-${status}` };
-        const response = await jrnyClient.callJrny<unknown>({ trace, auth, method: HttpMethod.POST, path, body, headers });
+        // A 429 here would leave a sent invoice listed as unsent, so it would go to Shoprite again next run.
+        const response = await jrnyBackoff.withBackoff(() => jrnyClient.callJrny<unknown>({ trace, auth, method: HttpMethod.POST, path, body, headers }));
         return isRecord(response) && isRecord(response['data']) ? response['data'] : response;
       },
     });

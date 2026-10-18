@@ -168,7 +168,7 @@ Only a count of one confirms: "0 records were successfully inserted" is `UNCONFI
 ## Piece work: JRNY
 
 Two hand-written actions on JRNY's endpoints (see "JRNY's invoice endpoints"):
-- **List Invoices Ready to Send:** takes a customer code and a From Date. List rows carry no lines, so it lists, then fetches each invoice's detail, and returns `{ count, invoices[], waiting }` with the fields Send Invoice needs. It lists `apiDelivery=unsent` and `apiDelivery=failed`.
+- **List Invoices Ready to Send:** takes a customer code and a From Date. List rows carry no lines, so it lists, then fetches each invoice's detail, and returns `{ count, invoices[], waiting }` with the fields Send Invoice needs. It lists `apiDelivery=unsent`, which JRNY defines as never sent, reset or failed, so failed invoices come back through it. Listing `failed` as well would send a retried invoice twice. An invoice JRNY can't return is counted in `waiting.fetchFailed`, and the rest carry on.
   - **Left out without a word** (they are not ready, and nothing is wrong):
     - failed invoices whose message starts `UNCONFIRMED` (they may have reached Shoprite; a person checks and resets them in JRNY);
     - invoices with no customer PO number;
@@ -178,7 +178,7 @@ Two hand-written actions on JRNY's endpoints (see "JRNY's invoice endpoints"):
     - a delivery address with no GLN: "Delivery address 1608 has no GLN in JRNY".
     All problems of an invoice are joined with "; ".
   - Each line's incl. VAT total is `lineTotal + vatAmount`.
-  - Pages are fetched in full, with the same cap-and-error pattern as List Courier Dispatches. JRNY rate-limits (429), so calls are made one at a time and a 429 is retried after its `Retry-After`.
+  - Pages are fetched in full, with the same cap-and-error pattern as List Courier Dispatches. JRNY rate-limits (429), so calls are made one at a time. Every call, including Record Invoice Result's, retries a 429 after 2, 4, 8, 16 and 32 seconds, which covers a one-minute window (the client doesn't keep `Retry-After`).
 - **Record Invoice Result:** takes a document number, a status (`sent` / `failed`), the external reference or the message, and posts `api-delivery` with `occurredAt` as UTC ISO time and an `Idempotency-Key`.
 
 **Unblocked.** Everything the actions need is on JRNY dev. Production gets the line GTINs with the next AON deploy, and until GLNs and GTINs are loaded every invoice is recorded as failed with what is missing.

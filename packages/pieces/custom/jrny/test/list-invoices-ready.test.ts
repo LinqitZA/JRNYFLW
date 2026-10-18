@@ -45,11 +45,10 @@ describe('listInvoicesReady', () => {
     });
     afterEach(() => vi.useRealTimers());
 
-    test('lists unsent and failed, pages through, and returns delivered invoices in Send Invoice shape', async () => {
+    test('lists unsent (which includes failed), pages through, and returns delivered invoices in Send Invoice shape', async () => {
         jrny({
             '/invoices?unsent': list([row('INV-1')], 'c1'),
-            '/invoices?unsent&c1': list([row('INV-2')]),
-            '/invoices?failed': list([row('INV-3', { apiDelivery: { status: 'failed', lastMessage: 'REJECTED: x' } })]),
+            '/invoices?unsent&c1': list([row('INV-2'), row('INV-3', { apiDelivery: { status: 'failed', lastMessage: 'REJECTED: x' } })]),
             '/invoices/INV-1': detail('INV-1'), '/invoices/INV-2': detail('INV-2'), '/invoices/INV-3': detail('INV-3'),
             '/dispatch-notes?so=SO-INV-1': pod, '/dispatch-notes?so=SO-INV-2': noPod, '/dispatch-notes?so=SO-INV-3': pod,
         });
@@ -64,12 +63,11 @@ describe('listInvoicesReady', () => {
 
     test('skips no-PO and UNCONFIRMED rows without fetching them', async () => {
         jrny({
-            '/invoices?unsent': list([row('INV-1', { customerPoNumber: null })]),
-            '/invoices?failed': list([row('INV-2', { apiDelivery: { status: 'failed', lastMessage: 'UNCONFIRMED: no answer' } })]),
+            '/invoices?unsent': list([row('INV-1', { customerPoNumber: null }), row('INV-2', { apiDelivery: { status: 'failed', lastMessage: 'UNCONFIRMED: no answer' } })]),
         });
         const result = await run({});
         expect(result.output).toMatchObject({ count: 0, waiting: { noPurchaseOrder: 1, unconfirmed: 1 } });
-        expect(sendRequest).toHaveBeenCalledTimes(2);
+        expect(sendRequest).toHaveBeenCalledTimes(1);
     });
 
     test('only clean invoices count toward Max Invoices; problem ones are always listed', async () => {
@@ -82,6 +80,48 @@ describe('listInvoicesReady', () => {
         const result = await run({ maxInvoices: 1 });
         expect(result.output).toMatchObject({ count: 2, clean: 1, withProblems: 1, waiting: { overLimit: 1 } });
         expect(result.output.invoices[0]).toMatchObject({ invoiceNumber: 'INV-1', clean: false, problem: 'Delivery address 1608 has no GLN in JRNY' });
+    });
+
+    test('a failed invoice JRNY lists as unsent is listed once, never twice', async () => {
+        const failed = row('INV-9', { apiDelivery: { status: 'failed', lastMessage: 'REJECTED: Shoprite down' } });
+        jrny({
+            '/invoices?unsent': list([failed, failed]),
+            '/invoices?failed': list([failed]),
+            '/invoices/INV-9': detail('INV-9'), '/dispatch-notes?so=SO-INV-9': pod,
+        });
+        const result = await run({});
+        expect(result.output).toMatchObject({ count: 1, clean: 1 });
+        expect(sendRequest.mock.calls.filter((c) => c[0].queryParams?.['apiDelivery'] === 'failed')).toHaveLength(0);
+    });
+
+    test('one invoice JRNY cannot return is counted and the rest still go', async () => {
+        jrny({
+            '/invoices?unsent': list([row('INV-1'), row('INV-2')]),
+            '/invoices/INV-2': detail('INV-2'), '/dispatch-notes?so=SO-INV-2': pod,
+        });
+        const result = await run({});
+        expect(result).toMatchObject({ ok: true, output: { count: 1, waiting: { fetchFailed: 1 } } });
+        expect(result.output.invoices[0].invoiceNumber).toBe('INV-2');
+    });
+
+    test('keeps backing off through a rate-limit window of a minute', async () => {
+        vi.useFakeTimers();
+        let refusals = 5;
+        sendRequest.mockImplementation(async () => {
+            if (refusals > 0) {
+                refusals -= 1;
+                const config = { headers: new AxiosHeaders() };
+                throw new HttpError({}, new AxiosError('Too Many Requests', 'ERR_BAD_REQUEST', config, undefined, {
+                    status: 429, statusText: 'Too Many Requests', headers: {}, config,
+                    data: { error: { code: 'RATE_LIMIT_EXCEEDED', message: 'slow down' } },
+                }));
+            }
+            return { status: 200, body: list([]) };
+        });
+        const pending = run({});
+        await vi.advanceTimersByTimeAsync(62_000);
+        const result = await pending;
+        expect(result).toMatchObject({ ok: true, output: { count: 0 } });
     });
 
     test('backs off on a 429 and carries on', async () => {
@@ -102,7 +142,7 @@ describe('listInvoicesReady', () => {
         await vi.advanceTimersByTimeAsync(2000);
         const result = await pending;
         expect(result).toMatchObject({ ok: true, output: { count: 0 } });
-        expect(sendRequest).toHaveBeenCalledTimes(3);
+        expect(sendRequest).toHaveBeenCalledTimes(2);
     });
 
     test.each([
