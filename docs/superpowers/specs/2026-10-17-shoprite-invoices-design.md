@@ -5,7 +5,7 @@
 **Branch:** `shoprite-invoices`
 **Depends on:**
 - the Shoprite orders work (merged 9b7633f7e1): the `@jrnyflw/shoprite` client and the orders flow;
-- JRNY: the invoice pull and delivery-result endpoints exist (confirmed 2026-10-18, see "JRNY's invoice endpoints"). Still needed: the Shoprite GTIN on invoice lines, a GLN on delivery addresses, and a way to tell a delivered invoice (POD).
+- JRNY (handover 2026-10-18, see "JRNY's invoice endpoints"): the pull, api-delivery and invoice GLN are live; GTIN and product code on lines are on JRNY dev and reach production with the next AON deploy. Still needed: GLNs and Shoprite GTINs loaded as data.
 
 ## Purpose
 
@@ -168,14 +168,20 @@ Only a count of one confirms: "0 records were successfully inserted" is `UNCONFI
 ## Piece work: JRNY
 
 Two hand-written actions on JRNY's endpoints (see "JRNY's invoice endpoints"):
-- **List Invoices Ready to Send:** takes a customer code and a From Date. List rows carry no lines, so it lists, then fetches each invoice's detail, and returns `{ count, invoices[] }` with the fields Send Invoice needs. It lists `apiDelivery=unsent` and `apiDelivery=failed`, and leaves out:
-  - failed invoices whose message starts `UNCONFIRMED` (they may have reached Shoprite; a person checks and resets them in JRNY);
-  - invoices with no customer PO number;
-  - invoices not yet delivered, once JRNY exposes POD.
-  Pages are fetched in full, with the same cap-and-error pattern as List Courier Dispatches.
+- **List Invoices Ready to Send:** takes a customer code and a From Date. List rows carry no lines, so it lists, then fetches each invoice's detail, and returns `{ count, invoices[], waiting }` with the fields Send Invoice needs. It lists `apiDelivery=unsent` and `apiDelivery=failed`.
+  - **Left out without a word** (they are not ready, and nothing is wrong):
+    - failed invoices whose message starts `UNCONFIRMED` (they may have reached Shoprite; a person checks and resets them in JRNY);
+    - invoices with no customer PO number;
+    - **invoices not yet delivered:** the invoice's sales order's dispatch notes (`GET …/dispatch-notes?salesOrderNumber=`) must all have a POD (`podSignedAt` or `podUrl`). An invoice with no sales order or no dispatch is left out too. `waiting` counts these per reason so the run shows why nothing went.
+  - **Listed with a `problem`, so the flow records them as failed with a reason staff can fix** (`problem` is null on a clean invoice):
+    - a line whose `gtinSource` is not `gtin`: "Line 2 (TRI200, BOX): no Shoprite GTIN in JRNY". A `default` barcode is never sent to Shoprite.
+    - a delivery address with no GLN: "Delivery address 1608 has no GLN in JRNY".
+    All problems of an invoice are joined with "; ".
+  - Each line's incl. VAT total is `lineTotal + vatAmount`.
+  - Pages are fetched in full, with the same cap-and-error pattern as List Courier Dispatches. JRNY rate-limits (429), so calls are made one at a time and a 429 is retried after its `Retry-After`.
 - **Record Invoice Result:** takes a document number, a status (`sent` / `failed`), the external reference or the message, and posts `api-delivery` with `occurredAt` as UTC ISO time and an `Idempotency-Key`.
 
-**Still blocked** on the JRNY items under "What we still need from JRNY". The Shoprite side, Send Invoice, is built.
+**Unblocked.** Everything the actions need is on JRNY dev. Production gets the line GTINs with the next AON deploy, and until GLNs and GTINs are loaded every invoice is recorded as failed with what is missing.
 
 ## The flow
 
@@ -184,20 +190,24 @@ Schedule: hourly, 07:00–19:00 Africa/Johannesburg (0 7-19 * * *)
 1. JRNY · List Invoices Ready to Send       customer SHOE100          (Stop on failure)
 2. Router "Anything to send?"  count > 0
    3. Loop on {{step_1.output.invoices}}
-      4. Shoprite · Send Invoice              fields from the loop item, Lines by list mapper
-                                              If the call fails → Continue; Continue on Failure on
-      5. Router (first match)
-         ├─ Sent     step_4 ok is true
-         │    6. JRNY · Record Invoice Result  sent, externalReference = invoiceRefNo
+      4. Router "Clean?"  item.problem is empty
+         ├─ Clean
+         │    5. Shoprite · Send Invoice              fields from the loop item, Lines by list mapper
+         │                                            If the call fails → Continue; Continue on Failure on
+         │    6. Router (first match)
+         │       ├─ Sent     step_5 ok is true
+         │       │    7. JRNY · Record Invoice Result  sent, externalReference = invoiceRefNo
+         │       └─ Otherwise
+         │            8. JRNY · Record Invoice Result  failed, message = "<error.code>: <error.message>"
          └─ Otherwise
-              7. JRNY · Record Invoice Result  failed, message = "<error.code>: <error.message>"
+              9. JRNY · Record Invoice Result  failed, message = "INVALID: <item.problem>"
 ```
 
 **How it behaves:**
 - **A sent invoice drops out of the next run,** because JRNY no longer lists it.
 - **A failed invoice goes again next run,** unless it failed UNCONFIRMED. That covers Shoprite being down. A permanently bad invoice keeps failing, and JRNY shows the same reason, until someone corrects it.
 - **An UNCONFIRMED invoice is never resent automatically.** It may already be in Shoprite. Someone checks, then resets it in JRNY, and a reset invoice comes back as unsent.
-- **One bad invoice never stops the others.** Every step inside the loop has Continue on Failure on. Steps 6 and 7 also continue, because a JRNY write failure must not stop the loop.
+- **One bad invoice never stops the others.** Every step inside the loop has Continue on Failure on. The Record Invoice Result steps (7, 8, 9) also continue, because a JRNY write failure must not stop the loop.
 - **If Record Invoice Result fails after a successful send,** the invoice is sent again next run. Whether Shoprite rejects a duplicate invoice number is an open question. Until it is answered, this is the one double-send path. It needs JRNY to fail right after Shoprite accepted, which should be rare.
 - **No emails yet.** IT notification steps get added once the MS Graph connection exists.
 - **Generator:** an importable flow JSON at `docs/integrations/shoprite/shoprite-invoices.flow.json`, built by `scripts/uat/gen-shoprite-invoices-flow.ts` with the same self-checks as the orders generator. It has placeholder connections and needs the JRNY action names, so it is built after the JRNY actions.
@@ -206,11 +216,11 @@ Schedule: hourly, 07:00–19:00 Africa/Johannesburg (0 7-19 * * *)
 
 Shoprite orders each product against a single GTIN. So the GTIN is a property of the product in JRNY, not something carried through from each order:
 - **Order intake** (already built): Resolve Order Lines looks a line up by product code first, then by GTIN through JRNY's barcode lookup.
-- **Invoices:** JRNY sends the product's Shoprite GTIN on each invoice line, not the product's default barcode.
+- **Invoices:** each invoice detail line carries `gtin` and `gtinSource`. Only `gtinSource: "gtin"` counts: a GTIN-type barcode set up for the line's own unit, so a box line only gets the box GTIN. `"default"` is a fallback barcode and is never sent.
 
 The orders flow needs no change.
 
-JRNY keeps several barcodes per product (`product_barcodes`, each with a barcode type and a unit), so JRNY must be able to pick the one Shoprite orders against. On JRNY dev, only 2 of 30 GTINs from a Shoprite order sample matched any JRNY barcode. So these GTINs have to be loaded into JRNY before the first invoice run.
+**On JRNY dev, 18 Oct, after the first GTIN import** (unsent SHOE100 invoices since 1 Sep with a PO: 189 invoices, 588 lines): 236 lines have a confirmed GTIN, 352 only a default barcode (most of them 8-digit internal codes that fail the GTIN check digit). 36 invoices have a confirmed GTIN on every line.
 
 ## JRNY's invoice endpoints (confirmed by the JRNY team, 2026-10-18)
 
@@ -220,14 +230,18 @@ JRNY keeps several barcodes per product (`product_barcodes`, each with a barcode
   - `message` is required for `failed`, up to 2,000 characters; `externalReference` up to 255.
   - A second `sent` with a different reference returns 409 `ALREADY_SENT`. The same reference again returns 200 with `changed: false`, and InvoiceRefNo is stable, so a repeated `sent` is harmless.
 - **A reset document comes back as unsent.** Its `apiDelivery` field is not null, so the flow trusts the `apiDelivery=unsent` filter and never skips a document because the field has a value.
-- **Invoice detail** carries `deliveryAddress { code, gln }` and amounts as numbers. Its lines have no GTIN yet.
-- **Every key on every line, null when empty,** is still needed: the flow's list mapper misaligns lines when a key is missing.
+- **Invoice list and detail** carry `deliveryAddress { code, gln }`: the document's own delivery address, else its sales order's. `gln` is null until AON captures it. Amounts are numbers.
+- **Detail lines** carry `lineNumber`, `productCode`, `description`, `quantity`, `uom`, `unitPrice`, `vatRate`, `lineTotal` (excl.), `vatAmount`, `taxCode`, `gtin`, `gtinSource`. Every key is always present (null when empty). The detail call works the GTIN out each time, so it beats the `invoice.created` webhook.
+- **Dispatch automation (built, switched off):** JRNY can post a dispatch and raise its invoice at courier booking. Such invoices are ordinary unsent invoices, so the POD check above is what keeps them back until delivery. JRNY's `shipping.delivered` webhook fires when the invoice is raised, so it is never treated as delivery.
+- **Identity (next deploy):** documents created through the key show as JRNYFLW. Retrying a request first sent before that deploy with the same `Idempotency-Key` runs it again; the orders flow is safe because it sends `portalCode` + `externalReference`.
 
-## What we still need from JRNY
+**On JRNY dev, 18 Oct:** every one of the 189 PO invoices since 1 Sep has exactly one dispatch through its sales order: 43 delivered with a POD, 136 manifested, 10 booked. No delivery address has a GLN yet. 657 further unsent invoices since 1 Sep have no PO (one free-text line, no sales order) and are left out.
 
-1. **The Shoprite GTIN on each invoice line:** the product's barcode that Shoprite orders against, not its default barcode. JRNY needs a way to mark that barcode, for example a barcode type, and the GTINs loaded for every product Shoprite buys. The GTIN's unit must match the invoiced quantity's unit. A line with no Shoprite GTIN fails the check and is recorded as failed.
-2. **A GLN on customer delivery addresses,** which AON fills in once per Shoprite store.
-3. **A way to tell a delivered invoice (POD).** `apiDelivery=unsent` includes invoices raised while the dispatch is only manifested, and Shoprite should only be invoiced after delivery.
+## What we still need from JRNY and AON
+
+1. **The next AON deploy,** which brings `productCode`, `gtin` and `gtinSource` to production.
+2. **Shoprite GTINs loaded** as GTIN-type barcodes at the unit Shoprite orders in, for every product Shoprite buys.
+3. **GLNs on the Shoprite delivery addresses,** one per store.
 
 ## Error handling
 
