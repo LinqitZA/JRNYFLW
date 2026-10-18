@@ -1,6 +1,6 @@
 import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpError, HttpMethod } from '@activepieces/pieces-common';
-import { tryCatch } from '@activepieces/shared';
+import { tryCatch, tryCatchSync } from '@activepieces/shared';
 import { pieceTrace, Tracer } from '@jrnyflw/piece-trace';
 import { shopriteAuth, ShopriteAuth } from '../auth';
 import { shopriteClient } from '../client';
@@ -57,16 +57,21 @@ export const sendInvoice = createAction({
             secrets: shopriteClient.secretsOf(auth),
             work: async (trace) => {
                 const supplier = supplierOf(auth);
-                const invoice = gs1Invoice.check({
-                    invoiceNumber: props.invoiceNumber,
-                    invoiceDate: props.invoiceDate,
-                    purchaseOrder: props.purchaseOrder,
-                    storeGln: props.storeGln,
-                    totalExclVat: props.totalExclVat,
-                    totalVat: props.totalVat,
-                    totalInclVat: props.totalInclVat,
-                    lines: props.lines,
-                });
+                const { data: invoice, error: invalid } = tryCatchSync(() =>
+                    gs1Invoice.check({
+                        invoiceNumber: props.invoiceNumber,
+                        invoiceDate: props.invoiceDate,
+                        purchaseOrder: props.purchaseOrder,
+                        storeGln: props.storeGln,
+                        totalExclVat: props.totalExclVat,
+                        totalVat: props.totalVat,
+                        totalInclVat: props.totalInclVat,
+                        lines: props.lines,
+                    }),
+                );
+                if (invalid !== null) {
+                    throw new SendInvoiceError({ message: invalid.message, code: 'INVALID' });
+                }
                 const invoiceRefNo = gs1Invoice.refNo({ supplierGln: supplier.gln, invoiceNumber: invoice.invoiceNumber });
                 const xml = gs1Invoice.toXml({ invoice, supplier, invoiceRefNo, sentAt: new Date() });
                 const shopriteMessage = await post({ trace, auth, xml });
@@ -96,14 +101,19 @@ async function post({ trace, auth, xml }: { trace: Tracer; auth: ShopriteAuth; x
         }),
     );
     if (error !== null) {
-        if (error instanceof HttpError) {
-            throw new Error(invoiceResponse.failure({ status: error.response.status, body: error.response.body }));
+        if (!(error instanceof HttpError)) {
+            throw error;
         }
-        throw error;
+        const { status, body } = error.response;
+        // pieces-common reports a dropped connection or timeout as a 500 with no body, so the invoice may still have landed.
+        if (status >= 500 && (body === undefined || body === null || body === '')) {
+            throw new SendInvoiceError({ message: invoiceResponse.noAnswer(), code: 'UNCONFIRMED' });
+        }
+        throw new SendInvoiceError({ message: invoiceResponse.failure({ status, body }), code: 'REJECTED' });
     }
     const message = invoiceResponse.confirmation(response.body);
     if (message === null) {
-        throw new Error(invoiceResponse.unconfirmed({ status: response.status, body: response.body }));
+        throw new SendInvoiceError({ message: invoiceResponse.unconfirmed({ status: response.status, body: response.body }), code: 'UNCONFIRMED' });
     }
     return message;
 }
@@ -112,13 +122,25 @@ function supplierOf(auth: ShopriteAuth): Supplier {
     const gln = (auth.supplierGln ?? '').trim();
     const vatRegistrationNumber = (auth.vatRegistrationNumber ?? '').trim();
     if (gln === '') {
-        throw new Error('Add the Supplier GLN to the Shoprite connection');
+        throw new SendInvoiceError({ message: 'Add the Supplier GLN to the Shoprite connection', code: 'INVALID' });
     }
     if (!gs1Invoice.isGln(gln)) {
-        throw new Error(`The Supplier GLN on the Shoprite connection (${gln}) must be 13 digits with a valid check digit`);
+        throw new SendInvoiceError({ message: `The Supplier GLN on the Shoprite connection (${gln}) must be 13 digits with a valid check digit`, code: 'INVALID' });
     }
     if (vatRegistrationNumber === '') {
-        throw new Error('Add the VAT Registration Number to the Shoprite connection');
+        throw new SendInvoiceError({ message: 'Add the VAT Registration Number to the Shoprite connection', code: 'INVALID' });
     }
     return { gln, vatRegistrationNumber };
 }
+
+// The code reaches the step output as error.code, so the flow can hold back an UNCONFIRMED invoice instead of resending it next run.
+class SendInvoiceError extends Error {
+    readonly code: SendInvoiceErrorCode;
+
+    constructor({ message, code }: { message: string; code: SendInvoiceErrorCode }) {
+        super(message);
+        this.code = code;
+    }
+}
+
+type SendInvoiceErrorCode = 'INVALID' | 'REJECTED' | 'UNCONFIRMED';

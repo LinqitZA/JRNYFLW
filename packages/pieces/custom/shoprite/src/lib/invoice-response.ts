@@ -24,6 +24,10 @@ function failure({ status, body }: ResponseParams): string {
     return cap(`HTTP ${status}: ${oneLine(text)}`);
 }
 
+function noAnswer(): string {
+    return 'No answer from Shoprite (the connection failed or timed out, or it returned an empty server error). Check in Shoprite before resending.';
+}
+
 // Shoprite's .NET errors put the readable part in Message; ExceptionMessage repeats it and the stack trace means nothing to whoever fixes the invoice.
 function errorMessageOf({ body, text }: { body: unknown; text: string }): string {
     const xml = /<Message>([\s\S]*?)<\/Message>/.exec(text);
@@ -64,9 +68,10 @@ function cap(text: string): string {
     return text.length > MAX_MESSAGE_CHARS ? `${text.slice(0, MAX_MESSAGE_CHARS - 1)}…` : text;
 }
 
-const CONFIRMATION = /successfully inserted/i;
+// One invoice goes per POST, so only a count of one confirms it; "0 records were successfully inserted" did not land.
+const CONFIRMATION = /\b1 records? (?:was|were) successfully inserted/i;
 const MAX_MESSAGE_CHARS = 1000;
 
-export const invoiceResponse = { confirmation, unconfirmed, failure };
+export const invoiceResponse = { confirmation, unconfirmed, failure, noAnswer };
 
 type ResponseParams = { status: number; body: unknown };

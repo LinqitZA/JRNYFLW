@@ -12,7 +12,7 @@ function check(input: InvoiceInput): Invoice {
         compareTotals({ totals, lines, problems });
     }
     if (problems.length > 0 || totals === null) {
-        throw new Error(problems.join('; '));
+        throw new Error(summarise(problems));
     }
     return { invoiceNumber, invoiceDate, purchaseOrder, storeGln, totals, lines };
 }
@@ -147,6 +147,19 @@ function lineItem(line: InvoiceLine): string[] {
 
 function xmlText(text: string): string {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// JRNY keeps at most 2,000 characters of a failure message; a field missing on every line of a long invoice would exceed it.
+function summarise(problems: string[]): string {
+    const shown = [problems[0].slice(0, MAX_MESSAGE_CHARS - MORE_ROOM)];
+    for (const problem of problems.slice(1)) {
+        if ([...shown, problem].join('; ').length > MAX_MESSAGE_CHARS - MORE_ROOM) {
+            break;
+        }
+        shown.push(problem);
+    }
+    const hidden = problems.length - shown.length;
+    return hidden === 0 ? shown.join('; ') : `${shown.join('; ')}; and ${hidden} more`;
 }
 
 function requiredText({ value, label, problems }: FieldParams): string {
@@ -367,6 +380,8 @@ function money(cents: number): string {
 }
 
 const VAT_PERCENT = 15;
+const MAX_MESSAGE_CHARS = 1000;
+const MORE_ROOM = 20;
 const TAB = 9;
 const DELETE = 127;
 const TOTAL_LABELS: [keyof InvoiceTotals, string][] = [

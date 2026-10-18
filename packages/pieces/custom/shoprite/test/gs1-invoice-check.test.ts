@@ -114,6 +114,15 @@ describe('gs1Invoice.check', () => {
     test('reports every problem at once', () => {
         expect(problemsOf({ purchaseOrder: '', lines: [lineOne({ gtin: '' }), lineTwo()] })).toBe('Purchase Order is required; Line 1: GTIN is required');
     });
+
+    // JRNY keeps at most 2,000 characters of a failure message, and a long invoice with a field missing on every line would exceed it.
+    test('caps a long list of problems at 1,000 characters and says how many more there are', () => {
+        const lines = Array.from({ length: 200 }, (_, index) => lineOne({ lineNumber: index + 1, gtin: '' }));
+        const message = problemsOf({ lines });
+        expect(message.length).toBeLessThanOrEqual(1000);
+        expect(message.startsWith('Line 1: GTIN is required; Line 2: GTIN is required')).toBe(true);
+        expect(message).toMatch(/; and \d+ more$/);
+    });
 });
 
 describe('gs1Invoice.isGln', () => {

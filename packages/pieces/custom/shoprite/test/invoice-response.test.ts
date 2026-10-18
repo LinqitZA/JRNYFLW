@@ -20,6 +20,12 @@ describe('invoiceResponse.confirmation', () => {
         expect(invoiceResponse.confirmation('')).toBeNull();
         expect(invoiceResponse.confirmation(undefined)).toBeNull();
     });
+
+    // One invoice goes per POST, so anything but a count of one means the invoice did not land.
+    test('returns null when Shoprite reports inserting other than one record', () => {
+        expect(invoiceResponse.confirmation('<string>0 records were successfully inserted</string>')).toBeNull();
+        expect(invoiceResponse.confirmation('<string>10 records were successfully inserted</string>')).toBeNull();
+    });
 });
 
 describe('invoiceResponse.failure', () => {

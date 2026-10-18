@@ -136,6 +136,45 @@ describe('sendInvoice', () => {
     });
 });
 
+describe('sendInvoice error codes', () => {
+    beforeEach(() => {
+        sendRequest.mockReset();
+    });
+
+    test('marks invoices that fail the checks INVALID', async () => {
+        const result = await run({ propsValue: { ...invoiceProps({ purchaseOrder: '' }), onFailure: 'continue' } });
+        expect(result).toMatchObject({ ok: false, error: { code: 'INVALID' } });
+        const noSupplier = await run({ propsValue: { ...invoiceProps(), onFailure: 'continue' }, auth: { ...AUTH, supplierGln: undefined } });
+        expect(noSupplier).toMatchObject({ ok: false, error: { code: 'INVALID' } });
+    });
+
+    test('marks a Shoprite error answer REJECTED', async () => {
+        sendRequest.mockRejectedValueOnce(httpError({ status: 400, data: '<Error><Message>Validation Error: bad</Message></Error>' }));
+        const result = await run({ propsValue: { ...invoiceProps(), onFailure: 'continue' } });
+        expect(result).toMatchObject({ ok: false, error: { code: 'REJECTED', message: 'Validation Error: bad' } });
+    });
+
+    test('marks a 2xx without the confirmation UNCONFIRMED', async () => {
+        sendRequest.mockResolvedValueOnce({ status: 200, body: '<string>0 records were successfully inserted</string>' });
+        const result = await run({ propsValue: { ...invoiceProps(), onFailure: 'continue' } });
+        expect(result).toMatchObject({ ok: false, error: { code: 'UNCONFIRMED' } });
+    });
+
+    // pieces-common turns a dropped connection or timeout into an HttpError with status 500 and no body; the invoice may still have landed.
+    test('marks no answer from Shoprite UNCONFIRMED instead of reporting a Shoprite 500', async () => {
+        const config = { headers: new AxiosHeaders() };
+        sendRequest.mockRejectedValueOnce(new HttpError({}, new AxiosError('socket hang up', 'ECONNRESET', config)));
+        const result = await run({ propsValue: { ...invoiceProps(), onFailure: 'continue' } });
+        expect(result).toMatchObject({
+            ok: false,
+            error: {
+                code: 'UNCONFIRMED',
+                message: 'No answer from Shoprite (the connection failed or timed out, or it returned an empty server error). Check in Shoprite before resending.',
+            },
+        });
+    });
+});
+
 describe('Shoprite connection', () => {
     test('offers Supplier GLN and VAT Registration Number as optional fields, so existing connections stay valid', () => {
         expect(shopriteAuth.props.supplierGln).toMatchObject({ displayName: 'Supplier GLN', required: false });
