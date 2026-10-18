@@ -2,8 +2,8 @@ import { describe, expect, test } from 'vitest';
 import { jrnyOperations } from '../src/lib/operations';
 
 describe('jrnyOperations manifest', () => {
-    test('contains all 89 operations', () => {
-        expect(jrnyOperations.length).toBe(89);
+    test('contains all 96 operations', () => {
+        expect(jrnyOperations.length).toBe(96);
     });
     test('action names are unique', () => {
         const names = jrnyOperations.map((o) => o.name);
@@ -24,5 +24,19 @@ describe('jrnyOperations manifest', () => {
     test('listDispatchNotes exposes the courier filters', () => {
         const op = jrnyOperations.find((o) => o.name === 'list_dispatch_notes');
         expect(op?.queryParams.map((q) => q.name)).toEqual(expect.arrayContaining(['courierCode', 'courierStatus', 'podMissing', 'grnMissing']));
+    });
+    test('listQuotations and listSalesOrders filter by portal code', () => {
+        for (const name of ['list_quotations', 'list_sales_orders']) {
+            const op = jrnyOperations.find((o) => o.name === name);
+            expect(op?.queryParams.map((q) => q.name)).toContain('portalCode');
+        }
+    });
+    test('reportInvoiceApiDelivery posts to the invoice api-delivery path', () => {
+        const op = jrnyOperations.find((o) => o.name === 'report_invoice_api_delivery');
+        expect(op).toMatchObject({ method: 'POST', hasBody: true, pathParams: ['invoiceNumber'], path: '/api/v1/integration/entities/{entityId}/invoices/{invoiceNumber}/api-delivery' });
+    });
+    test('listInvoices filters by api delivery status', () => {
+        const op = jrnyOperations.find((o) => o.name === 'list_invoices');
+        expect(op?.queryParams.map((q) => q.name)).toContain('apiDelivery');
     });
 });

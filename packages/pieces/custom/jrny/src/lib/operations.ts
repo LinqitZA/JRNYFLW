@@ -43,6 +43,10 @@ export const jrnyOperations: JrnyOperation[] = [
         "required": false
       },
       {
+        "name": "portalCode",
+        "required": false
+      },
+      {
         "name": "cursor",
         "required": false
       },
@@ -109,6 +113,10 @@ export const jrnyOperations: JrnyOperation[] = [
         "required": false
       },
       {
+        "name": "portalCode",
+        "required": false
+      },
+      {
         "name": "cursor",
         "required": false
       },
@@ -162,6 +170,19 @@ export const jrnyOperations: JrnyOperation[] = [
     "description": "Get fulfillment status",
     "method": "GET",
     "path": "/api/v1/integration/entities/{entityId}/sales-orders/{orderNumber}/fulfillment",
+    "tag": "Integration - Sales",
+    "pathParams": [
+      "orderNumber"
+    ],
+    "queryParams": [],
+    "hasBody": false
+  },
+  {
+    "name": "generate_pick",
+    "displayName": "Generate Pick",
+    "description": "Generate a pick instruction for a sales order",
+    "method": "POST",
+    "path": "/api/v1/integration/entities/{entityId}/sales-orders/{orderNumber}/generate-pick",
     "tag": "Integration - Sales",
     "pathParams": [
       "orderNumber"
@@ -796,6 +817,19 @@ export const jrnyOperations: JrnyOperation[] = [
     "hasBody": false
   },
   {
+    "name": "get_product_by_barcode",
+    "displayName": "Get Product By Barcode",
+    "description": "Look up a product by barcode",
+    "method": "GET",
+    "path": "/api/v1/integration/entities/{entityId}/products/by-barcode/{barcode}",
+    "tag": "Integration — Products & Inventory",
+    "pathParams": [
+      "barcode"
+    ],
+    "queryParams": [],
+    "hasBody": false
+  },
+  {
     "name": "get_product_stock",
     "displayName": "Get Product Stock",
     "description": "Stock on hand for a product",
@@ -1391,6 +1425,10 @@ export const jrnyOperations: JrnyOperation[] = [
         "required": false
       },
       {
+        "name": "apiDelivery",
+        "required": false
+      },
+      {
         "name": "cursor",
         "required": false
       },
@@ -1428,11 +1466,19 @@ export const jrnyOperations: JrnyOperation[] = [
         "required": false
       },
       {
+        "name": "status",
+        "required": false
+      },
+      {
         "name": "fromDate",
         "required": false
       },
       {
         "name": "toDate",
+        "required": false
+      },
+      {
+        "name": "apiDelivery",
         "required": false
       },
       {
@@ -1458,6 +1504,98 @@ export const jrnyOperations: JrnyOperation[] = [
     ],
     "queryParams": [],
     "hasBody": false
+  },
+  {
+    "name": "list_debit_notes",
+    "displayName": "List Debit Notes",
+    "description": "List customer debit notes",
+    "method": "GET",
+    "path": "/api/v1/integration/entities/{entityId}/debit-notes",
+    "tag": "Integration - Finance",
+    "pathParams": [],
+    "queryParams": [
+      {
+        "name": "customerCode",
+        "required": false
+      },
+      {
+        "name": "status",
+        "required": false
+      },
+      {
+        "name": "fromDate",
+        "required": false
+      },
+      {
+        "name": "toDate",
+        "required": false
+      },
+      {
+        "name": "apiDelivery",
+        "required": false
+      },
+      {
+        "name": "cursor",
+        "required": false
+      },
+      {
+        "name": "limit",
+        "required": false
+      }
+    ],
+    "hasBody": false
+  },
+  {
+    "name": "get_debit_note",
+    "displayName": "Get Debit Note",
+    "description": "Get debit note detail",
+    "method": "GET",
+    "path": "/api/v1/integration/entities/{entityId}/debit-notes/{debitNoteNumber}",
+    "tag": "Integration - Finance",
+    "pathParams": [
+      "debitNoteNumber"
+    ],
+    "queryParams": [],
+    "hasBody": false
+  },
+  {
+    "name": "report_invoice_api_delivery",
+    "displayName": "Report Invoice Api Delivery",
+    "description": "Report an invoice sent or failed via API",
+    "method": "POST",
+    "path": "/api/v1/integration/entities/{entityId}/invoices/{invoiceNumber}/api-delivery",
+    "tag": "Integration - Finance",
+    "pathParams": [
+      "invoiceNumber"
+    ],
+    "queryParams": [],
+    "hasBody": true
+  },
+  {
+    "name": "report_credit_note_api_delivery",
+    "displayName": "Report Credit Note Api Delivery",
+    "description": "Report a credit note sent or failed via API",
+    "method": "POST",
+    "path": "/api/v1/integration/entities/{entityId}/credit-notes/{creditNoteNumber}/api-delivery",
+    "tag": "Integration - Finance",
+    "pathParams": [
+      "creditNoteNumber"
+    ],
+    "queryParams": [],
+    "hasBody": true
+  },
+  {
+    "name": "report_debit_note_api_delivery",
+    "displayName": "Report Debit Note Api Delivery",
+    "description": "Report a debit note sent or failed via API",
+    "method": "POST",
+    "path": "/api/v1/integration/entities/{entityId}/debit-notes/{debitNoteNumber}/api-delivery",
+    "tag": "Integration - Finance",
+    "pathParams": [
+      "debitNoteNumber"
+    ],
+    "queryParams": [],
+    "hasBody": true
   },
   {
     "name": "list_payments",
