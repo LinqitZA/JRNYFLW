@@ -52,6 +52,11 @@ export const createQuote = createAction({
       description: 'Free-text reference recorded on the quotation. Useful for idempotency and audit.',
       required: false,
     }),
+    portalCode: Property.ShortText({
+      displayName: 'Portal Code',
+      description: 'Which portal sent the order, e.g. SHOPRITE, with its order number as the External Reference. JRNY refuses a second order with the same pair (409 DUPLICATE_PORTAL_ORDER).',
+      required: false,
+    }),
     deliveryAddressMode: Property.StaticDropdown<'none' | 'byCode' | 'inline'>({
       displayName: 'Delivery Address',
       required: true,
@@ -164,6 +169,8 @@ export const createQuote = createAction({
 
         if (p.notes) body['notes'] = p.notes;
         if (p.externalReference) body['externalReference'] = p.externalReference;
+        const portalCode = (p.portalCode ?? '').trim();
+        if (portalCode !== '') body['portalCode'] = portalCode;
         if (autoConvert) body['autoConvert'] = true;
         if (autoConfirm) body['autoConfirm'] = true;
         if (deliveryDate !== '') body['deliveryDate'] = deliveryDate;

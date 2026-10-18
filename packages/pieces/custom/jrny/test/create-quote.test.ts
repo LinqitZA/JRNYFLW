@@ -57,4 +57,14 @@ describe('createQuote', () => {
         expect(sent().body).toEqual({ customer: { code: 'SHOE100' }, lines: [{ stockCode: 'CSL1388', qty: 1, unitPrice: 30 }] });
         expect(sent().headers).not.toHaveProperty('Idempotency-Key');
     });
+
+    test('sends the portal code beside the external reference', async () => {
+        await run({ portalCode: 'SHOPRITE', externalReference: '1221181491' });
+        expect(sent().body).toMatchObject({ portalCode: 'SHOPRITE', externalReference: '1221181491' });
+    });
+
+    test('a blank portal code is not sent', async () => {
+        await run({ portalCode: '   ' });
+        expect(sent().body).not.toHaveProperty('portalCode');
+    });
 });

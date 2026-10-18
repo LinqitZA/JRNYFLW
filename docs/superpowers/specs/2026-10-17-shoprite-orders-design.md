@@ -230,12 +230,14 @@ The exact path to the sales order number in Create Quote's output is checked wit
 | Some items not found | Draft sales order without those lines, with a note per line |
 | No items found | No quote; listed in the run output (email later) |
 | Already loaded (same PO) | Skipped |
+| Same PO created anyway (race, or the check missed it) | JRNY refuses it with 409 `DUPLICATE_PORTAL_ORDER`; no quote, no pick |
 | Create Quote fails | No quote; the next run retries it |
 
 **Rules:**
 - **Shoprite's unit price excl. VAT goes on each line,** so the invoice matches the PO (agreed 2026-10-17).
 - **No step inside the loop stops the run.** Failures use Continue. The failure emails come once MS Graph Mail is connected (`ms-graph-mail` piece).
-- **The duplicate check, plus the idempotency key,** make reruns safe. Before the switch-over, every run sees the same orders.
+- **The duplicate check, the idempotency key and the portal code** make reruns safe. Before the switch-over, every run sees the same orders.
+- **Portal code `SHOPRITE` plus the order number** identify a Shoprite order in JRNY (added 2026-10-18). JRNY refuses a second create of the same pair with 409 `DUPLICATE_PORTAL_ORDER`, and a cancelled order keeps its number, so it is never recreated. The duplicate check still matches on the order number alone, so quotes loaded before the portal code existed are still found. At the switch-over, a `DUPLICATE_PORTAL_ORDER` counts as "already in JRNY", so the order gets acknowledged.
 
 ### Before and after the switch-over
 

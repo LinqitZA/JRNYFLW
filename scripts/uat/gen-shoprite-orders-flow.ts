@@ -47,6 +47,7 @@ const quote = {
             },
             notes: "{{step_6['output']['notes']}}",
             externalReference: item("['orderNumber']"),
+            portalCode: 'SHOPRITE',
             deliveryAddressMode: 'byCode',
             deliveryAddressCode: "{{step_6['output']['addressCode']}}",
             autoConvert: true,
