@@ -154,6 +154,15 @@ Lines are written in Line Number order.
 | Any other status with an `<Error>` body | **Failure.** The message is `<Message>`'s text with XML escapes decoded, literal `\r\n` sequences and real line breaks collapsed to single spaces, and a leading "Validation Error:" kept. The stack trace and exception type are left out. The text is capped at 1,000 characters. |
 | Any other status, no recognisable body | **Failure:** `HTTP <status>: <body>`, the standard trace message, capped at 1,000 characters. |
 
+**Error codes (added in the review, 2026-10-18).** Every failure carries `error.code`:
+- `INVALID`: failed the checks, or the connection lacks the supplier details;
+- `REJECTED`: Shoprite answered with an error;
+- `UNCONFIRMED`: a 2xx without "1 record … successfully inserted", or no answer at all (connection failed or timed out, or an empty 5xx). The invoice may have landed.
+
+Phase 2's flow must not resend `UNCONFIRMED` automatically. It should record it in JRNY so that a person checks Shoprite first.
+
+Only a count of one confirms: "0 records were successfully inserted" is `UNCONFIRMED`. A failed-checks message is capped at 1,000 characters ("…; and N more").
+
 **Failure output** follows the usual trace contract, `{ ok: false, error: { message, status, … } }`, so the flow can pass `error.message` to JRNY. The full response is always in the step's `sent` trace. The Authorization, Authentication and password values are redacted there, as for the orders calls.
 
 ## Piece work: JRNY
