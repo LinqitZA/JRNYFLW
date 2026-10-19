@@ -17,7 +17,7 @@ The generator also checks every field against the pieces.
 - JRNY still lists those invoices as unsent, so an earlier date sends them to Shoprite a second time.
 - A later date leaves the invoices in between unsent.
 
-The committed file uses `2026-10-20`. To change it, regenerate with `--from-date`, or edit step 1 after importing.
+The switch-over date is **20 Oct 2026** (confirmed), and the committed file uses `2026-10-20`. To change it, regenerate with `--from-date`, or edit step 1 after importing.
 
 ## Before importing
 
