@@ -55,6 +55,7 @@ Every result shows on the invoice's API delivery status.
 | Failed, `INVALID: Delivery address 1608 has no GLN in JRNY` | The store's delivery address has no GLN | Load the GLN. The next run sends it |
 | Failed, `INVALID: …` (anything else) | The invoice doesn't add up or is missing a field | Correct the invoice. It goes again next run |
 | Failed, `REJECTED: …` | Shoprite refused it | Read Shoprite's message. It goes again next run |
+| Failed, `REJECTED: …` saying the invoice already exists | Shoprite already has this invoice number: the old platform sent it, or JRNY missed recording an earlier send | Check it's in Shoprite, then mark it sent in JRNY. Until then it's resent and rejected every hour |
 | Failed, `UNCONFIRMED: …` | Shoprite didn't confirm it or didn't answer. **It may have arrived** | **Not resent automatically.** Check in Shoprite. If it isn't there, reset the invoice in JRNY and the next run sends it |
 
 **Not sent yet, with nothing recorded:**

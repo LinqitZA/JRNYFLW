@@ -208,7 +208,7 @@ Schedule: hourly, 07:00–19:00 Africa/Johannesburg (0 7-19 * * *)
 - **A failed invoice goes again next run,** unless it failed UNCONFIRMED. That covers Shoprite being down. A permanently bad invoice keeps failing, and JRNY shows the same reason, until someone corrects it.
 - **An UNCONFIRMED invoice is never resent automatically.** It may already be in Shoprite. Someone checks, then resets it in JRNY, and a reset invoice comes back as unsent.
 - **One bad invoice never stops the others.** Every step inside the loop has Continue on Failure on. The Record Invoice Result steps (7, 8, 9) also continue, because a JRNY write failure must not stop the loop.
-- **If Record Invoice Result fails after a successful send,** the invoice is sent again next run. Whether Shoprite rejects a duplicate invoice number is an open question. Until it is answered, this is the one double-send path. It needs JRNY to fail right after Shoprite accepted, which should be rare.
+- **If Record Invoice Result fails after a successful send,** the invoice is sent again next run. Shoprite rejects a duplicate invoice number (confirmed by the user, 2026-10-19), so it is never in Shoprite twice. Instead the resend comes back `REJECTED`, JRNY records it failed, and it is resent and rejected every hour until someone marks it sent in JRNY. It needs JRNY to fail right after Shoprite accepted, which should be rare. The same rejection protects the switch-over: an invoice the old platform already sent is rejected, not doubled.
 - **No emails yet.** IT notification steps get added once the MS Graph connection exists.
 - **Generator:** an importable flow JSON at `docs/integrations/shoprite/shoprite-invoices.flow.json`, built by `scripts/uat/gen-shoprite-invoices-flow.ts` with the same self-checks as the orders generator. It has placeholder connections and needs the JRNY action names, so it is built after the JRNY actions.
 
@@ -293,7 +293,7 @@ The orders flow needs no change.
 ## Open questions
 
 1. **`InvoiceRefNo`:** does the old system reuse it on a resend? This design keeps it stable.
-2. **Duplicates:** does Shoprite reject a second invoice with the same number, or create a duplicate? This decides how risky the after-send JRNY failure is.
+2. **Duplicates:** answered 2026-10-19: Shoprite rejects a second invoice with the same number. Still wanted: the exact rejection text, so a duplicate can be told apart from other rejections.
 3. **The three timestamps:**
    - SBDH `CreationDateAndTime`, `creationDateTime` and `documentEffectiveDate` are set to sending time, sending date and invoice date. The sample (29th 10:00, 30th, 29th) fits that loosely. Confirm with Shoprite or the old system's mapping.
 4. **A Shoprite test environment:** is there one (the `b2b.shopriteholdings.co.za` help host?) where invoices can be posted safely?
