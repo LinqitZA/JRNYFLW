@@ -119,18 +119,32 @@ const resolve = {
     }),
 }
 
-const alreadyLoaded = {
-    ...piece({ name: 'step_4', displayName: 'Already loaded? (List Quotations)', pieceName: '@jrnyflw/jrny', actionName: 'list_quotations', inLoop: true, input: { auth: JRNY, customerCode: 'SHOE100', externalRef: item("['orderNumber']"), onFailure: 'continue' } }),
+// The old platform creates sales orders directly, with the Shoprite order number as the customer PO and no quote or portal code,
+// so neither the quote check nor JRNY's DUPLICATE_PORTAL_ORDER sees them. poReference matches the customer PO or the external reference.
+const salesOrderCheck = {
+    ...piece({ name: 'step_15', displayName: 'Already loaded? (List Sales Orders)', pieceName: '@jrnyflw/jrny', actionName: 'list_sales_orders', inLoop: true, input: { auth: JRNY, customerCode: 'SHOE100', poReference: item("['orderNumber']"), onFailure: 'continue' } }),
     nextAction: router({
         name: 'step_5', displayName: 'New order?', branchName: 'Not in JRNY yet',
-        conditions: [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_4['ok']}}" }, { operator: 'LIST_IS_EMPTY', firstValue: "{{step_4['output']['data']}}" }],
+        conditions: [
+            { operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_4['ok']}}" }, { operator: 'LIST_IS_EMPTY', firstValue: "{{step_4['output']['data']}}" },
+            { operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_15['ok']}}" }, { operator: 'LIST_IS_EMPTY', firstValue: "{{step_15['output']['data']}}" },
+        ],
         child: resolve,
+        // A failed check is neither "new" nor "in JRNY": the order is left alone and comes back next run.
         otherwise: live ? router({
             name: 'step_11', displayName: 'Already in JRNY?', branchName: 'Acknowledge it',
-            conditions: [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_4['ok']}}" }, { operator: 'LIST_IS_NOT_EMPTY', firstValue: "{{step_4['output']['data']}}" }],
+            anyOf: [
+                [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_4['ok']}}" }, { operator: 'LIST_IS_NOT_EMPTY', firstValue: "{{step_4['output']['data']}}" }],
+                [{ operator: 'BOOLEAN_IS_TRUE', firstValue: "{{step_15['ok']}}" }, { operator: 'LIST_IS_NOT_EMPTY', firstValue: "{{step_15['output']['data']}}" }],
+            ],
             child: ackExisting,
         }) : null,
     }),
+}
+
+const alreadyLoaded = {
+    ...piece({ name: 'step_4', displayName: 'Already loaded? (List Quotations)', pieceName: '@jrnyflw/jrny', actionName: 'list_quotations', inLoop: true, input: { auth: JRNY, customerCode: 'SHOE100', externalRef: item("['orderNumber']"), onFailure: 'continue' } }),
+    nextAction: salesOrderCheck,
 }
 
 const loop = { name: 'step_3', displayName: 'Each order', type: 'LOOP_ON_ITEMS', valid: true, skip: false, lastUpdatedDate: now, settings: { items: "{{step_1['output']['orders']}}" }, firstLoopAction: alreadyLoaded }
@@ -165,24 +179,26 @@ const template = {
 }
 
 const listQuotationParams = jrnyOperations.find((op) => op.name === 'list_quotations')?.queryParams.map((q) => q.name) ?? []
+const listSalesOrderParams = jrnyOperations.find((op) => op.name === 'list_sales_orders')?.queryParams.map((q) => q.name) ?? []
 const propsOf: Record<string, string[]> = {
     download_orders: Object.keys(downloadOrders.props),
     resolve_order_lines: Object.keys(resolveOrderLines.props),
     create_quote: Object.keys(createQuote.props),
     generate_pick: Object.keys(generatePick.props),
     list_quotations: [...listQuotationParams, 'onFailure'],
+    list_sales_orders: [...listSalesOrderParams, 'onFailure'],
     acknowledge_orders: Object.keys(acknowledgeOrders.props),
 }
 const ackSteps = live ? [ackExisting, ackNew] : []
 const problems: string[] = []
-for (const step of [download, alreadyLoaded, resolve, quote, pick, ...ackSteps]) {
+for (const step of [download, alreadyLoaded, salesOrderCheck, resolve, quote, pick, ...ackSteps]) {
     const known = propsOf[step.settings.actionName]
     for (const key of Object.keys(step.settings.input).filter((k) => k !== 'auth')) {
         if (!known.includes(key)) problems.push(`${step.name} (${step.settings.actionName}) has no prop ${key}`)
     }
 }
 // The engine checks props before a piece's own Continue handling runs, so only continueOnFailure keeps one bad order from stopping the loop.
-for (const step of [alreadyLoaded, resolve, quote, pick, ...ackSteps]) {
+for (const step of [alreadyLoaded, salesOrderCheck, resolve, quote, pick, ...ackSteps]) {
     if (step.settings.errorHandlingOptions.continueOnFailure.value !== true) problems.push(`${step.name} must continue on failure: it runs inside the loop`)
 }
 if (resolve.settings.input.warnings === undefined) problems.push('step_6 must receive the order warnings')

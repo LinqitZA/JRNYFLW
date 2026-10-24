@@ -27,7 +27,7 @@
         "displayName": "08:00 and 16:00",
         "type": "PIECE_TRIGGER",
         "valid": true,
-        "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+        "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
         "settings": {
           "pieceName": "@activepieces/piece-schedule",
           "pieceVersion": "0.1.17",
@@ -52,7 +52,7 @@
           "type": "PIECE",
           "valid": false,
           "skip": false,
-          "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+          "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
           "settings": {
             "pieceName": "@jrnyflw/shoprite",
             "pieceVersion": "0.1.0",
@@ -82,7 +82,7 @@
             "type": "ROUTER",
             "valid": true,
             "skip": false,
-            "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+            "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
             "settings": {
               "executionType": "EXECUTE_FIRST_MATCH",
               "branches": [
@@ -112,7 +112,7 @@
                 "type": "LOOP_ON_ITEMS",
                 "valid": true,
                 "skip": false,
-                "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+                "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
                 "settings": {
                   "items": "{{step_1['output']['orders']}}"
                 },
@@ -122,7 +122,7 @@
                   "type": "PIECE",
                   "valid": false,
                   "skip": false,
-                  "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+                  "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
                   "settings": {
                     "pieceName": "@jrnyflw/jrny",
                     "pieceVersion": "0.1.0",
@@ -155,308 +155,280 @@
                     }
                   },
                   "nextAction": {
-                    "name": "step_5",
-                    "displayName": "New order?",
-                    "type": "ROUTER",
-                    "valid": true,
+                    "name": "step_15",
+                    "displayName": "Already loaded? (List Sales Orders)",
+                    "type": "PIECE",
+                    "valid": false,
                     "skip": false,
-                    "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+                    "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
                     "settings": {
-                      "executionType": "EXECUTE_FIRST_MATCH",
-                      "branches": [
-                        {
-                          "branchType": "CONDITION",
-                          "branchName": "Not in JRNY yet",
-                          "conditions": [
-                            [
-                              {
-                                "operator": "BOOLEAN_IS_TRUE",
-                                "firstValue": "{{step_4['ok']}}"
-                              },
-                              {
-                                "operator": "LIST_IS_EMPTY",
-                                "firstValue": "{{step_4['output']['data']}}"
-                              }
-                            ]
-                          ]
+                      "pieceName": "@jrnyflw/jrny",
+                      "pieceVersion": "0.1.0",
+                      "actionName": "list_sales_orders",
+                      "input": {
+                        "auth": "{{connections['pick-the-jrny-production-connection']}}",
+                        "customerCode": "SHOE100",
+                        "poReference": "{{step_3['item']['orderNumber']}}",
+                        "onFailure": "continue"
+                      },
+                      "propertySettings": {
+                        "customerCode": {
+                          "type": "MANUAL"
                         },
-                        {
-                          "branchType": "FALLBACK",
-                          "branchName": "Otherwise"
+                        "poReference": {
+                          "type": "MANUAL"
+                        },
+                        "onFailure": {
+                          "type": "MANUAL"
                         }
-                      ]
-                    },
-                    "children": [
-                      {
-                        "name": "step_6",
-                        "displayName": "Resolve Order Lines",
-                        "type": "PIECE",
-                        "valid": false,
-                        "skip": false,
-                        "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
-                        "settings": {
-                          "pieceName": "@jrnyflw/jrny",
-                          "pieceVersion": "0.1.0",
-                          "actionName": "resolve_order_lines",
-                          "input": {
-                            "auth": "{{connections['pick-the-jrny-production-connection']}}",
-                            "customerCode": "SHOE100",
-                            "addressCode": "{{step_3['item']['store']['branch']}}",
-                            "fallbackAddressCode": "0001",
-                            "notePrefix": "Shoprite PO {{step_3['item']['orderNumber']}}, {{step_3['item']['store']['name']}} ({{step_3['item']['store']['branch']}})",
-                            "lines": {
-                              "stockCode": "{{flattenNestedKeys(step_3, ['item', 'lines', 'buyerItemCode'])}}",
-                              "barcode": "{{flattenNestedKeys(step_3, ['item', 'lines', 'gtin'])}}",
-                              "quantity": "{{flattenNestedKeys(step_3, ['item', 'lines', 'quantity'])}}",
-                              "unitPrice": "{{flattenNestedKeys(step_3, ['item', 'lines', 'unitPriceExclVat'])}}",
-                              "description": "{{flattenNestedKeys(step_3, ['item', 'lines', 'description'])}}",
-                              "reference": "{{flattenNestedKeys(step_3, ['item', 'lines', 'lineNumber'])}}"
-                            },
-                            "warnings": "{{step_3['item']['warnings']}}",
-                            "onFailure": "continue"
-                          },
-                          "propertySettings": {
-                            "customerCode": {
-                              "type": "MANUAL"
-                            },
-                            "addressCode": {
-                              "type": "MANUAL"
-                            },
-                            "fallbackAddressCode": {
-                              "type": "MANUAL"
-                            },
-                            "notePrefix": {
-                              "type": "MANUAL"
-                            },
-                            "lines": {
-                              "type": "DYNAMIC"
-                            },
-                            "warnings": {
-                              "type": "DYNAMIC"
-                            },
-                            "onFailure": {
-                              "type": "MANUAL"
-                            }
-                          },
-                          "sampleData": {},
-                          "errorHandlingOptions": {
-                            "retryOnFailure": {
-                              "value": false
-                            },
-                            "continueOnFailure": {
-                              "value": true
-                            }
-                          }
+                      },
+                      "sampleData": {},
+                      "errorHandlingOptions": {
+                        "retryOnFailure": {
+                          "value": false
                         },
-                        "nextAction": {
-                          "name": "step_7",
-                          "displayName": "Anything to load?",
-                          "type": "ROUTER",
-                          "valid": true,
-                          "skip": false,
-                          "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
-                          "settings": {
-                            "executionType": "EXECUTE_FIRST_MATCH",
-                            "branches": [
-                              {
-                                "branchType": "CONDITION",
-                                "branchName": "Create the quote",
-                                "conditions": [
-                                  [
-                                    {
-                                      "operator": "BOOLEAN_IS_TRUE",
-                                      "firstValue": "{{step_6['ok']}}"
-                                    },
-                                    {
-                                      "operator": "NUMBER_IS_GREATER_THAN",
-                                      "firstValue": "{{step_6['output']['lineCount']}}",
-                                      "secondValue": "0"
-                                    }
-                                  ]
-                                ]
-                              },
-                              {
-                                "branchType": "FALLBACK",
-                                "branchName": "Otherwise"
-                              }
+                        "continueOnFailure": {
+                          "value": true
+                        }
+                      }
+                    },
+                    "nextAction": {
+                      "name": "step_5",
+                      "displayName": "New order?",
+                      "type": "ROUTER",
+                      "valid": true,
+                      "skip": false,
+                      "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                      "settings": {
+                        "executionType": "EXECUTE_FIRST_MATCH",
+                        "branches": [
+                          {
+                            "branchType": "CONDITION",
+                            "branchName": "Not in JRNY yet",
+                            "conditions": [
+                              [
+                                {
+                                  "operator": "BOOLEAN_IS_TRUE",
+                                  "firstValue": "{{step_4['ok']}}"
+                                },
+                                {
+                                  "operator": "LIST_IS_EMPTY",
+                                  "firstValue": "{{step_4['output']['data']}}"
+                                },
+                                {
+                                  "operator": "BOOLEAN_IS_TRUE",
+                                  "firstValue": "{{step_15['ok']}}"
+                                },
+                                {
+                                  "operator": "LIST_IS_EMPTY",
+                                  "firstValue": "{{step_15['output']['data']}}"
+                                }
+                              ]
                             ]
                           },
-                          "children": [
-                            {
-                              "name": "step_8",
-                              "displayName": "Create Quote",
-                              "type": "PIECE",
-                              "valid": false,
-                              "skip": false,
-                              "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
-                              "settings": {
-                                "pieceName": "@jrnyflw/jrny",
-                                "pieceVersion": "0.1.0",
-                                "actionName": "create_quote",
-                                "input": {
-                                  "auth": "{{connections['pick-the-jrny-production-connection']}}",
-                                  "customerCode": "SHOE100",
-                                  "lines": {
-                                    "stockCode": "{{flattenNestedKeys(step_6, ['output', 'lines', 'stockCode'])}}",
-                                    "qty": "{{flattenNestedKeys(step_6, ['output', 'lines', 'qty'])}}",
-                                    "unitPrice": "{{flattenNestedKeys(step_6, ['output', 'lines', 'unitPrice'])}}",
-                                    "uom": "{{flattenNestedKeys(step_6, ['output', 'lines', 'uom'])}}"
-                                  },
-                                  "notes": "{{step_6['output']['notes']}}",
-                                  "externalReference": "{{step_3['item']['orderNumber']}}",
-                                  "portalCode": "SHOPRITE",
-                                  "deliveryAddressMode": "byCode",
-                                  "deliveryAddressCode": "{{step_6['output']['addressCode']}}",
-                                  "autoConvert": true,
-                                  "autoConfirm": "{{step_6['output']['clean']}}",
-                                  "deliveryDate": "{{step_3['item']['deliveryDate']}}",
-                                  "idempotencyKey": "shoprite-{{step_3['item']['orderNumber']}}",
-                                  "onFailure": "continue"
-                                },
-                                "propertySettings": {
-                                  "customerCode": {
-                                    "type": "MANUAL"
-                                  },
-                                  "lines": {
-                                    "type": "DYNAMIC"
-                                  },
-                                  "notes": {
-                                    "type": "MANUAL"
-                                  },
-                                  "externalReference": {
-                                    "type": "MANUAL"
-                                  },
-                                  "portalCode": {
-                                    "type": "MANUAL"
-                                  },
-                                  "deliveryAddressMode": {
-                                    "type": "MANUAL"
-                                  },
-                                  "deliveryAddressCode": {
-                                    "type": "MANUAL"
-                                  },
-                                  "autoConvert": {
-                                    "type": "MANUAL"
-                                  },
-                                  "autoConfirm": {
-                                    "type": "DYNAMIC"
-                                  },
-                                  "deliveryDate": {
-                                    "type": "MANUAL"
-                                  },
-                                  "idempotencyKey": {
-                                    "type": "MANUAL"
-                                  },
-                                  "onFailure": {
-                                    "type": "MANUAL"
-                                  }
-                                },
-                                "sampleData": {},
-                                "errorHandlingOptions": {
-                                  "retryOnFailure": {
-                                    "value": false
-                                  },
-                                  "continueOnFailure": {
-                                    "value": true
-                                  }
-                                }
+                          {
+                            "branchType": "FALLBACK",
+                            "branchName": "Otherwise"
+                          }
+                        ]
+                      },
+                      "children": [
+                        {
+                          "name": "step_6",
+                          "displayName": "Resolve Order Lines",
+                          "type": "PIECE",
+                          "valid": false,
+                          "skip": false,
+                          "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                          "settings": {
+                            "pieceName": "@jrnyflw/jrny",
+                            "pieceVersion": "0.1.0",
+                            "actionName": "resolve_order_lines",
+                            "input": {
+                              "auth": "{{connections['pick-the-jrny-production-connection']}}",
+                              "customerCode": "SHOE100",
+                              "addressCode": "{{step_3['item']['store']['branch']}}",
+                              "fallbackAddressCode": "0001",
+                              "notePrefix": "Shoprite PO {{step_3['item']['orderNumber']}}, {{step_3['item']['store']['name']}} ({{step_3['item']['store']['branch']}})",
+                              "lines": {
+                                "stockCode": "{{flattenNestedKeys(step_3, ['item', 'lines', 'buyerItemCode'])}}",
+                                "barcode": "{{flattenNestedKeys(step_3, ['item', 'lines', 'gtin'])}}",
+                                "quantity": "{{flattenNestedKeys(step_3, ['item', 'lines', 'quantity'])}}",
+                                "unitPrice": "{{flattenNestedKeys(step_3, ['item', 'lines', 'unitPriceExclVat'])}}",
+                                "description": "{{flattenNestedKeys(step_3, ['item', 'lines', 'description'])}}",
+                                "reference": "{{flattenNestedKeys(step_3, ['item', 'lines', 'lineNumber'])}}"
                               },
-                              "nextAction": {
-                                "name": "step_9",
-                                "displayName": "Clean and created?",
-                                "type": "ROUTER",
-                                "valid": true,
-                                "skip": false,
-                                "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
-                                "settings": {
-                                  "executionType": "EXECUTE_FIRST_MATCH",
-                                  "branches": [
-                                    {
-                                      "branchType": "CONDITION",
-                                      "branchName": "Generate the pick",
-                                      "conditions": [
-                                        [
-                                          {
-                                            "operator": "BOOLEAN_IS_TRUE",
-                                            "firstValue": "{{step_8['ok']}}"
-                                          },
-                                          {
-                                            "operator": "BOOLEAN_IS_TRUE",
-                                            "firstValue": "{{step_6['output']['clean']}}"
-                                          }
-                                        ]
-                                      ]
-                                    },
-                                    {
-                                      "branchType": "FALLBACK",
-                                      "branchName": "Otherwise"
-                                    }
+                              "warnings": "{{step_3['item']['warnings']}}",
+                              "onFailure": "continue"
+                            },
+                            "propertySettings": {
+                              "customerCode": {
+                                "type": "MANUAL"
+                              },
+                              "addressCode": {
+                                "type": "MANUAL"
+                              },
+                              "fallbackAddressCode": {
+                                "type": "MANUAL"
+                              },
+                              "notePrefix": {
+                                "type": "MANUAL"
+                              },
+                              "lines": {
+                                "type": "DYNAMIC"
+                              },
+                              "warnings": {
+                                "type": "DYNAMIC"
+                              },
+                              "onFailure": {
+                                "type": "MANUAL"
+                              }
+                            },
+                            "sampleData": {},
+                            "errorHandlingOptions": {
+                              "retryOnFailure": {
+                                "value": false
+                              },
+                              "continueOnFailure": {
+                                "value": true
+                              }
+                            }
+                          },
+                          "nextAction": {
+                            "name": "step_7",
+                            "displayName": "Anything to load?",
+                            "type": "ROUTER",
+                            "valid": true,
+                            "skip": false,
+                            "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                            "settings": {
+                              "executionType": "EXECUTE_FIRST_MATCH",
+                              "branches": [
+                                {
+                                  "branchType": "CONDITION",
+                                  "branchName": "Create the quote",
+                                  "conditions": [
+                                    [
+                                      {
+                                        "operator": "BOOLEAN_IS_TRUE",
+                                        "firstValue": "{{step_6['ok']}}"
+                                      },
+                                      {
+                                        "operator": "NUMBER_IS_GREATER_THAN",
+                                        "firstValue": "{{step_6['output']['lineCount']}}",
+                                        "secondValue": "0"
+                                      }
+                                    ]
                                   ]
                                 },
-                                "children": [
-                                  {
-                                    "name": "step_10",
-                                    "displayName": "Generate Pick",
-                                    "type": "PIECE",
-                                    "valid": false,
-                                    "skip": false,
-                                    "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
-                                    "settings": {
-                                      "pieceName": "@jrnyflw/jrny",
-                                      "pieceVersion": "0.1.0",
-                                      "actionName": "generate_pick",
-                                      "input": {
-                                        "auth": "{{connections['pick-the-jrny-production-connection']}}",
-                                        "salesOrderNumber": "{{step_8['output']['salesOrder']['salesOrderNumber']}}",
-                                        "onFailure": "continue"
-                                      },
-                                      "propertySettings": {
-                                        "salesOrderNumber": {
-                                          "type": "MANUAL"
-                                        },
-                                        "onFailure": {
-                                          "type": "MANUAL"
-                                        }
-                                      },
-                                      "sampleData": {},
-                                      "errorHandlingOptions": {
-                                        "retryOnFailure": {
-                                          "value": false
-                                        },
-                                        "continueOnFailure": {
-                                          "value": true
-                                        }
-                                      }
+                                {
+                                  "branchType": "FALLBACK",
+                                  "branchName": "Otherwise"
+                                }
+                              ]
+                            },
+                            "children": [
+                              {
+                                "name": "step_8",
+                                "displayName": "Create Quote",
+                                "type": "PIECE",
+                                "valid": false,
+                                "skip": false,
+                                "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                                "settings": {
+                                  "pieceName": "@jrnyflw/jrny",
+                                  "pieceVersion": "0.1.0",
+                                  "actionName": "create_quote",
+                                  "input": {
+                                    "auth": "{{connections['pick-the-jrny-production-connection']}}",
+                                    "customerCode": "SHOE100",
+                                    "lines": {
+                                      "stockCode": "{{flattenNestedKeys(step_6, ['output', 'lines', 'stockCode'])}}",
+                                      "qty": "{{flattenNestedKeys(step_6, ['output', 'lines', 'qty'])}}",
+                                      "unitPrice": "{{flattenNestedKeys(step_6, ['output', 'lines', 'unitPrice'])}}",
+                                      "uom": "{{flattenNestedKeys(step_6, ['output', 'lines', 'uom'])}}"
+                                    },
+                                    "notes": "{{step_6['output']['notes']}}",
+                                    "externalReference": "{{step_3['item']['orderNumber']}}",
+                                    "portalCode": "SHOPRITE",
+                                    "deliveryAddressMode": "byCode",
+                                    "deliveryAddressCode": "{{step_6['output']['addressCode']}}",
+                                    "autoConvert": true,
+                                    "autoConfirm": "{{step_6['output']['clean']}}",
+                                    "deliveryDate": "{{step_3['item']['deliveryDate']}}",
+                                    "idempotencyKey": "shoprite-{{step_3['item']['orderNumber']}}",
+                                    "onFailure": "continue"
+                                  },
+                                  "propertySettings": {
+                                    "customerCode": {
+                                      "type": "MANUAL"
+                                    },
+                                    "lines": {
+                                      "type": "DYNAMIC"
+                                    },
+                                    "notes": {
+                                      "type": "MANUAL"
+                                    },
+                                    "externalReference": {
+                                      "type": "MANUAL"
+                                    },
+                                    "portalCode": {
+                                      "type": "MANUAL"
+                                    },
+                                    "deliveryAddressMode": {
+                                      "type": "MANUAL"
+                                    },
+                                    "deliveryAddressCode": {
+                                      "type": "MANUAL"
+                                    },
+                                    "autoConvert": {
+                                      "type": "MANUAL"
+                                    },
+                                    "autoConfirm": {
+                                      "type": "DYNAMIC"
+                                    },
+                                    "deliveryDate": {
+                                      "type": "MANUAL"
+                                    },
+                                    "idempotencyKey": {
+                                      "type": "MANUAL"
+                                    },
+                                    "onFailure": {
+                                      "type": "MANUAL"
                                     }
                                   },
-                                  null
-                                ],
+                                  "sampleData": {},
+                                  "errorHandlingOptions": {
+                                    "retryOnFailure": {
+                                      "value": false
+                                    },
+                                    "continueOnFailure": {
+                                      "value": true
+                                    }
+                                  }
+                                },
                                 "nextAction": {
-                                  "name": "step_13",
-                                  "displayName": "In JRNY?",
+                                  "name": "step_9",
+                                  "displayName": "Clean and created?",
                                   "type": "ROUTER",
                                   "valid": true,
                                   "skip": false,
-                                  "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+                                  "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
                                   "settings": {
                                     "executionType": "EXECUTE_FIRST_MATCH",
                                     "branches": [
                                       {
                                         "branchType": "CONDITION",
-                                        "branchName": "Acknowledge it",
+                                        "branchName": "Generate the pick",
                                         "conditions": [
                                           [
                                             {
                                               "operator": "BOOLEAN_IS_TRUE",
                                               "firstValue": "{{step_8['ok']}}"
-                                            }
-                                          ],
-                                          [
+                                            },
                                             {
-                                              "operator": "TEXT_EXACTLY_MATCHES",
-                                              "firstValue": "{{step_8['error']['code']}}",
-                                              "secondValue": "DUPLICATE_PORTAL_ORDER",
-                                              "caseSensitive": true
+                                              "operator": "BOOLEAN_IS_TRUE",
+                                              "firstValue": "{{step_6['output']['clean']}}"
                                             }
                                           ]
                                         ]
@@ -469,23 +441,23 @@
                                   },
                                   "children": [
                                     {
-                                      "name": "step_14",
-                                      "displayName": "Acknowledge Order",
+                                      "name": "step_10",
+                                      "displayName": "Generate Pick",
                                       "type": "PIECE",
                                       "valid": false,
                                       "skip": false,
-                                      "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
+                                      "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
                                       "settings": {
-                                        "pieceName": "@jrnyflw/shoprite",
+                                        "pieceName": "@jrnyflw/jrny",
                                         "pieceVersion": "0.1.0",
-                                        "actionName": "acknowledge_orders",
+                                        "actionName": "generate_pick",
                                         "input": {
-                                          "auth": "{{connections['pick-the-shoprite-connection']}}",
-                                          "orderNumbers": "{{step_3['item']['orderNumber']}}",
+                                          "auth": "{{connections['pick-the-jrny-production-connection']}}",
+                                          "salesOrderNumber": "{{step_8['output']['salesOrder']['salesOrderNumber']}}",
                                           "onFailure": "continue"
                                         },
                                         "propertySettings": {
-                                          "orderNumbers": {
+                                          "salesOrderNumber": {
                                             "type": "MANUAL"
                                           },
                                           "onFailure": {
@@ -504,86 +476,171 @@
                                       }
                                     },
                                     null
+                                  ],
+                                  "nextAction": {
+                                    "name": "step_13",
+                                    "displayName": "In JRNY?",
+                                    "type": "ROUTER",
+                                    "valid": true,
+                                    "skip": false,
+                                    "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                                    "settings": {
+                                      "executionType": "EXECUTE_FIRST_MATCH",
+                                      "branches": [
+                                        {
+                                          "branchType": "CONDITION",
+                                          "branchName": "Acknowledge it",
+                                          "conditions": [
+                                            [
+                                              {
+                                                "operator": "BOOLEAN_IS_TRUE",
+                                                "firstValue": "{{step_8['ok']}}"
+                                              }
+                                            ],
+                                            [
+                                              {
+                                                "operator": "TEXT_EXACTLY_MATCHES",
+                                                "firstValue": "{{step_8['error']['code']}}",
+                                                "secondValue": "DUPLICATE_PORTAL_ORDER",
+                                                "caseSensitive": true
+                                              }
+                                            ]
+                                          ]
+                                        },
+                                        {
+                                          "branchType": "FALLBACK",
+                                          "branchName": "Otherwise"
+                                        }
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "name": "step_14",
+                                        "displayName": "Acknowledge Order",
+                                        "type": "PIECE",
+                                        "valid": false,
+                                        "skip": false,
+                                        "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                                        "settings": {
+                                          "pieceName": "@jrnyflw/shoprite",
+                                          "pieceVersion": "0.1.0",
+                                          "actionName": "acknowledge_orders",
+                                          "input": {
+                                            "auth": "{{connections['pick-the-shoprite-connection']}}",
+                                            "orderNumbers": "{{step_3['item']['orderNumber']}}",
+                                            "onFailure": "continue"
+                                          },
+                                          "propertySettings": {
+                                            "orderNumbers": {
+                                              "type": "MANUAL"
+                                            },
+                                            "onFailure": {
+                                              "type": "MANUAL"
+                                            }
+                                          },
+                                          "sampleData": {},
+                                          "errorHandlingOptions": {
+                                            "retryOnFailure": {
+                                              "value": false
+                                            },
+                                            "continueOnFailure": {
+                                              "value": true
+                                            }
+                                          }
+                                        }
+                                      },
+                                      null
+                                    ]
+                                  }
+                                }
+                              },
+                              null
+                            ]
+                          }
+                        },
+                        {
+                          "name": "step_11",
+                          "displayName": "Already in JRNY?",
+                          "type": "ROUTER",
+                          "valid": true,
+                          "skip": false,
+                          "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                          "settings": {
+                            "executionType": "EXECUTE_FIRST_MATCH",
+                            "branches": [
+                              {
+                                "branchType": "CONDITION",
+                                "branchName": "Acknowledge it",
+                                "conditions": [
+                                  [
+                                    {
+                                      "operator": "BOOLEAN_IS_TRUE",
+                                      "firstValue": "{{step_4['ok']}}"
+                                    },
+                                    {
+                                      "operator": "LIST_IS_NOT_EMPTY",
+                                      "firstValue": "{{step_4['output']['data']}}"
+                                    }
+                                  ],
+                                  [
+                                    {
+                                      "operator": "BOOLEAN_IS_TRUE",
+                                      "firstValue": "{{step_15['ok']}}"
+                                    },
+                                    {
+                                      "operator": "LIST_IS_NOT_EMPTY",
+                                      "firstValue": "{{step_15['output']['data']}}"
+                                    }
                                   ]
+                                ]
+                              },
+                              {
+                                "branchType": "FALLBACK",
+                                "branchName": "Otherwise"
+                              }
+                            ]
+                          },
+                          "children": [
+                            {
+                              "name": "step_12",
+                              "displayName": "Acknowledge Order",
+                              "type": "PIECE",
+                              "valid": false,
+                              "skip": false,
+                              "lastUpdatedDate": "2026-10-24T05:42:42.829Z",
+                              "settings": {
+                                "pieceName": "@jrnyflw/shoprite",
+                                "pieceVersion": "0.1.0",
+                                "actionName": "acknowledge_orders",
+                                "input": {
+                                  "auth": "{{connections['pick-the-shoprite-connection']}}",
+                                  "orderNumbers": "{{step_3['item']['orderNumber']}}",
+                                  "onFailure": "continue"
+                                },
+                                "propertySettings": {
+                                  "orderNumbers": {
+                                    "type": "MANUAL"
+                                  },
+                                  "onFailure": {
+                                    "type": "MANUAL"
+                                  }
+                                },
+                                "sampleData": {},
+                                "errorHandlingOptions": {
+                                  "retryOnFailure": {
+                                    "value": false
+                                  },
+                                  "continueOnFailure": {
+                                    "value": true
+                                  }
                                 }
                               }
                             },
                             null
                           ]
                         }
-                      },
-                      {
-                        "name": "step_11",
-                        "displayName": "Already in JRNY?",
-                        "type": "ROUTER",
-                        "valid": true,
-                        "skip": false,
-                        "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
-                        "settings": {
-                          "executionType": "EXECUTE_FIRST_MATCH",
-                          "branches": [
-                            {
-                              "branchType": "CONDITION",
-                              "branchName": "Acknowledge it",
-                              "conditions": [
-                                [
-                                  {
-                                    "operator": "BOOLEAN_IS_TRUE",
-                                    "firstValue": "{{step_4['ok']}}"
-                                  },
-                                  {
-                                    "operator": "LIST_IS_NOT_EMPTY",
-                                    "firstValue": "{{step_4['output']['data']}}"
-                                  }
-                                ]
-                              ]
-                            },
-                            {
-                              "branchType": "FALLBACK",
-                              "branchName": "Otherwise"
-                            }
-                          ]
-                        },
-                        "children": [
-                          {
-                            "name": "step_12",
-                            "displayName": "Acknowledge Order",
-                            "type": "PIECE",
-                            "valid": false,
-                            "skip": false,
-                            "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
-                            "settings": {
-                              "pieceName": "@jrnyflw/shoprite",
-                              "pieceVersion": "0.1.0",
-                              "actionName": "acknowledge_orders",
-                              "input": {
-                                "auth": "{{connections['pick-the-shoprite-connection']}}",
-                                "orderNumbers": "{{step_3['item']['orderNumber']}}",
-                                "onFailure": "continue"
-                              },
-                              "propertySettings": {
-                                "orderNumbers": {
-                                  "type": "MANUAL"
-                                },
-                                "onFailure": {
-                                  "type": "MANUAL"
-                                }
-                              },
-                              "sampleData": {},
-                              "errorHandlingOptions": {
-                                "retryOnFailure": {
-                                  "value": false
-                                },
-                                "continueOnFailure": {
-                                  "value": true
-                                }
-                              }
-                            }
-                          },
-                          null
-                        ]
-                      }
-                    ]
+                      ]
+                    }
                   }
                 }
               },
