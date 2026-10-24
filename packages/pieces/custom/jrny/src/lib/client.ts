@@ -5,6 +5,7 @@ import { JrnyAuth } from './auth';
 export class JrnyApiError extends Error {
   public readonly httpStatus: number;
   public readonly code: string;
+  public readonly jrnyMessage: string;
   public readonly codes: string[];
   public readonly details?: unknown;
   public readonly requestId?: string;
@@ -14,6 +15,7 @@ export class JrnyApiError extends Error {
     this.name = 'JrnyApiError';
     this.httpStatus = httpStatus;
     this.code = envelope.error.code;
+    this.jrnyMessage = envelope.error.message;
     this.codes = [...new Set([envelope.error.code, ...codesIn(envelope.error.details)])];
     this.details = envelope.error.details;
     this.requestId = envelope.requestId;

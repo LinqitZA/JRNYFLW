@@ -56,6 +56,7 @@ const quote = {
                 stockCode: listOf({ step: 'step_6', path: ['output', 'lines', 'stockCode'] }),
                 qty: listOf({ step: 'step_6', path: ['output', 'lines', 'qty'] }),
                 unitPrice: listOf({ step: 'step_6', path: ['output', 'lines', 'unitPrice'] }),
+                uom: listOf({ step: 'step_6', path: ['output', 'lines', 'uom'] }),
             },
             notes: "{{step_6['output']['notes']}}",
             externalReference: item("['orderNumber']"),
@@ -99,7 +100,8 @@ const resolve = {
             fallbackAddressCode: '0001',
             notePrefix: `Shoprite PO ${item("['orderNumber']")}, ${item("['store']['name']")} (${item("['store']['branch']")})`,
             lines: {
-                stockCode: listOf({ step: 'step_3', path: ['item', 'lines', 'supplierItemCode'] }),
+                // AON's JRNY products for Shoprite are coded by Shoprite's item number. The old supplier codes either miss or hit a superseded product.
+                stockCode: listOf({ step: 'step_3', path: ['item', 'lines', 'buyerItemCode'] }),
                 barcode: listOf({ step: 'step_3', path: ['item', 'lines', 'gtin'] }),
                 quantity: listOf({ step: 'step_3', path: ['item', 'lines', 'quantity'] }),
                 unitPrice: listOf({ step: 'step_3', path: ['item', 'lines', 'unitPriceExclVat'] }),

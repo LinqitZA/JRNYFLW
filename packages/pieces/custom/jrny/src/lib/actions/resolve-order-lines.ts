@@ -2,7 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { pieceTrace, Tracer } from '@jrnyflw/piece-trace';
 import { jrnyAuth, JrnyAuth } from '../auth';
-import { jrnyClient } from '../client';
+import { JrnyApiError, jrnyClient } from '../client';
 
 // Declared before the action because its props read it when the module loads.
 const DEFAULT_FALLBACK = '0001';
@@ -83,41 +83,73 @@ async function resolveLine({ line, reference, lookup }: { line: InputLine; refer
     return drop('quantity must be more than 0');
   }
   let matchedBy: ResolvedLine['matchedBy'] = 'stockCode';
-  let product = line.stockCode === null ? null : await lookup({ kind: 'stockCode', value: line.stockCode });
-  if (product === null && line.barcode !== null) {
+  let found = line.stockCode === null ? null : await lookup({ kind: 'stockCode', value: line.stockCode });
+  if (found === null && line.barcode !== null) {
     matchedBy = 'barcode';
-    product = await lookup({ kind: 'barcode', value: line.barcode });
+    found = await lookup({ kind: 'barcode', value: line.barcode });
   }
-  if (product === null) {
+  if (found === null) {
     return drop('item not found');
   }
-  if (!product.isActive) {
+  if ('refused' in found) {
+    return drop(found.refused);
+  }
+  if (!found.isActive) {
     return drop('inactive in JRNY');
   }
-  // unitPrice stays as null rather than absent: the builder's list mapper skips items missing a key, which would misalign the prices.
-  return { stockCode: product.stockCode, qty: line.quantity, unitPrice: line.unitPrice, reference, matchedBy };
+  // unitPrice and uom stay as null rather than absent: the builder's list mapper skips items missing a key, which would misalign the lines.
+  return { stockCode: found.stockCode, qty: line.quantity, unitPrice: line.unitPrice, reference, matchedBy, uom: found.uom };
 }
 
 function productLookup({ trace, auth, entity }: { trace: Tracer; auth: JrnyAuth; entity: string }): ProductLookup {
-  const cache = new Map<string, Promise<Product | null>>();
+  const cache = new Map<string, Promise<LookupResult>>();
   return ({ kind, value }) => {
     const key = `${kind}:${value}`;
     const cached = cache.get(key);
     if (cached) {
       return cached;
     }
-    const path = kind === 'stockCode' ? `${entity}/products/${encodeURIComponent(value)}` : `${entity}/products/by-barcode/${encodeURIComponent(value)}`;
-    const pending = jrnyClient.find<unknown>({ trace, auth, path }).then((body) => (body === null ? null : productOf(body)));
+    const pending = kind === 'stockCode'
+      ? jrnyClient.find<unknown>({ trace, auth, path: `${entity}/products/${encodeURIComponent(value)}` }).then((body) => (body === null ? null : productOf(body)))
+      : barcodeLookup({ trace, auth, path: `${entity}/products/by-barcode/${encodeURIComponent(value)}` });
     cache.set(key, pending);
     return pending;
   };
+}
+
+async function barcodeLookup({ trace, auth, path }: { trace: Tracer; auth: JrnyAuth; path: string }): Promise<LookupResult> {
+  try {
+    const body = await jrnyClient.find<unknown>({ trace, auth, path });
+    return body === null ? null : barcodeMatchOf(body);
+  } catch (err) {
+    // These refuse one barcode, not the call, so only that line is left out.
+    if (err instanceof JrnyApiError && err.httpStatus === 409) {
+      return { refused: 'barcode matches more than one JRNY product' };
+    }
+    if (err instanceof JrnyApiError && err.httpStatus === 410) {
+      return { refused: 'barcode deactivated in JRNY' };
+    }
+    if (err instanceof JrnyApiError && err.httpStatus === 422) {
+      return { refused: `JRNY cannot use this barcode: ${err.jrnyMessage}` };
+    }
+    throw err;
+  }
 }
 
 function productOf(body: unknown): Product {
   if (!isRecord(body) || typeof body['stockCode'] !== 'string') {
     throw new Error('Unexpected response from JRNY: a product without a stock code');
   }
-  return { stockCode: body['stockCode'], isActive: body['isActive'] !== false };
+  return { stockCode: body['stockCode'], isActive: body['isActive'] !== false, uom: null };
+}
+
+// The unit is the one this barcode stands for (each, box, case), so the quote line is counted in what Shoprite ordered.
+function barcodeMatchOf(body: unknown): Product {
+  const match = isRecord(body) ? body['data'] : undefined;
+  if (!isRecord(match) || typeof match['stockCode'] !== 'string') {
+    throw new Error('Unexpected response from JRNY: a barcode match without a stock code');
+  }
+  return { stockCode: match['stockCode'], isActive: true, uom: textOf(match['uom']) };
 }
 
 function addressCodesOf(body: unknown): string[] {
@@ -186,7 +218,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 type InputLine = { stockCode: string | null; barcode: string | null; quantity: number | null; unitPrice: number | null; description: string | null; reference: string | null };
-type Product = { stockCode: string; isActive: boolean };
-type ProductLookup = (query: { kind: 'stockCode' | 'barcode'; value: string }) => Promise<Product | null>;
-type ResolvedLine = { stockCode: string; qty: number; unitPrice: number | null; reference: string; matchedBy: 'stockCode' | 'barcode' };
+type Product = { stockCode: string; isActive: boolean; uom: string | null };
+type LookupResult = Product | { refused: string } | null;
+type ProductLookup = (query: { kind: 'stockCode' | 'barcode'; value: string }) => Promise<LookupResult>;
+type ResolvedLine = { stockCode: string; qty: number; unitPrice: number | null; reference: string; matchedBy: 'stockCode' | 'barcode'; uom: string | null };
 type DroppedLine = { reference: string; description: string | null; stockCode: string | null; barcode: string | null; reason: string };

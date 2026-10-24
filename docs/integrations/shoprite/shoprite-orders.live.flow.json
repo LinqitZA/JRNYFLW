@@ -27,7 +27,7 @@
         "displayName": "08:00 and 16:00",
         "type": "PIECE_TRIGGER",
         "valid": true,
-        "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+        "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
         "settings": {
           "pieceName": "@activepieces/piece-schedule",
           "pieceVersion": "0.1.17",
@@ -52,7 +52,7 @@
           "type": "PIECE",
           "valid": false,
           "skip": false,
-          "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+          "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
           "settings": {
             "pieceName": "@jrnyflw/shoprite",
             "pieceVersion": "0.1.0",
@@ -82,7 +82,7 @@
             "type": "ROUTER",
             "valid": true,
             "skip": false,
-            "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+            "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
             "settings": {
               "executionType": "EXECUTE_FIRST_MATCH",
               "branches": [
@@ -112,7 +112,7 @@
                 "type": "LOOP_ON_ITEMS",
                 "valid": true,
                 "skip": false,
-                "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                 "settings": {
                   "items": "{{step_1['output']['orders']}}"
                 },
@@ -122,7 +122,7 @@
                   "type": "PIECE",
                   "valid": false,
                   "skip": false,
-                  "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                  "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                   "settings": {
                     "pieceName": "@jrnyflw/jrny",
                     "pieceVersion": "0.1.0",
@@ -160,7 +160,7 @@
                     "type": "ROUTER",
                     "valid": true,
                     "skip": false,
-                    "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                    "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                     "settings": {
                       "executionType": "EXECUTE_FIRST_MATCH",
                       "branches": [
@@ -193,7 +193,7 @@
                         "type": "PIECE",
                         "valid": false,
                         "skip": false,
-                        "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                        "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                         "settings": {
                           "pieceName": "@jrnyflw/jrny",
                           "pieceVersion": "0.1.0",
@@ -205,7 +205,7 @@
                             "fallbackAddressCode": "0001",
                             "notePrefix": "Shoprite PO {{step_3['item']['orderNumber']}}, {{step_3['item']['store']['name']}} ({{step_3['item']['store']['branch']}})",
                             "lines": {
-                              "stockCode": "{{flattenNestedKeys(step_3, ['item', 'lines', 'supplierItemCode'])}}",
+                              "stockCode": "{{flattenNestedKeys(step_3, ['item', 'lines', 'buyerItemCode'])}}",
                               "barcode": "{{flattenNestedKeys(step_3, ['item', 'lines', 'gtin'])}}",
                               "quantity": "{{flattenNestedKeys(step_3, ['item', 'lines', 'quantity'])}}",
                               "unitPrice": "{{flattenNestedKeys(step_3, ['item', 'lines', 'unitPriceExclVat'])}}",
@@ -254,7 +254,7 @@
                           "type": "ROUTER",
                           "valid": true,
                           "skip": false,
-                          "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                          "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                           "settings": {
                             "executionType": "EXECUTE_FIRST_MATCH",
                             "branches": [
@@ -288,7 +288,7 @@
                               "type": "PIECE",
                               "valid": false,
                               "skip": false,
-                              "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                              "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                               "settings": {
                                 "pieceName": "@jrnyflw/jrny",
                                 "pieceVersion": "0.1.0",
@@ -299,7 +299,8 @@
                                   "lines": {
                                     "stockCode": "{{flattenNestedKeys(step_6, ['output', 'lines', 'stockCode'])}}",
                                     "qty": "{{flattenNestedKeys(step_6, ['output', 'lines', 'qty'])}}",
-                                    "unitPrice": "{{flattenNestedKeys(step_6, ['output', 'lines', 'unitPrice'])}}"
+                                    "unitPrice": "{{flattenNestedKeys(step_6, ['output', 'lines', 'unitPrice'])}}",
+                                    "uom": "{{flattenNestedKeys(step_6, ['output', 'lines', 'uom'])}}"
                                   },
                                   "notes": "{{step_6['output']['notes']}}",
                                   "externalReference": "{{step_3['item']['orderNumber']}}",
@@ -366,7 +367,7 @@
                                 "type": "ROUTER",
                                 "valid": true,
                                 "skip": false,
-                                "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                                "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                                 "settings": {
                                   "executionType": "EXECUTE_FIRST_MATCH",
                                   "branches": [
@@ -399,7 +400,7 @@
                                     "type": "PIECE",
                                     "valid": false,
                                     "skip": false,
-                                    "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                                    "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                                     "settings": {
                                       "pieceName": "@jrnyflw/jrny",
                                       "pieceVersion": "0.1.0",
@@ -436,7 +437,7 @@
                                   "type": "ROUTER",
                                   "valid": true,
                                   "skip": false,
-                                  "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                                  "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                                   "settings": {
                                     "executionType": "EXECUTE_FIRST_MATCH",
                                     "branches": [
@@ -473,7 +474,7 @@
                                       "type": "PIECE",
                                       "valid": false,
                                       "skip": false,
-                                      "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                                      "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                                       "settings": {
                                         "pieceName": "@jrnyflw/shoprite",
                                         "pieceVersion": "0.1.0",
@@ -517,7 +518,7 @@
                         "type": "ROUTER",
                         "valid": true,
                         "skip": false,
-                        "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                        "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                         "settings": {
                           "executionType": "EXECUTE_FIRST_MATCH",
                           "branches": [
@@ -550,7 +551,7 @@
                             "type": "PIECE",
                             "valid": false,
                             "skip": false,
-                            "lastUpdatedDate": "2026-10-18T19:02:32.144Z",
+                            "lastUpdatedDate": "2026-10-24T05:02:05.791Z",
                             "settings": {
                               "pieceName": "@jrnyflw/shoprite",
                               "pieceVersion": "0.1.0",

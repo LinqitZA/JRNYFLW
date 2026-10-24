@@ -38,6 +38,10 @@ function urls(): string[] {
 
 const shoe100 = { data: [{ addressCode: '1608' }, { addressCode: '0001' }], total: 2 };
 const product = (stockCode: string, extra: Record<string, unknown> = {}) => ({ stockCode, description: stockCode, isActive: true, ...extra });
+// The by-barcode route wraps its answer in data, unlike the product route.
+const barcodeHit = (stockCode: string, extra: Record<string, unknown> = {}) => ({
+    data: { stockCode, description: stockCode, barcode: '06001224126747', barcodeType: 'GTIN', uom: 'EA', conversionFactor: '1', stockingUom: 'EA', isPrimary: true, source: 'barcode', ...extra },
+});
 
 function run(props: Record<string, unknown>) {
     const propsValue = { customerCode: 'SHOE100', addressCode: '1608', notePrefix: 'Shoprite PO 1221181491, TEST STORE (1608)', ...props };
@@ -54,21 +58,48 @@ describe('resolveOrderLines', () => {
         const result = await run({ lines: [{ stockCode: 'CSL1388', barcode: '06001001438896', quantity: 2, unitPrice: 30, description: 'KEY CONTROL', reference: '1' }] });
         expect(result.output).toEqual({
             addressCode: '1608', addressFallback: false,
-            lines: [{ stockCode: 'CSL1388', qty: 2, unitPrice: 30, reference: '1', matchedBy: 'stockCode' }],
+            lines: [{ stockCode: 'CSL1388', qty: 2, unitPrice: 30, reference: '1', matchedBy: 'stockCode', uom: null }],
             lineCount: 1, dropped: [], clean: true, notes: 'Shoprite PO 1221181491, TEST STORE (1608).',
         });
         expect(JSON.stringify(result)).not.toContain(TOKEN);
     });
 
     test('an unknown stock code falls back to the barcode, sent exactly as given', async () => {
-        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/by-barcode/06001224126747`]: product('XSTAMP25') });
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/by-barcode/06001224126747`]: barcodeHit('XSTAMP25') });
         const result = await run({ lines: [{ stockCode: 'OLDCODE', barcode: '06001224126747', quantity: 1, unitPrice: 50, description: 'X STAMPER', reference: '3' }] });
         expect(urls()).toContain(`${BASE}/products/by-barcode/06001224126747`);
-        expect(result.output).toMatchObject({ lines: [{ stockCode: 'XSTAMP25', matchedBy: 'barcode', reference: '3' }], clean: true });
+        expect(result.output).toMatchObject({ lines: [{ stockCode: 'XSTAMP25', matchedBy: 'barcode', reference: '3', uom: 'EA' }], clean: true });
+    });
+
+    // Without a unit JRNY uses the product's default selling unit, which can differ from the unit Shoprite ordered by.
+    test('a barcode for a box quotes the line in boxes', async () => {
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/by-barcode/06001224126747`]: barcodeHit('CSL1496/A', { uom: 'BOX', conversionFactor: '12' }) });
+        const result = await run({ lines: [{ stockCode: '', barcode: '06001224126747', quantity: 5, unitPrice: 120, reference: '2' }] });
+        expect(result.output?.lines).toEqual([{ stockCode: 'CSL1496/A', qty: 5, unitPrice: 120, reference: '2', matchedBy: 'barcode', uom: 'BOX' }]);
+    });
+
+    test.each([
+        { status: 409, code: 'BARCODE_AMBIGUOUS', reason: 'barcode matches more than one JRNY product' },
+        { status: 410, code: 'BARCODE_DEACTIVATED', reason: 'barcode deactivated in JRNY' },
+        { status: 422, code: 'PRODUCT_DEACTIVATED', reason: 'JRNY cannot use this barcode: Product is deactivated' },
+    ])('a barcode JRNY refuses with $status drops the line instead of failing the order', async ({ status, code, reason }) => {
+        const refused = httpError({ status, data: { error: { code, message: code === 'PRODUCT_DEACTIVATED' ? 'Product is deactivated' : 'refused' } } });
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/CSL1388`]: product('CSL1388'), [`${BASE}/products/by-barcode/06001224126747`]: refused });
+        const result = await run({ lines: [
+            { stockCode: 'CSL1388', quantity: 1, reference: '1' },
+            { stockCode: '', barcode: '06001224126747', quantity: 2, reference: '2' },
+        ] });
+        expect(result.output).toMatchObject({ lineCount: 1, clean: false, dropped: [{ reference: '2', barcode: '06001224126747', reason }] });
+    });
+
+    test('a barcode answer without a stock code fails the step', async () => {
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/by-barcode/06001224126747`]: { stockCode: 'FLAT' } });
+        const result = await run({ onFailure: 'continue', lines: [{ barcode: '06001224126747', quantity: 1, reference: '1' }] });
+        expect(result).toMatchObject({ ok: false, error: { message: 'Unexpected response from JRNY: a barcode match without a stock code' } });
     });
 
     test('a blank stock code goes straight to the barcode', async () => {
-        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/by-barcode/06001224126747`]: product('XSTAMP25') });
+        routes({ [ADDRESSES]: shoe100, [`${BASE}/products/by-barcode/06001224126747`]: barcodeHit('XSTAMP25') });
         await run({ lines: [{ stockCode: '', barcode: '06001224126747', quantity: 1, reference: '3' }] });
         expect(urls()).toEqual([ADDRESSES, `${BASE}/products/by-barcode/06001224126747`]);
     });
@@ -147,8 +178,8 @@ describe('resolveOrderLines', () => {
             { stockCode: 'SC007', quantity: 2, unitPrice: 64.5, reference: '2' },
         ] });
         expect(result.output?.lines).toEqual([
-            { stockCode: 'CSL1388', qty: 1, unitPrice: null, reference: '1', matchedBy: 'stockCode' },
-            { stockCode: 'SC007', qty: 2, unitPrice: 64.5, reference: '2', matchedBy: 'stockCode' },
+            { stockCode: 'CSL1388', qty: 1, unitPrice: null, reference: '1', matchedBy: 'stockCode', uom: null },
+            { stockCode: 'SC007', qty: 2, unitPrice: 64.5, reference: '2', matchedBy: 'stockCode', uom: null },
         ]);
     });
 });
