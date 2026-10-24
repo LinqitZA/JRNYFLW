@@ -1,0 +1,3895 @@
+{
+  "ok": true,
+  "sent": [
+    {
+      "method": "GET",
+      "url": "https://externalservices.shopriteholdings.co.za/b2bservice/api/VendorOrder",
+      "query": {},
+      "headers": {
+        "Authorization": "[redacted]",
+        "Authentication": "[redacted]",
+        "ContractID": "aa659aa2-4175-471f-8c82-59ca416723cf",
+        "UIUser": "AccessOffice"
+      },
+      "body": null,
+      "status": 200,
+      "durationMs": 599
+    }
+  ],
+  "output": {
+    "count": 37,
+    "createdAt": "2026-10-24T06:42:54.3889928+02:00",
+    "orderNumbers": "1221774794,1221780570,1221781387,1221782437,1221782641,1221782646,1221782913,1221782920,1221782929,1221783451,1221787532,1221787597,1221788510,1221788862,1221788936,1221789234,1221790114,1221798346,1221797990,1221798786,1221798853,1221798930,1221799097,1221799340,1221799462,1221799506,1221799542,1221799752,1221799964,1221800054,1221800362,1221800742,1221800836,1221801034,1221801138,1221801618,1221801621",
+    "orders": [
+      {
+        "orderNumber": "1221774794",
+        "headerId": "242679769",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G098",
+          "name": "CHECKERS FX ARBOUR ARCH",
+          "gln": "6001001609890"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 77.08,
+            "lineTotalInclVat": 88.64,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G098",
+              "gln": "6001001609890"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1496/A",
+            "gtin": "02200072627527",
+            "buyerItemCode": "10749543",
+            "description": "SLIP CNTROL BANKING&DEPOSIT 5PK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 68.99,
+            "unitPriceInclVat": 79.34,
+            "lineTotalExclVat": 137.98,
+            "lineTotalInclVat": 158.68,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G098",
+              "gln": "6001001609890"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 63.22,
+            "lineTotalInclVat": 72.7,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G098",
+              "gln": "6001001609890"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 332.85,
+            "lineTotalInclVat": 382.77,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G098",
+              "gln": "6001001609890"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 68.95,
+            "lineTotalInclVat": 79.29,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G098",
+              "gln": "6001001609890"
+            }
+          }
+        ],
+        "totalExclVat": 680.08,
+        "totalInclVat": 782.08,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221780570",
+        "headerId": "242681788",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-23",
+        "store": {
+          "branch": "42703",
+          "name": "CHECKERS HILLCREST",
+          "gln": "6001001427005"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1141/HYP",
+            "gtin": "06001001432481",
+            "buyerItemCode": "10367050",
+            "description": "CASH REFUND/OVER NCR 5PACK BOOK",
+            "quantity": 10,
+            "uom": "EA",
+            "unitPriceExclVat": 43.9,
+            "unitPriceInclVat": 50.49,
+            "lineTotalExclVat": 439,
+            "lineTotalInclVat": 504.9,
+            "deliveryDate": "2026-10-23",
+            "shipTo": {
+              "branch": "42703",
+              "gln": "6001001427005"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 192.7,
+            "lineTotalInclVat": 221.6,
+            "deliveryDate": "2026-10-23",
+            "shipTo": {
+              "branch": "42703",
+              "gln": "6001001427005"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1509S",
+            "gtin": "02200072627510",
+            "buyerItemCode": "10749542",
+            "description": "CARD RECORD CASH PERFORMANCE 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 39.01,
+            "unitPriceInclVat": 44.86,
+            "lineTotalExclVat": 78.02,
+            "lineTotalInclVat": 89.72,
+            "deliveryDate": "2026-10-23",
+            "shipTo": {
+              "branch": "42703",
+              "gln": "6001001427005"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "CSL1496/A",
+            "gtin": "02200072627527",
+            "buyerItemCode": "10749543",
+            "description": "SLIP CNTROL BANKING&DEPOSIT 5PK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 68.99,
+            "unitPriceInclVat": 79.34,
+            "lineTotalExclVat": 137.98,
+            "lineTotalInclVat": 158.68,
+            "deliveryDate": "2026-10-23",
+            "shipTo": {
+              "branch": "42703",
+              "gln": "6001001427005"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 554.75,
+            "lineTotalInclVat": 637.95,
+            "deliveryDate": "2026-10-23",
+            "shipTo": {
+              "branch": "42703",
+              "gln": "6001001427005"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 344.75,
+            "lineTotalInclVat": 396.45,
+            "deliveryDate": "2026-10-23",
+            "shipTo": {
+              "branch": "42703",
+              "gln": "6001001427005"
+            }
+          }
+        ],
+        "totalExclVat": 1747.2,
+        "totalInclVat": 2009.3,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221781387",
+        "headerId": "242682207",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "18580",
+          "name": "SHOPRITE SCF WEST STREET",
+          "gln": "6001001185806"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 137.9,
+            "lineTotalInclVat": 158.58,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "18580",
+              "gln": "6001001185806"
+            }
+          }
+        ],
+        "totalExclVat": 137.9,
+        "totalInclVat": 158.58,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221782437",
+        "headerId": "242682576",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "18548",
+          "name": "SHOPRITE SCF PINETOWN",
+          "gln": "6001001185400"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 10,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 689.5,
+            "lineTotalInclVat": 792.9,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "18548",
+              "gln": "6001001185400"
+            }
+          }
+        ],
+        "totalExclVat": 689.5,
+        "totalInclVat": 792.9,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221782641",
+        "headerId": "242682761",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "37158",
+          "name": "SHOPRITE GREYTOWN",
+          "gln": "6001001371506"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1141/HYP",
+            "gtin": "06001001432481",
+            "buyerItemCode": "10367050",
+            "description": "CASH REFUND/OVER NCR 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 43.9,
+            "unitPriceInclVat": 50.49,
+            "lineTotalExclVat": 43.9,
+            "lineTotalInclVat": 50.49,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 38.54,
+            "lineTotalInclVat": 44.32,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1509S",
+            "gtin": "02200072627510",
+            "buyerItemCode": "10749542",
+            "description": "CARD RECORD CASH PERFORMANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 39.01,
+            "unitPriceInclVat": 44.86,
+            "lineTotalExclVat": 39.01,
+            "lineTotalInclVat": 44.86,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "CSL1496/A",
+            "gtin": "02200072627527",
+            "buyerItemCode": "10749543",
+            "description": "SLIP CNTROL BANKING&DEPOSIT 5PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 68.99,
+            "unitPriceInclVat": 79.34,
+            "lineTotalExclVat": 68.99,
+            "lineTotalInclVat": 79.34,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 63.22,
+            "lineTotalInclVat": 72.7,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": "CSL175",
+            "gtin": "02200072628210",
+            "buyerItemCode": "10749581",
+            "description": "BOOK RECEIPT 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 54.75,
+            "unitPriceInclVat": 62.96,
+            "lineTotalExclVat": 54.75,
+            "lineTotalInclVat": 62.96,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 7,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 67.83,
+            "lineTotalInclVat": 78,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 8,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 91.84,
+            "lineTotalInclVat": 105.62,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 9,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 344.75,
+            "lineTotalInclVat": 396.45,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          },
+          {
+            "lineNumber": 10,
+            "supplierItemCode": null,
+            "gtin": "06001224497441",
+            "buyerItemCode": "10903392",
+            "description": "ENDORSING INK 30ML BLACK BOTTLE",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 8.95,
+            "unitPriceInclVat": 10.29,
+            "lineTotalExclVat": 26.85,
+            "lineTotalInclVat": 30.87,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "37158",
+              "gln": "6001001371506"
+            }
+          }
+        ],
+        "totalExclVat": 839.68,
+        "totalInclVat": 965.61,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221782646",
+        "headerId": "242682766",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "83395",
+          "name": "SHOPRITE STUTTERHEIM",
+          "gln": "6001001833905"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 31.61,
+            "lineTotalInclVat": 36.35,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83395",
+              "gln": "6001001833905"
+            }
+          }
+        ],
+        "totalExclVat": 31.61,
+        "totalInclVat": 36.35,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221782913",
+        "headerId": "242683020",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "18807",
+          "name": "SHOPRITE SRH UMZIMKULU",
+          "gln": "6001001188005"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1388",
+            "gtin": "06001001438896",
+            "buyerItemCode": "10367034",
+            "description": "KEY CONTROL 5PACK BOOK",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 38.16,
+            "unitPriceInclVat": 43.88,
+            "lineTotalExclVat": 114.48,
+            "lineTotalInclVat": 131.64,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "18807",
+              "gln": "6001001188005"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 94.83,
+            "lineTotalInclVat": 109.05,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "18807",
+              "gln": "6001001188005"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL175",
+            "gtin": "02200072628210",
+            "buyerItemCode": "10749581",
+            "description": "BOOK RECEIPT 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 54.75,
+            "unitPriceInclVat": 62.96,
+            "lineTotalExclVat": 54.75,
+            "lineTotalInclVat": 62.96,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "18807",
+              "gln": "6001001188005"
+            }
+          }
+        ],
+        "totalExclVat": 264.06,
+        "totalInclVat": 303.65,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221782920",
+        "headerId": "242683026",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "30449",
+          "name": "SHOPRITE MOUNT FRERE",
+          "gln": "6001001304405"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 63.22,
+            "lineTotalInclVat": 72.7,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "30449",
+              "gln": "6001001304405"
+            }
+          }
+        ],
+        "totalExclVat": 63.22,
+        "totalInclVat": 72.7,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221782929",
+        "headerId": "242683035",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "78499",
+          "name": "USAVE PORT ALFRED",
+          "gln": "6001001784900"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 115.62,
+            "lineTotalInclVat": 132.96,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "78499",
+              "gln": "6001001784900"
+            }
+          }
+        ],
+        "totalExclVat": 115.62,
+        "totalInclVat": 132.96,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221783451",
+        "headerId": "242683542",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "6666",
+          "name": "SHOPRITE ESHOWE",
+          "gln": "6001001066600"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "SHO005",
+            "gtin": "02200072627862",
+            "buyerItemCode": "10749570",
+            "description": "CARD PARCEL SHOPRITE 100S BLUE",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 25.11,
+            "unitPriceInclVat": 28.88,
+            "lineTotalExclVat": 50.22,
+            "lineTotalInclVat": 57.76,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "6666",
+              "gln": "6001001066600"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 4,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 443.8,
+            "lineTotalInclVat": 510.36,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "6666",
+              "gln": "6001001066600"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 183.68,
+            "lineTotalInclVat": 211.24,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "6666",
+              "gln": "6001001066600"
+            }
+          }
+        ],
+        "totalExclVat": 677.7,
+        "totalInclVat": 779.36,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221787532",
+        "headerId": "242687898",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "54059",
+          "name": "USAVE CHRISTIANA",
+          "gln": "6001001540506"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "UTAPE001BR",
+            "gtin": "02200072627626",
+            "buyerItemCode": "10749547",
+            "description": "TAPE BRANDED USAVE 12S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 83.03,
+            "unitPriceInclVat": 95.48,
+            "lineTotalExclVat": 83.03,
+            "lineTotalInclVat": 95.48,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "54059",
+              "gln": "6001001540506"
+            }
+          }
+        ],
+        "totalExclVat": 83.03,
+        "totalInclVat": 95.48,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221787597",
+        "headerId": "242687960",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "70328",
+          "name": "CHECKERS FOODS FRANSCHHOEK",
+          "gln": "6001001703208"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 94.83,
+            "lineTotalInclVat": 109.05,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "70328",
+              "gln": "6001001703208"
+            }
+          }
+        ],
+        "totalExclVat": 94.83,
+        "totalInclVat": 109.05,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221788510",
+        "headerId": "242688325",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "55429",
+          "name": "USAVE SENEKAL",
+          "gln": "6001001554206"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 135.66,
+            "lineTotalInclVat": 156,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55429",
+              "gln": "6001001554206"
+            }
+          }
+        ],
+        "totalExclVat": 135.66,
+        "totalInclVat": 156,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221788862",
+        "headerId": "242688629",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "880",
+          "name": "SHOPRITE SPRINGBOK",
+          "gln": "6001001008808"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "BW6003201",
+            "gtin": "02200072650709",
+            "buyerItemCode": "10795384",
+            "description": "LAMINATION POUCH 150MIC 100PK",
+            "quantity": 10,
+            "uom": "EA",
+            "unitPriceExclVat": 95.14,
+            "unitPriceInclVat": 109.41,
+            "lineTotalExclVat": 951.4,
+            "lineTotalInclVat": 1094.1,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "880",
+              "gln": "6001001008808"
+            }
+          }
+        ],
+        "totalExclVat": 951.4,
+        "totalInclVat": 1094.1,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221788936",
+        "headerId": "242688688",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "42981",
+          "name": "CHECKERS FX PROTEA HEIGHTS",
+          "gln": "6001001429801"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CHE001",
+            "gtin": "02200072627053",
+            "buyerItemCode": "10749517",
+            "description": "BADGE VISITOR CHECKERS 50S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 401.71,
+            "unitPriceInclVat": 461.97,
+            "lineTotalExclVat": 401.71,
+            "lineTotalInclVat": 461.97,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "42981",
+              "gln": "6001001429801"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "BADGECLIP001",
+            "gtin": "02200072627312",
+            "buyerItemCode": "10749533",
+            "description": "BADGE CLIPS 50PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 209.69,
+            "unitPriceInclVat": 241.14,
+            "lineTotalExclVat": 209.69,
+            "lineTotalInclVat": 241.14,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "42981",
+              "gln": "6001001429801"
+            }
+          }
+        ],
+        "totalExclVat": 611.4,
+        "totalInclVat": 703.11,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221789234",
+        "headerId": "242688944",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "83971",
+          "name": "SHOPRITE PHILIPPI 2",
+          "gln": "6001001839709"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "18T",
+            "gtin": "02200072626858",
+            "buyerItemCode": "10749513",
+            "description": "BAG FLOAT 26X28 3892727 TEAL",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 51.71,
+            "unitPriceInclVat": 59.47,
+            "lineTotalExclVat": 51.71,
+            "lineTotalInclVat": 59.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "18Y",
+            "gtin": "02200072626834",
+            "buyerItemCode": "10749514",
+            "description": "BAG FLOAT 26X28 3892710 YELLOW",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 51.71,
+            "unitPriceInclVat": 59.47,
+            "lineTotalExclVat": 51.71,
+            "lineTotalInclVat": 59.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "18BLK",
+            "gtin": "02200072627046",
+            "buyerItemCode": "10749515",
+            "description": "BAG FLOAT BLACK 26X28 3892741",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 51.71,
+            "unitPriceInclVat": 59.47,
+            "lineTotalExclVat": 51.71,
+            "lineTotalInclVat": 59.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "25",
+            "gtin": "02200072627305",
+            "buyerItemCode": "10749531",
+            "description": "BAG FLIP TOP TILL DRAWER BLACK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 123.85,
+            "unitPriceInclVat": 142.43,
+            "lineTotalExclVat": 123.85,
+            "lineTotalInclVat": 142.43,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "MBY001",
+            "gtin": "02200072627701",
+            "buyerItemCode": "10749549",
+            "description": "BAG MAIL SHOPRITE YELLOW",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 291.13,
+            "unitPriceInclVat": 334.8,
+            "lineTotalExclVat": 291.13,
+            "lineTotalInclVat": 334.8,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": "MBR001",
+            "gtin": "02200072627718",
+            "buyerItemCode": "10749550",
+            "description": "BAG MAIL SHOPRITE RED",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 291.13,
+            "unitPriceInclVat": 334.8,
+            "lineTotalExclVat": 291.13,
+            "lineTotalInclVat": 334.8,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 7,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 110.95,
+            "lineTotalInclVat": 127.59,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 8,
+            "supplierItemCode": "17",
+            "gtin": "02200072627107",
+            "buyerItemCode": "10749780",
+            "description": "BAG SLIDING BLK TILL DRAW LARGE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 177.05,
+            "unitPriceInclVat": 203.61,
+            "lineTotalExclVat": 177.05,
+            "lineTotalInclVat": 203.61,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 9,
+            "supplierItemCode": "18R",
+            "gtin": "02200072626841",
+            "buyerItemCode": "10749781",
+            "description": "BAG FLOAT 26X28 3892703 RED",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 51.71,
+            "unitPriceInclVat": 59.47,
+            "lineTotalExclVat": 51.71,
+            "lineTotalInclVat": 59.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          },
+          {
+            "lineNumber": 10,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 91.84,
+            "lineTotalInclVat": 105.62,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "83971",
+              "gln": "6001001839709"
+            }
+          }
+        ],
+        "totalExclVat": 1292.79,
+        "totalInclVat": 1486.73,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221790114",
+        "headerId": "242689419",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G205",
+          "name": "SHOPRITE LENTEGEUR 2",
+          "gln": "6001001620598"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1388",
+            "gtin": "06001001438896",
+            "buyerItemCode": "10367034",
+            "description": "KEY CONTROL 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 38.16,
+            "unitPriceInclVat": 43.88,
+            "lineTotalExclVat": 38.16,
+            "lineTotalInclVat": 43.88,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G205",
+              "gln": "6001001620598"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CTAPE001BT",
+            "gtin": "02200072626766",
+            "buyerItemCode": "10749511",
+            "description": "TAPE BRANDED CHECKERS 12S",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 83.03,
+            "unitPriceInclVat": 95.48,
+            "lineTotalExclVat": 166.06,
+            "lineTotalInclVat": 190.96,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G205",
+              "gln": "6001001620598"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1509S",
+            "gtin": "02200072627510",
+            "buyerItemCode": "10749542",
+            "description": "CARD RECORD CASH PERFORMANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 39.01,
+            "unitPriceInclVat": 44.86,
+            "lineTotalExclVat": 39.01,
+            "lineTotalInclVat": 44.86,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G205",
+              "gln": "6001001620598"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 554.75,
+            "lineTotalInclVat": 637.95,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G205",
+              "gln": "6001001620598"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 67.83,
+            "lineTotalInclVat": 78,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G205",
+              "gln": "6001001620598"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 10,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 689.5,
+            "lineTotalInclVat": 792.9,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G205",
+              "gln": "6001001620598"
+            }
+          }
+        ],
+        "totalExclVat": 1555.31,
+        "totalInclVat": 1788.55,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221798346",
+        "headerId": "242692078",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "351",
+          "name": "SHOPRITE NEWLANDS NATAL",
+          "gln": "6001001003506"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 183.68,
+            "lineTotalInclVat": 211.24,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "351",
+              "gln": "6001001003506"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 100,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 6895,
+            "lineTotalInclVat": 7929,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "351",
+              "gln": "6001001003506"
+            }
+          }
+        ],
+        "totalExclVat": 7078.68,
+        "totalInclVat": 8140.24,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221797990",
+        "headerId": "242692172",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "30334",
+          "name": "CHECKERS FX BEN FLEUR",
+          "gln": "6001001303309"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "SH026",
+            "gtin": "02200072343519",
+            "buyerItemCode": "10500339",
+            "description": "STAMP RUBBER STORE CODE SHOPRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 83.97,
+            "unitPriceInclVat": 96.57,
+            "lineTotalExclVat": 83.97,
+            "lineTotalInclVat": 96.57,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "30334",
+              "gln": "6001001303309"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 192.7,
+            "lineTotalInclVat": 221.6,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "30334",
+              "gln": "6001001303309"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 554.75,
+            "lineTotalInclVat": 637.95,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "30334",
+              "gln": "6001001303309"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "BW6003201",
+            "gtin": "02200072650709",
+            "buyerItemCode": "10795384",
+            "description": "LAMINATION POUCH 150MIC 100PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 95.14,
+            "unitPriceInclVat": 109.41,
+            "lineTotalExclVat": 95.14,
+            "lineTotalInclVat": 109.41,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "30334",
+              "gln": "6001001303309"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": null,
+            "gtin": "02200072650327",
+            "buyerItemCode": "10797351",
+            "description": "LAMINATION POUCHES A4 150MIC BOX 100S",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 109,
+            "unitPriceInclVat": 125.35,
+            "lineTotalExclVat": 218,
+            "lineTotalInclVat": 250.7,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "30334",
+              "gln": "6001001303309"
+            }
+          }
+        ],
+        "totalExclVat": 1144.56,
+        "totalInclVat": 1316.23,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221798786",
+        "headerId": "242692523",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "38609",
+          "name": "SHOPRITE TSAKANE CORNER",
+          "gln": "6001001386005"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "SHO001",
+            "gtin": "02200072627770",
+            "buyerItemCode": "10749565",
+            "description": "BADGE VISITOR SHOPRITE 50S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 400.01,
+            "unitPriceInclVat": 460.01,
+            "lineTotalExclVat": 400.01,
+            "lineTotalInclVat": 460.01,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "38609",
+              "gln": "6001001386005"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "SHO011",
+            "gtin": "02200072627879",
+            "buyerItemCode": "10749569",
+            "description": "CARD PARCEL CTR SHOPRITE 1-130 BLUE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 47.62,
+            "unitPriceInclVat": 54.76,
+            "lineTotalExclVat": 47.62,
+            "lineTotalInclVat": 54.76,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "38609",
+              "gln": "6001001386005"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 135.66,
+            "lineTotalInclVat": 156,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "38609",
+              "gln": "6001001386005"
+            }
+          }
+        ],
+        "totalExclVat": 583.29,
+        "totalInclVat": 670.77,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221798853",
+        "headerId": "242692545",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-30",
+        "store": {
+          "branch": "17021",
+          "name": "CHECKERS FX THE GREENERY",
+          "gln": "6001001170208"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "BW6003201",
+            "gtin": "02200072650709",
+            "buyerItemCode": "10795384",
+            "description": "LAMINATION POUCH 150MIC 100PK",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 95.14,
+            "unitPriceInclVat": 109.41,
+            "lineTotalExclVat": 475.7,
+            "lineTotalInclVat": 547.05,
+            "deliveryDate": "2026-10-30",
+            "shipTo": {
+              "branch": "17021",
+              "gln": "6001001170208"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": null,
+            "gtin": "02200072650327",
+            "buyerItemCode": "10797351",
+            "description": "LAMINATION POUCHES A4 150MIC BOX 100S",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 109,
+            "unitPriceInclVat": 125.35,
+            "lineTotalExclVat": 545,
+            "lineTotalInclVat": 626.75,
+            "deliveryDate": "2026-10-30",
+            "shipTo": {
+              "branch": "17021",
+              "gln": "6001001170208"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": null,
+            "gtin": "06001224497441",
+            "buyerItemCode": "10903392",
+            "description": "ENDORSING INK 30ML BLACK BOTTLE",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 8.95,
+            "unitPriceInclVat": 10.29,
+            "lineTotalExclVat": 44.75,
+            "lineTotalInclVat": 51.45,
+            "deliveryDate": "2026-10-30",
+            "shipTo": {
+              "branch": "17021",
+              "gln": "6001001170208"
+            }
+          }
+        ],
+        "totalExclVat": 1065.45,
+        "totalInclVat": 1225.25,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221798930",
+        "headerId": "242692579",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "94556",
+          "name": "USAVE ALICE",
+          "gln": "6001001945509"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "SH005",
+            "gtin": "02200072627084",
+            "buyerItemCode": "10749516",
+            "description": "STAMP BRANCH USAVE 1UN BOX",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 83.88,
+            "unitPriceInclVat": 96.46,
+            "lineTotalExclVat": 167.76,
+            "lineTotalInclVat": 192.92,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "94556",
+              "gln": "6001001945509"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL175",
+            "gtin": "02200072628210",
+            "buyerItemCode": "10749581",
+            "description": "BOOK RECEIPT 1UN BOOK",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 54.75,
+            "unitPriceInclVat": 62.96,
+            "lineTotalExclVat": 273.75,
+            "lineTotalInclVat": 314.8,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "94556",
+              "gln": "6001001945509"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 339.15,
+            "lineTotalInclVat": 390,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "94556",
+              "gln": "6001001945509"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 10,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 689.5,
+            "lineTotalInclVat": 792.9,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "94556",
+              "gln": "6001001945509"
+            }
+          }
+        ],
+        "totalExclVat": 1470.16,
+        "totalInclVat": 1690.62,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221799097",
+        "headerId": "242692727",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "85290",
+          "name": "CHECKERS FX GREENSTONE MALL",
+          "gln": "6001001852906"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1496/A",
+            "gtin": "02200072627527",
+            "buyerItemCode": "10749543",
+            "description": "SLIP CNTROL BANKING&DEPOSIT 5PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 68.99,
+            "unitPriceInclVat": 79.34,
+            "lineTotalExclVat": 68.99,
+            "lineTotalInclVat": 79.34,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "85290",
+              "gln": "6001001852906"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 110.95,
+            "lineTotalInclVat": 127.59,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "85290",
+              "gln": "6001001852906"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 135.66,
+            "lineTotalInclVat": 156,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "85290",
+              "gln": "6001001852906"
+            }
+          }
+        ],
+        "totalExclVat": 315.6,
+        "totalInclVat": 362.93,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221799340",
+        "headerId": "242692939",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "55047",
+          "name": "CHECKERS RIVERWALK",
+          "gln": "6001001550406"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1388",
+            "gtin": "06001001438896",
+            "buyerItemCode": "10367034",
+            "description": "KEY CONTROL 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 38.16,
+            "unitPriceInclVat": 43.88,
+            "lineTotalExclVat": 38.16,
+            "lineTotalInclVat": 43.88,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 38.54,
+            "lineTotalInclVat": 44.32,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1496/A",
+            "gtin": "02200072627527",
+            "buyerItemCode": "10749543",
+            "description": "SLIP CNTROL BANKING&DEPOSIT 5PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 68.99,
+            "unitPriceInclVat": 79.34,
+            "lineTotalExclVat": 68.99,
+            "lineTotalInclVat": 79.34,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 158.05,
+            "lineTotalInclVat": 181.75,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 110.95,
+            "lineTotalInclVat": 127.59,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 67.83,
+            "lineTotalInclVat": 78,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          },
+          {
+            "lineNumber": 7,
+            "supplierItemCode": "BW6003201",
+            "gtin": "02200072650709",
+            "buyerItemCode": "10795384",
+            "description": "LAMINATION POUCH 150MIC 100PK",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 95.14,
+            "unitPriceInclVat": 109.41,
+            "lineTotalExclVat": 475.7,
+            "lineTotalInclVat": 547.05,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          },
+          {
+            "lineNumber": 8,
+            "supplierItemCode": null,
+            "gtin": "06001224497441",
+            "buyerItemCode": "10903392",
+            "description": "ENDORSING INK 30ML BLACK BOTTLE",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 8.95,
+            "unitPriceInclVat": 10.29,
+            "lineTotalExclVat": 26.85,
+            "lineTotalInclVat": 30.87,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "55047",
+              "gln": "6001001550406"
+            }
+          }
+        ],
+        "totalExclVat": 985.07,
+        "totalInclVat": 1132.8,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221799462",
+        "headerId": "242693060",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "57861",
+          "name": "CHECKERS FX MALL OF THE NORTH",
+          "gln": "6001001578608"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1388",
+            "gtin": "06001001438896",
+            "buyerItemCode": "10367034",
+            "description": "KEY CONTROL 5PACK BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 38.16,
+            "unitPriceInclVat": 43.88,
+            "lineTotalExclVat": 76.32,
+            "lineTotalInclVat": 87.76,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "57861",
+              "gln": "6001001578608"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 10,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 1109.5,
+            "lineTotalInclVat": 1275.9,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "57861",
+              "gln": "6001001578608"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": null,
+            "gtin": "02200072650327",
+            "buyerItemCode": "10797351",
+            "description": "LAMINATION POUCHES A4 150MIC BOX 100S",
+            "quantity": 10,
+            "uom": "EA",
+            "unitPriceExclVat": 109,
+            "unitPriceInclVat": 125.35,
+            "lineTotalExclVat": 1090,
+            "lineTotalInclVat": 1253.5,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "57861",
+              "gln": "6001001578608"
+            }
+          }
+        ],
+        "totalExclVat": 2275.82,
+        "totalInclVat": 2617.16,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221799506",
+        "headerId": "242693100",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "42850",
+          "name": "USAVE WHITE RIVER",
+          "gln": "6001001428507"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 20,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 770.8,
+            "lineTotalInclVat": 886.4,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "42850",
+              "gln": "6001001428507"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 11,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 1220.45,
+            "lineTotalInclVat": 1403.49,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "42850",
+              "gln": "6001001428507"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL378",
+            "gtin": "02200072628609",
+            "buyerItemCode": "10749599",
+            "description": "BOOK PETTY CASH 1UN BOOK",
+            "quantity": 8,
+            "uom": "EA",
+            "unitPriceExclVat": 67.83,
+            "unitPriceInclVat": 78,
+            "lineTotalExclVat": 542.64,
+            "lineTotalInclVat": 624,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "42850",
+              "gln": "6001001428507"
+            }
+          }
+        ],
+        "totalExclVat": 2533.89,
+        "totalInclVat": 2913.89,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221799542",
+        "headerId": "242693136",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "78253",
+          "name": "SHOPRITE COSMO CITY MALL",
+          "gln": "6001001782500"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "STAPE001BR",
+            "gtin": "02200072627114",
+            "buyerItemCode": "10749518",
+            "description": "TAPE BRANDED SHOPRITE 12S",
+            "quantity": 4,
+            "uom": "EA",
+            "unitPriceExclVat": 83.03,
+            "unitPriceInclVat": 95.48,
+            "lineTotalExclVat": 332.12,
+            "lineTotalInclVat": 381.92,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "78253",
+              "gln": "6001001782500"
+            }
+          }
+        ],
+        "totalExclVat": 332.12,
+        "totalInclVat": 381.92,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221799752",
+        "headerId": "242693343",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "7400",
+          "name": "SHOPRITE RANDFONTEIN VILLAGE",
+          "gln": "6001001074001"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 5,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 554.75,
+            "lineTotalInclVat": 637.95,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "7400",
+              "gln": "6001001074001"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "SC042",
+            "gtin": "02200072628425",
+            "buyerItemCode": "10749595",
+            "description": "PAD STOCKTAKE SCAN OBS 50 PACK",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 139.9,
+            "unitPriceInclVat": 160.89,
+            "lineTotalExclVat": 419.7,
+            "lineTotalInclVat": 482.67,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "7400",
+              "gln": "6001001074001"
+            }
+          }
+        ],
+        "totalExclVat": 974.45,
+        "totalInclVat": 1120.62,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221799964",
+        "headerId": "242693551",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "89236",
+          "name": "SHOPRITE RIVERSIDE SQUARE",
+          "gln": "6001001892308"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1141/HYP",
+            "gtin": "06001001432481",
+            "buyerItemCode": "10367050",
+            "description": "CASH REFUND/OVER NCR 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 43.9,
+            "unitPriceInclVat": 50.49,
+            "lineTotalExclVat": 43.9,
+            "lineTotalInclVat": 50.49,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "89236",
+              "gln": "6001001892308"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 332.85,
+            "lineTotalInclVat": 382.77,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "89236",
+              "gln": "6001001892308"
+            }
+          }
+        ],
+        "totalExclVat": 376.75,
+        "totalInclVat": 433.26,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221800054",
+        "headerId": "242693628",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "87200",
+          "name": "SHOPRITE LIQUORSHOP TSAKANE CORNER",
+          "gln": "6001001872003"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1481S",
+            "gtin": "02200072627152",
+            "buyerItemCode": "10749525",
+            "description": "BOOK DEPOSIT STANDARD BANK 5PACK",
+            "quantity": 4,
+            "uom": "EA",
+            "unitPriceExclVat": 38.54,
+            "unitPriceInclVat": 44.32,
+            "lineTotalExclVat": 154.16,
+            "lineTotalInclVat": 177.28,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "87200",
+              "gln": "6001001872003"
+            }
+          }
+        ],
+        "totalExclVat": 154.16,
+        "totalInclVat": 177.28,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221800362",
+        "headerId": "242693914",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G505",
+          "name": "CHECKERS BRENTWOOD",
+          "gln": "6001001650595"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "1/SEALS",
+            "gtin": "02200072628234",
+            "buyerItemCode": "10749583",
+            "description": "BAG FLOAT SEALS 1000S",
+            "quantity": 4,
+            "uom": "EA",
+            "unitPriceExclVat": 110.95,
+            "unitPriceInclVat": 127.59,
+            "lineTotalExclVat": 443.8,
+            "lineTotalInclVat": 510.36,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G505",
+              "gln": "6001001650595"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": null,
+            "gtin": "06001224126747",
+            "buyerItemCode": "10895479",
+            "description": "X STAMPER BOOK PK25",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 68.95,
+            "unitPriceInclVat": 79.29,
+            "lineTotalExclVat": 137.9,
+            "lineTotalInclVat": 158.58,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G505",
+              "gln": "6001001650595"
+            }
+          }
+        ],
+        "totalExclVat": 581.7,
+        "totalInclVat": 668.94,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221800742",
+        "headerId": "242694257",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G353",
+          "name": "CHECKERS FX LINTONS CORNER",
+          "gln": "6001001635394"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1048",
+            "gtin": "06001001422727",
+            "buyerItemCode": "10367063",
+            "description": "VOUCHER GOODS RECEIVED 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 64.4,
+            "unitPriceInclVat": 74.06,
+            "lineTotalExclVat": 64.4,
+            "lineTotalInclVat": 74.06,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "SH004",
+            "gtin": "06001001481762",
+            "buyerItemCode": "10370355",
+            "description": "STAMP CANCELLED LITHOTEC",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 79.63,
+            "unitPriceInclVat": 91.57,
+            "lineTotalExclVat": 79.63,
+            "lineTotalInclVat": 91.57,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "SH007",
+            "gtin": "06001001483797",
+            "buyerItemCode": "10370360",
+            "description": "STAMP PASSED FOR PAYMENT MEDI-RITE R/S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 87.57,
+            "unitPriceInclVat": 100.71,
+            "lineTotalExclVat": 87.57,
+            "lineTotalInclVat": 100.71,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "SH002",
+            "gtin": "06001001481748",
+            "buyerItemCode": "10370362",
+            "description": "STAMP PASSED FOR PAYMENT LIQUOR STORE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 210.22,
+            "unitPriceInclVat": 241.75,
+            "lineTotalExclVat": 210.22,
+            "lineTotalInclVat": 241.75,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "SH009",
+            "gtin": "06001001483964",
+            "buyerItemCode": "10370504",
+            "description": "STAMP CHECKERS ADDRESS LITHOTEC",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 175.19,
+            "unitPriceInclVat": 201.47,
+            "lineTotalExclVat": 175.19,
+            "lineTotalInclVat": 201.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": "SH011",
+            "gtin": "06001224006070",
+            "buyerItemCode": "10406762",
+            "description": "STAMP RUBBER EIR NO",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 126.35,
+            "unitPriceInclVat": 145.3,
+            "lineTotalExclVat": 126.35,
+            "lineTotalInclVat": 145.3,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 7,
+            "supplierItemCode": "MED003S",
+            "gtin": "02200072626650",
+            "buyerItemCode": "10749507",
+            "description": "BOOK DEPOSIT STD BANK MEDIRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 48.85,
+            "unitPriceInclVat": 56.18,
+            "lineTotalExclVat": 48.85,
+            "lineTotalInclVat": 56.18,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 8,
+            "supplierItemCode": "CTAPE001BT",
+            "gtin": "02200072626766",
+            "buyerItemCode": "10749511",
+            "description": "TAPE BRANDED CHECKERS 12S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 83.03,
+            "unitPriceInclVat": 95.48,
+            "lineTotalExclVat": 83.03,
+            "lineTotalInclVat": 95.48,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 9,
+            "supplierItemCode": "18BLK",
+            "gtin": "02200072627046",
+            "buyerItemCode": "10749515",
+            "description": "BAG FLOAT BLACK 26X28 3892741",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 51.71,
+            "unitPriceInclVat": 59.47,
+            "lineTotalExclVat": 51.71,
+            "lineTotalInclVat": 59.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 10,
+            "supplierItemCode": "CHE001",
+            "gtin": "02200072627053",
+            "buyerItemCode": "10749517",
+            "description": "BADGE VISITOR CHECKERS 50S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 401.71,
+            "unitPriceInclVat": 461.97,
+            "lineTotalExclVat": 401.71,
+            "lineTotalInclVat": 461.97,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 11,
+            "supplierItemCode": "STMPPADS.NO1",
+            "gtin": "02200072627138",
+            "buyerItemCode": "10749523",
+            "description": "PAD STAMP NO.1 1UN BOX",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 18.4,
+            "unitPriceInclVat": 21.16,
+            "lineTotalExclVat": 18.4,
+            "lineTotalInclVat": 21.16,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 12,
+            "supplierItemCode": "25",
+            "gtin": "02200072627305",
+            "buyerItemCode": "10749531",
+            "description": "BAG FLIP TOP TILL DRAWER BLACK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 123.85,
+            "unitPriceInclVat": 142.43,
+            "lineTotalExclVat": 123.85,
+            "lineTotalInclVat": 142.43,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 13,
+            "supplierItemCode": "K8/001",
+            "gtin": "02200072627503",
+            "buyerItemCode": "10749540",
+            "description": "BAG SECURITY K8 NECK SEALER",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 155.07,
+            "unitPriceInclVat": 178.33,
+            "lineTotalExclVat": 155.07,
+            "lineTotalInclVat": 178.33,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 14,
+            "supplierItemCode": "CSL1509S",
+            "gtin": "02200072627510",
+            "buyerItemCode": "10749542",
+            "description": "CARD RECORD CASH PERFORMANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 39.01,
+            "unitPriceInclVat": 44.86,
+            "lineTotalExclVat": 39.01,
+            "lineTotalInclVat": 44.86,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 15,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 31.61,
+            "lineTotalInclVat": 36.35,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 16,
+            "supplierItemCode": "CSL1456",
+            "gtin": "02200072628067",
+            "buyerItemCode": "10749580",
+            "description": "SECURITY OCCURANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 47.73,
+            "unitPriceInclVat": 54.89,
+            "lineTotalExclVat": 47.73,
+            "lineTotalInclVat": 54.89,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 17,
+            "supplierItemCode": "CSL175",
+            "gtin": "02200072628210",
+            "buyerItemCode": "10749581",
+            "description": "BOOK RECEIPT 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 54.75,
+            "unitPriceInclVat": 62.96,
+            "lineTotalExclVat": 54.75,
+            "lineTotalInclVat": 62.96,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 18,
+            "supplierItemCode": "SH015",
+            "gtin": "02200072628807",
+            "buyerItemCode": "10749603",
+            "description": "PRESCRIPTION SELFINK 4928 MEDIRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 525.56,
+            "unitPriceInclVat": 604.39,
+            "lineTotalExclVat": 525.56,
+            "lineTotalInclVat": 604.39,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 19,
+            "supplierItemCode": "SH016",
+            "gtin": "02200072628821",
+            "buyerItemCode": "10749605",
+            "description": "STAMP RUBBER GRN POD 1UN EACH",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 160.26,
+            "unitPriceInclVat": 184.3,
+            "lineTotalExclVat": 160.26,
+            "lineTotalInclVat": 184.3,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 20,
+            "supplierItemCode": "17",
+            "gtin": "02200072627107",
+            "buyerItemCode": "10749780",
+            "description": "BAG SLIDING BLK TILL DRAW LARGE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 177.05,
+            "unitPriceInclVat": 203.61,
+            "lineTotalExclVat": 177.05,
+            "lineTotalInclVat": 203.61,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 21,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 91.84,
+            "lineTotalInclVat": 105.62,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 22,
+            "supplierItemCode": "CSL1407",
+            "gtin": "02200072631050",
+            "buyerItemCode": "10752375",
+            "description": "OUT OF STOCK PRODUCT VOUCHER EACH",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 8.95,
+            "unitPriceInclVat": 10.29,
+            "lineTotalExclVat": 8.95,
+            "lineTotalInclVat": 10.29,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 23,
+            "supplierItemCode": "6060PICKER",
+            "gtin": "02200072638042",
+            "buyerItemCode": "10766618",
+            "description": "BOOK CONTROL SIXTY/60 PICKER 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 52.04,
+            "unitPriceInclVat": 59.85,
+            "lineTotalExclVat": 52.04,
+            "lineTotalInclVat": 59.85,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          },
+          {
+            "lineNumber": 24,
+            "supplierItemCode": "6060DRIVER",
+            "gtin": "02200072638035",
+            "buyerItemCode": "10766619",
+            "description": "BOOK CONTROL SIXTY/60 DRIVER 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 50.28,
+            "unitPriceInclVat": 57.82,
+            "lineTotalExclVat": 50.28,
+            "lineTotalInclVat": 57.82,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G353",
+              "gln": "6001001635394"
+            }
+          }
+        ],
+        "totalExclVat": 2865.06,
+        "totalInclVat": 3294.82,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221800836",
+        "headerId": "242694335",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G575",
+          "name": "CHECKERS FX LAVENDER SQUARE",
+          "gln": "6001001657594"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1388",
+            "gtin": "06001001438896",
+            "buyerItemCode": "10367034",
+            "description": "KEY CONTROL 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 38.16,
+            "unitPriceInclVat": 43.88,
+            "lineTotalExclVat": 38.16,
+            "lineTotalInclVat": 43.88,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1141/HYP",
+            "gtin": "06001001432481",
+            "buyerItemCode": "10367050",
+            "description": "CASH REFUND/OVER NCR 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 43.9,
+            "unitPriceInclVat": 50.49,
+            "lineTotalExclVat": 43.9,
+            "lineTotalInclVat": 50.49,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1048",
+            "gtin": "06001001422727",
+            "buyerItemCode": "10367063",
+            "description": "VOUCHER GOODS RECEIVED 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 64.4,
+            "unitPriceInclVat": 74.06,
+            "lineTotalExclVat": 64.4,
+            "lineTotalInclVat": 74.06,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "SH004",
+            "gtin": "06001001481762",
+            "buyerItemCode": "10370355",
+            "description": "STAMP CANCELLED LITHOTEC",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 79.63,
+            "unitPriceInclVat": 91.57,
+            "lineTotalExclVat": 79.63,
+            "lineTotalInclVat": 91.57,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "SH007",
+            "gtin": "06001001483797",
+            "buyerItemCode": "10370360",
+            "description": "STAMP PASSED FOR PAYMENT MEDI-RITE R/S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 87.57,
+            "unitPriceInclVat": 100.71,
+            "lineTotalExclVat": 87.57,
+            "lineTotalInclVat": 100.71,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": "SH002",
+            "gtin": "06001001481748",
+            "buyerItemCode": "10370362",
+            "description": "STAMP PASSED FOR PAYMENT LIQUOR STORE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 210.22,
+            "unitPriceInclVat": 241.75,
+            "lineTotalExclVat": 210.22,
+            "lineTotalInclVat": 241.75,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 7,
+            "supplierItemCode": "SH009",
+            "gtin": "06001001483964",
+            "buyerItemCode": "10370504",
+            "description": "STAMP CHECKERS ADDRESS LITHOTEC",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 175.19,
+            "unitPriceInclVat": 201.47,
+            "lineTotalExclVat": 175.19,
+            "lineTotalInclVat": 201.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 8,
+            "supplierItemCode": "SH011",
+            "gtin": "06001224006070",
+            "buyerItemCode": "10406762",
+            "description": "STAMP RUBBER EIR NO",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 126.35,
+            "unitPriceInclVat": 145.3,
+            "lineTotalExclVat": 126.35,
+            "lineTotalInclVat": 145.3,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 9,
+            "supplierItemCode": "MED003S",
+            "gtin": "02200072626650",
+            "buyerItemCode": "10749507",
+            "description": "BOOK DEPOSIT STD BANK MEDIRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 48.85,
+            "unitPriceInclVat": 56.18,
+            "lineTotalExclVat": 48.85,
+            "lineTotalInclVat": 56.18,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 10,
+            "supplierItemCode": "18BLK",
+            "gtin": "02200072627046",
+            "buyerItemCode": "10749515",
+            "description": "BAG FLOAT BLACK 26X28 3892741",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 51.71,
+            "unitPriceInclVat": 59.47,
+            "lineTotalExclVat": 51.71,
+            "lineTotalInclVat": 59.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 11,
+            "supplierItemCode": "CHE001",
+            "gtin": "02200072627053",
+            "buyerItemCode": "10749517",
+            "description": "BADGE VISITOR CHECKERS 50S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 401.71,
+            "unitPriceInclVat": 461.97,
+            "lineTotalExclVat": 401.71,
+            "lineTotalInclVat": 461.97,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 12,
+            "supplierItemCode": "STMPPADS.NO1",
+            "gtin": "02200072627138",
+            "buyerItemCode": "10749523",
+            "description": "PAD STAMP NO.1 1UN BOX",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 18.4,
+            "unitPriceInclVat": 21.16,
+            "lineTotalExclVat": 18.4,
+            "lineTotalInclVat": 21.16,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 13,
+            "supplierItemCode": "25",
+            "gtin": "02200072627305",
+            "buyerItemCode": "10749531",
+            "description": "BAG FLIP TOP TILL DRAWER BLACK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 123.85,
+            "unitPriceInclVat": 142.43,
+            "lineTotalExclVat": 123.85,
+            "lineTotalInclVat": 142.43,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 14,
+            "supplierItemCode": "K8/001",
+            "gtin": "02200072627503",
+            "buyerItemCode": "10749540",
+            "description": "BAG SECURITY K8 NECK SEALER",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 155.07,
+            "unitPriceInclVat": 178.33,
+            "lineTotalExclVat": 155.07,
+            "lineTotalInclVat": 178.33,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 15,
+            "supplierItemCode": "CSL1509S",
+            "gtin": "02200072627510",
+            "buyerItemCode": "10749542",
+            "description": "CARD RECORD CASH PERFORMANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 39.01,
+            "unitPriceInclVat": 44.86,
+            "lineTotalExclVat": 39.01,
+            "lineTotalInclVat": 44.86,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 16,
+            "supplierItemCode": "CSL1496/A",
+            "gtin": "02200072627527",
+            "buyerItemCode": "10749543",
+            "description": "SLIP CNTROL BANKING&DEPOSIT 5PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 68.99,
+            "unitPriceInclVat": 79.34,
+            "lineTotalExclVat": 68.99,
+            "lineTotalInclVat": 79.34,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 17,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 31.61,
+            "lineTotalInclVat": 36.35,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 18,
+            "supplierItemCode": "CSL1456",
+            "gtin": "02200072628067",
+            "buyerItemCode": "10749580",
+            "description": "SECURITY OCCURANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 47.73,
+            "unitPriceInclVat": 54.89,
+            "lineTotalExclVat": 47.73,
+            "lineTotalInclVat": 54.89,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 19,
+            "supplierItemCode": "CSL175",
+            "gtin": "02200072628210",
+            "buyerItemCode": "10749581",
+            "description": "BOOK RECEIPT 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 54.75,
+            "unitPriceInclVat": 62.96,
+            "lineTotalExclVat": 54.75,
+            "lineTotalInclVat": 62.96,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 20,
+            "supplierItemCode": "SH015",
+            "gtin": "02200072628807",
+            "buyerItemCode": "10749603",
+            "description": "PRESCRIPTION SELFINK 4928 MEDIRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 525.56,
+            "unitPriceInclVat": 604.39,
+            "lineTotalExclVat": 525.56,
+            "lineTotalInclVat": 604.39,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 21,
+            "supplierItemCode": "SH016",
+            "gtin": "02200072628821",
+            "buyerItemCode": "10749605",
+            "description": "STAMP RUBBER GRN POD 1UN EACH",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 160.26,
+            "unitPriceInclVat": 184.3,
+            "lineTotalExclVat": 160.26,
+            "lineTotalInclVat": 184.3,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 22,
+            "supplierItemCode": "17",
+            "gtin": "02200072627107",
+            "buyerItemCode": "10749780",
+            "description": "BAG SLIDING BLK TILL DRAW LARGE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 177.05,
+            "unitPriceInclVat": 203.61,
+            "lineTotalExclVat": 177.05,
+            "lineTotalInclVat": 203.61,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 23,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 91.84,
+            "lineTotalInclVat": 105.62,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 24,
+            "supplierItemCode": "CSL1407",
+            "gtin": "02200072631050",
+            "buyerItemCode": "10752375",
+            "description": "OUT OF STOCK PRODUCT VOUCHER EACH",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 8.95,
+            "unitPriceInclVat": 10.29,
+            "lineTotalExclVat": 8.95,
+            "lineTotalInclVat": 10.29,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 25,
+            "supplierItemCode": "6060PICKER",
+            "gtin": "02200072638042",
+            "buyerItemCode": "10766618",
+            "description": "BOOK CONTROL SIXTY/60 PICKER 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 52.04,
+            "unitPriceInclVat": 59.85,
+            "lineTotalExclVat": 52.04,
+            "lineTotalInclVat": 59.85,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          },
+          {
+            "lineNumber": 26,
+            "supplierItemCode": "6060DRIVER",
+            "gtin": "02200072638035",
+            "buyerItemCode": "10766619",
+            "description": "BOOK CONTROL SIXTY/60 DRIVER 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 50.28,
+            "unitPriceInclVat": 57.82,
+            "lineTotalExclVat": 50.28,
+            "lineTotalInclVat": 57.82,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G575",
+              "gln": "6001001657594"
+            }
+          }
+        ],
+        "totalExclVat": 2933.08,
+        "totalInclVat": 3373.05,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221801034",
+        "headerId": "242694477",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G665",
+          "name": "CHECKERS FX DAINFERN",
+          "gln": "6001001666596"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 183.68,
+            "lineTotalInclVat": 211.24,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G665",
+              "gln": "6001001666596"
+            }
+          }
+        ],
+        "totalExclVat": 183.68,
+        "totalInclVat": 211.24,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221801138",
+        "headerId": "242694562",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G765",
+          "name": "CHECKERS FX MONTANA CROSSING",
+          "gln": "6001001676595"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1388",
+            "gtin": "06001001438896",
+            "buyerItemCode": "10367034",
+            "description": "KEY CONTROL 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 38.16,
+            "unitPriceInclVat": 43.88,
+            "lineTotalExclVat": 38.16,
+            "lineTotalInclVat": 43.88,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "CSL1141/HYP",
+            "gtin": "06001001432481",
+            "buyerItemCode": "10367050",
+            "description": "CASH REFUND/OVER NCR 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 43.9,
+            "unitPriceInclVat": 50.49,
+            "lineTotalExclVat": 43.9,
+            "lineTotalInclVat": 50.49,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1048",
+            "gtin": "06001001422727",
+            "buyerItemCode": "10367063",
+            "description": "VOUCHER GOODS RECEIVED 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 64.4,
+            "unitPriceInclVat": 74.06,
+            "lineTotalExclVat": 64.4,
+            "lineTotalInclVat": 74.06,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 4,
+            "supplierItemCode": "SH004",
+            "gtin": "06001001481762",
+            "buyerItemCode": "10370355",
+            "description": "STAMP CANCELLED LITHOTEC",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 79.63,
+            "unitPriceInclVat": 91.57,
+            "lineTotalExclVat": 79.63,
+            "lineTotalInclVat": 91.57,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 5,
+            "supplierItemCode": "SH007",
+            "gtin": "06001001483797",
+            "buyerItemCode": "10370360",
+            "description": "STAMP PASSED FOR PAYMENT MEDI-RITE R/S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 87.57,
+            "unitPriceInclVat": 100.71,
+            "lineTotalExclVat": 87.57,
+            "lineTotalInclVat": 100.71,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 6,
+            "supplierItemCode": "SH002",
+            "gtin": "06001001481748",
+            "buyerItemCode": "10370362",
+            "description": "STAMP PASSED FOR PAYMENT LIQUOR STORE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 210.22,
+            "unitPriceInclVat": 241.75,
+            "lineTotalExclVat": 210.22,
+            "lineTotalInclVat": 241.75,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 7,
+            "supplierItemCode": "SH009",
+            "gtin": "06001001483964",
+            "buyerItemCode": "10370504",
+            "description": "STAMP CHECKERS ADDRESS LITHOTEC",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 175.19,
+            "unitPriceInclVat": 201.47,
+            "lineTotalExclVat": 175.19,
+            "lineTotalInclVat": 201.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 8,
+            "supplierItemCode": "SH011",
+            "gtin": "06001224006070",
+            "buyerItemCode": "10406762",
+            "description": "STAMP RUBBER EIR NO",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 126.35,
+            "unitPriceInclVat": 145.3,
+            "lineTotalExclVat": 126.35,
+            "lineTotalInclVat": 145.3,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 9,
+            "supplierItemCode": "MED003S",
+            "gtin": "02200072626650",
+            "buyerItemCode": "10749507",
+            "description": "BOOK DEPOSIT STD BANK MEDIRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 48.85,
+            "unitPriceInclVat": 56.18,
+            "lineTotalExclVat": 48.85,
+            "lineTotalInclVat": 56.18,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 10,
+            "supplierItemCode": "CTAPE001BT",
+            "gtin": "02200072626766",
+            "buyerItemCode": "10749511",
+            "description": "TAPE BRANDED CHECKERS 12S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 83.03,
+            "unitPriceInclVat": 95.48,
+            "lineTotalExclVat": 83.03,
+            "lineTotalInclVat": 95.48,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 11,
+            "supplierItemCode": "18BLK",
+            "gtin": "02200072627046",
+            "buyerItemCode": "10749515",
+            "description": "BAG FLOAT BLACK 26X28 3892741",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 51.71,
+            "unitPriceInclVat": 59.47,
+            "lineTotalExclVat": 51.71,
+            "lineTotalInclVat": 59.47,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 12,
+            "supplierItemCode": "CHE001",
+            "gtin": "02200072627053",
+            "buyerItemCode": "10749517",
+            "description": "BADGE VISITOR CHECKERS 50S",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 401.71,
+            "unitPriceInclVat": 461.97,
+            "lineTotalExclVat": 401.71,
+            "lineTotalInclVat": 461.97,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 13,
+            "supplierItemCode": "STMPPADS.NO1",
+            "gtin": "02200072627138",
+            "buyerItemCode": "10749523",
+            "description": "PAD STAMP NO.1 1UN BOX",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 18.4,
+            "unitPriceInclVat": 21.16,
+            "lineTotalExclVat": 18.4,
+            "lineTotalInclVat": 21.16,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 14,
+            "supplierItemCode": "25",
+            "gtin": "02200072627305",
+            "buyerItemCode": "10749531",
+            "description": "BAG FLIP TOP TILL DRAWER BLACK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 123.85,
+            "unitPriceInclVat": 142.43,
+            "lineTotalExclVat": 123.85,
+            "lineTotalInclVat": 142.43,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 15,
+            "supplierItemCode": "K8/001",
+            "gtin": "02200072627503",
+            "buyerItemCode": "10749540",
+            "description": "BAG SECURITY K8 NECK SEALER",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 155.07,
+            "unitPriceInclVat": 178.33,
+            "lineTotalExclVat": 155.07,
+            "lineTotalInclVat": 178.33,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 16,
+            "supplierItemCode": "CSL1509S",
+            "gtin": "02200072627510",
+            "buyerItemCode": "10749542",
+            "description": "CARD RECORD CASH PERFORMANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 39.01,
+            "unitPriceInclVat": 44.86,
+            "lineTotalExclVat": 39.01,
+            "lineTotalInclVat": 44.86,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 17,
+            "supplierItemCode": "CSL1496/A",
+            "gtin": "02200072627527",
+            "buyerItemCode": "10749543",
+            "description": "SLIP CNTROL BANKING&DEPOSIT 5PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 68.99,
+            "unitPriceInclVat": 79.34,
+            "lineTotalExclVat": 68.99,
+            "lineTotalInclVat": 79.34,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 18,
+            "supplierItemCode": "CSL1510S",
+            "gtin": "02200072627961",
+            "buyerItemCode": "10749574",
+            "description": "TILL FLOAT CONTROL SCAN 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 31.61,
+            "unitPriceInclVat": 36.35,
+            "lineTotalExclVat": 31.61,
+            "lineTotalInclVat": 36.35,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 19,
+            "supplierItemCode": "CSL1456",
+            "gtin": "02200072628067",
+            "buyerItemCode": "10749580",
+            "description": "SECURITY OCCURANCE 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 47.73,
+            "unitPriceInclVat": 54.89,
+            "lineTotalExclVat": 47.73,
+            "lineTotalInclVat": 54.89,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 20,
+            "supplierItemCode": "CSL175",
+            "gtin": "02200072628210",
+            "buyerItemCode": "10749581",
+            "description": "BOOK RECEIPT 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 54.75,
+            "unitPriceInclVat": 62.96,
+            "lineTotalExclVat": 54.75,
+            "lineTotalInclVat": 62.96,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 21,
+            "supplierItemCode": "SH015",
+            "gtin": "02200072628807",
+            "buyerItemCode": "10749603",
+            "description": "PRESCRIPTION SELFINK 4928 MEDIRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 525.56,
+            "unitPriceInclVat": 604.39,
+            "lineTotalExclVat": 525.56,
+            "lineTotalInclVat": 604.39,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 22,
+            "supplierItemCode": "SH016",
+            "gtin": "02200072628821",
+            "buyerItemCode": "10749605",
+            "description": "STAMP RUBBER GRN POD 1UN EACH",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 160.26,
+            "unitPriceInclVat": 184.3,
+            "lineTotalExclVat": 160.26,
+            "lineTotalInclVat": 184.3,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 23,
+            "supplierItemCode": "17",
+            "gtin": "02200072627107",
+            "buyerItemCode": "10749780",
+            "description": "BAG SLIDING BLK TILL DRAW LARGE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 177.05,
+            "unitPriceInclVat": 203.61,
+            "lineTotalExclVat": 177.05,
+            "lineTotalInclVat": 203.61,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 24,
+            "supplierItemCode": "7",
+            "gtin": "02200072626940",
+            "buyerItemCode": "10749782",
+            "description": "KEY CONTROL SEALS 10 PK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 91.84,
+            "unitPriceInclVat": 105.62,
+            "lineTotalExclVat": 91.84,
+            "lineTotalInclVat": 105.62,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 25,
+            "supplierItemCode": "CSL1407",
+            "gtin": "02200072631050",
+            "buyerItemCode": "10752375",
+            "description": "OUT OF STOCK PRODUCT VOUCHER EACH",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 8.95,
+            "unitPriceInclVat": 10.29,
+            "lineTotalExclVat": 8.95,
+            "lineTotalInclVat": 10.29,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 26,
+            "supplierItemCode": "6060PICKER",
+            "gtin": "02200072638042",
+            "buyerItemCode": "10766618",
+            "description": "BOOK CONTROL SIXTY/60 PICKER 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 52.04,
+            "unitPriceInclVat": 59.85,
+            "lineTotalExclVat": 52.04,
+            "lineTotalInclVat": 59.85,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          },
+          {
+            "lineNumber": 27,
+            "supplierItemCode": "6060DRIVER",
+            "gtin": "02200072638035",
+            "buyerItemCode": "10766619",
+            "description": "BOOK CONTROL SIXTY/60 DRIVER 1UN BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 50.28,
+            "unitPriceInclVat": 57.82,
+            "lineTotalExclVat": 50.28,
+            "lineTotalInclVat": 57.82,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G765",
+              "gln": "6001001676595"
+            }
+          }
+        ],
+        "totalExclVat": 3016.11,
+        "totalInclVat": 3468.53,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221801618",
+        "headerId": "242694803",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "G986",
+          "name": "CHECKERS FX OMNI SQUARE",
+          "gln": "6001001698696"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "SH004",
+            "gtin": "06001001481762",
+            "buyerItemCode": "10370355",
+            "description": "STAMP CANCELLED LITHOTEC",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 79.63,
+            "unitPriceInclVat": 91.57,
+            "lineTotalExclVat": 79.63,
+            "lineTotalInclVat": 91.57,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G986",
+              "gln": "6001001698696"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "SC042",
+            "gtin": "02200072628425",
+            "buyerItemCode": "10749595",
+            "description": "PAD STOCKTAKE SCAN OBS 50 PACK",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 139.9,
+            "unitPriceInclVat": 160.89,
+            "lineTotalExclVat": 419.7,
+            "lineTotalInclVat": 482.67,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G986",
+              "gln": "6001001698696"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "BW6003201",
+            "gtin": "02200072650709",
+            "buyerItemCode": "10795384",
+            "description": "LAMINATION POUCH 150MIC 100PK",
+            "quantity": 3,
+            "uom": "EA",
+            "unitPriceExclVat": 95.14,
+            "unitPriceInclVat": 109.41,
+            "lineTotalExclVat": 285.42,
+            "lineTotalInclVat": 328.23,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "G986",
+              "gln": "6001001698696"
+            }
+          }
+        ],
+        "totalExclVat": 784.75,
+        "totalInclVat": 902.47,
+        "warnings": []
+      },
+      {
+        "orderNumber": "1221801621",
+        "headerId": "242694806",
+        "orderType": "220",
+        "orderDate": "2026-10-23",
+        "deliveryDate": "2026-10-26",
+        "store": {
+          "branch": "H068",
+          "name": "SHOPRITE DARRAS CENTRE",
+          "gln": "6001001706896"
+        },
+        "lines": [
+          {
+            "lineNumber": 1,
+            "supplierItemCode": "CSL1388",
+            "gtin": "06001001438896",
+            "buyerItemCode": "10367034",
+            "description": "KEY CONTROL 5PACK BOOK",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 38.16,
+            "unitPriceInclVat": 43.88,
+            "lineTotalExclVat": 38.16,
+            "lineTotalInclVat": 43.88,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "H068",
+              "gln": "6001001706896"
+            }
+          },
+          {
+            "lineNumber": 2,
+            "supplierItemCode": "SH003",
+            "gtin": "06001001481755",
+            "buyerItemCode": "10370357",
+            "description": "STAMP MONEY MARKET SHOPRITE",
+            "quantity": 1,
+            "uom": "EA",
+            "unitPriceExclVat": 210.22,
+            "unitPriceInclVat": 241.75,
+            "lineTotalExclVat": 210.22,
+            "lineTotalInclVat": 241.75,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "H068",
+              "gln": "6001001706896"
+            }
+          },
+          {
+            "lineNumber": 3,
+            "supplierItemCode": "CSL1509S",
+            "gtin": "02200072627510",
+            "buyerItemCode": "10749542",
+            "description": "CARD RECORD CASH PERFORMANCE 1UN BOOK",
+            "quantity": 2,
+            "uom": "EA",
+            "unitPriceExclVat": 39.01,
+            "unitPriceInclVat": 44.86,
+            "lineTotalExclVat": 78.02,
+            "lineTotalInclVat": 89.72,
+            "deliveryDate": "2026-10-26",
+            "shipTo": {
+              "branch": "H068",
+              "gln": "6001001706896"
+            }
+          }
+        ],
+        "totalExclVat": 326.4,
+        "totalInclVat": 375.35,
+        "warnings": []
+      }
+    ]
+  }
+}
