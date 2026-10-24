@@ -16,7 +16,7 @@ After importing:
 
 | # | Step | Settings |
 | --- | --- | --- |
-| trigger | Schedule, cron | `0 8,16 * * *`, Africa/Johannesburg |
+| trigger | Schedule, cron | `0 6-18 * * *`, Africa/Johannesburg (hourly, 06:00 to 18:00). Shoprite places 80 to 100 orders a day, so hourly runs keep each batch small for JRNY's per-key rate limit |
 | 1 | Shoprite · Download Orders | If the call fails: Stop |
 | 2 | Router | `{{step_1.output.count}}` > 0 |
 | 3 | Loop on Items | `{{step_1.output.orders}}` |

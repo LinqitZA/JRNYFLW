@@ -159,10 +159,11 @@ const download = {
 }
 
 const trigger = {
-    name: 'trigger', displayName: '08:00 and 16:00', type: 'PIECE_TRIGGER', valid: true, lastUpdatedDate: now,
+    name: 'trigger', displayName: 'Hourly, 06:00 to 18:00', type: 'PIECE_TRIGGER', valid: true, lastUpdatedDate: now,
     settings: {
         pieceName: '@activepieces/piece-schedule', pieceVersion: '0.1.17', triggerName: 'cron_expression',
-        input: { cronExpression: '0 8,16 * * *', timezone: 'Africa/Johannesburg' },
+        // Shoprite places 80 to 100 orders a day; hourly runs keep each batch small enough for JRNY's per-key rate limit and the run time limit.
+        input: { cronExpression: '0 6-18 * * *', timezone: 'Africa/Johannesburg' },
         propertySettings: { cronExpression: { type: 'MANUAL' }, timezone: { type: 'MANUAL' } }, sampleData: {},
     },
     nextAction: download,
