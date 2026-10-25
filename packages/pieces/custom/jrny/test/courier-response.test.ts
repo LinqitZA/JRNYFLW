@@ -1,4 +1,4 @@
-import { describe, expect, test, vi, beforeEach } from 'vitest';
+import { describe, expect, test, vi, beforeEach, afterEach } from 'vitest';
 
 const { sendRequest } = vi.hoisted(() => ({ sendRequest: vi.fn() }));
 vi.mock('@activepieces/pieces-common', async (orig) => {
@@ -86,3 +86,49 @@ describe('courierResponse', () => {
         await expect(courierResponse.run({ ...createMockActionContext({ propsValue }), auth })).rejects.toThrow('Waybill number already in use');
     });
 });
+
+describe('courierResponse rate limits', () => {
+    beforeEach(() => {
+        sendRequest.mockReset();
+        vi.useFakeTimers();
+    });
+    afterEach(() => vi.useRealTimers());
+
+    const booked = { dispatchNumber: 'DN-1', courierStatus: 'booked', waybillNumber: 'AON-1', onFailure: 'continue' };
+
+    test('retries a 429 and books once JRNY accepts', async () => {
+        sendRequest.mockRejectedValueOnce(jrnyError(429));
+        sendRequest.mockResolvedValueOnce({ body: {} });
+        const pending = courierResponse.run({ ...createMockActionContext({ propsValue: booked }), auth });
+        await vi.advanceTimersByTimeAsync(2000);
+        const result = await pending;
+        expect(result.ok).toBe(true);
+        expect(sendRequest).toHaveBeenCalledTimes(2);
+        expect(sendRequest.mock.calls[1][0].url).toBe(sendRequest.mock.calls[0][0].url);
+        expect(sendRequest.mock.calls[1][0].body).toEqual(sendRequest.mock.calls[0][0].body);
+    });
+
+    test('gives up after the last wait when JRNY keeps answering 429', async () => {
+        sendRequest.mockRejectedValue(jrnyError(429));
+        const pending = courierResponse.run({ ...createMockActionContext({ propsValue: booked }), auth });
+        await vi.advanceTimersByTimeAsync(62000);
+        const result = await pending;
+        expect(result).toMatchObject({ ok: false, error: { status: 429 } });
+        expect(sendRequest).toHaveBeenCalledTimes(6);
+    });
+
+    test('does not retry a 400', async () => {
+        sendRequest.mockRejectedValueOnce(jrnyError(400));
+        const result = await courierResponse.run({ ...createMockActionContext({ propsValue: booked }), auth });
+        expect(result.ok).toBe(false);
+        expect(sendRequest).toHaveBeenCalledTimes(1);
+    });
+});
+
+function jrnyError(status: number) {
+    const config = { headers: new AxiosHeaders() };
+    return new HttpError({}, new AxiosError('JRNY refused', 'ERR_BAD_REQUEST', config, undefined, {
+        status, statusText: 'refused', headers: {}, config,
+        data: { error: { code: status === 429 ? 'RATE_LIMIT_EXCEEDED' : 'VALIDATION_ERROR', message: 'no' } },
+    }));
+}

@@ -2,6 +2,7 @@ import { createAction, Property } from '@activepieces/pieces-framework';
 import { HttpMethod } from '@activepieces/pieces-common';
 import { jrnyAuth } from '../auth';
 import { jrnyClient } from '../client';
+import { jrnyBackoff } from '../backoff';
 import { pieceTrace } from '@jrnyflw/piece-trace';
 
 export const courierResponse = createAction({
@@ -103,7 +104,7 @@ export const courierResponse = createAction({
           ...present('failedStep', p.failedStep),
         };
         const path = `/api/v1/integration/entities/${encodeURIComponent(auth.entityId)}/dispatch-notes/${encodeURIComponent(p.dispatchNumber.trim())}/courier-response`;
-        return jrnyClient.callJrny({ trace, auth, method: HttpMethod.PATCH, path, body });
+        return jrnyBackoff.withBackoff(() => jrnyClient.callJrny({ trace, auth, method: HttpMethod.PATCH, path, body }));
       },
     });
   },
