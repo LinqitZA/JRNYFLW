@@ -4,6 +4,7 @@ import { nucleusAuth } from '../auth';
 import { nucleusClient } from '../client';
 import { pieceTrace } from '@jrnyflw/piece-trace';
 import { nucleusPodStatus } from '../pod-status';
+import { FieldsTooLongError, nucleusFieldLengths } from '../field-lengths';
 
 export const createWaybillImportHeader = createAction({
     auth: nucleusAuth,
@@ -77,6 +78,21 @@ export const createWaybillImportHeader = createAction({
             onFailure: p.onFailure,
             secrets: nucleusClient.secretsOf(auth),
             work: async (trace) => {
+                const tooLong = nucleusFieldLengths.findTooLong({
+                    fields: [
+                        { label: 'Sender Address 1', value: p.accAddress1 },
+                        { label: 'Sender Address 2', value: p.accAddress2 },
+                        { label: 'Sender Address 3', value: p.accAddress3 },
+                        { label: 'Sender Address 4', value: p.accAddress4 },
+                        { label: 'Receiver Address 1', value: p.destAddress1 },
+                        { label: 'Receiver Address 2', value: p.destAddress2 },
+                        { label: 'Receiver Address 3', value: p.destAddress3 },
+                        { label: 'Receiver Address 4', value: p.destAddress4 },
+                    ],
+                });
+                if (tooLong.length > 0) {
+                    throw new FieldsTooLongError(tooLong);
+                }
                 const query: Record<string, string> = {
                     WaybillNo: p.waybillNo,
                     WaybillNoDate: toNucleusDate(p.waybillDate),

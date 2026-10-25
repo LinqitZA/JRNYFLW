@@ -11,8 +11,18 @@ import { createMockActionContext } from '@activepieces/pieces-framework';
 import { createWaybillImportHeader } from '../src/lib/actions/create-waybill-import-header';
 import { createWaybillImportDimsAndDetail } from '../src/lib/actions/create-waybill-import-dims-and-detail';
 import { nucleusParcels } from '../src/lib/parcels';
+import { nucleusFieldLengths } from '../src/lib/field-lengths';
 
 const auth = { props: { baseUrl: 'https://api/', username: 'u', password: 'p', groupName: 'G' } };
+
+const headerProps = {
+    waybillNo: 'W1', waybillDate: '2026/09/23', servCode: 'ECO', noParcels: 2, weight: 4.5,
+    accName: 'Sender', accTelNo: '010', accNum: 'ACC1', origCode: 'JNB',
+    accAddress1: 'a1', accAddress2: 'a2', accAddress3: 'a3', accAddress4: 'a4', accPostalCode: '0083',
+    destName: 'Recv', contactName: 'Bob', contactTelNo: '011', destCode: 'DBN',
+    destAddress1: 'd1', destAddress2: 'd2', destAddress3: 'd3', destAddress4: 'd4', destPostalCode: '0184',
+    customerPONumber: 'PO123', reference: '',
+};
 
 function lastRequest() {
     return sendRequest.mock.calls[sendRequest.mock.calls.length - 1][0];
@@ -24,14 +34,7 @@ describe('createWaybillImportHeader', () => {
     test('POSTs CreateWaybillImportHeader with mapped query params, a comma decimal weight and blank optionals as empty values', async () => {
         sendRequest.mockResolvedValueOnce({ body: { access_token: 'TOK', expires_in: 3599 } });
         sendRequest.mockResolvedValueOnce({ body: 'OK' });
-        const propsValue = {
-            waybillNo: 'W1', waybillDate: '2026/09/23', servCode: 'ECO', noParcels: 2, weight: 4.5,
-            accName: 'Sender', accTelNo: '010', accNum: 'ACC1', origCode: 'JNB',
-            accAddress1: 'a1', accAddress2: 'a2', accAddress3: 'a3', accAddress4: 'a4', accPostalCode: '0083',
-            destName: 'Recv', contactName: 'Bob', contactTelNo: '011', destCode: 'DBN',
-            destAddress1: 'd1', destAddress2: 'd2', destAddress3: 'd3', destAddress4: 'd4', destPostalCode: '0184',
-            customerPONumber: 'PO123', reference: '',
-        };
+        const propsValue = headerProps;
         const ctx = { ...createMockActionContext({ propsValue }), auth };
         await createWaybillImportHeader.run(ctx);
         const req = lastRequest();
@@ -46,6 +49,33 @@ describe('createWaybillImportHeader', () => {
         expect(req.queryParams).toEqual(expect.objectContaining({
             Reference: '', Dest_AccNum: '', AccNum2: '', Route_Code: '', Cost_Centre: '', Instruct: '', Carrier: '', Filename: '',
         }));
+    });
+});
+
+describe('address length check', () => {
+    beforeEach(() => sendRequest.mockReset());
+
+    test('refuses before calling Nucleus and lists every address field over 50 characters', async () => {
+        sendRequest.mockResolvedValueOnce({ body: { access_token: 'TOK', expires_in: 3599 } });
+        const propsValue = { ...headerProps, destAddress2: 'x'.repeat(63), accAddress1: 'y'.repeat(51), destAddress1: 'z'.repeat(50), onFailure: 'continue' };
+        const result = await createWaybillImportHeader.run({ ...createMockActionContext({ propsValue }), auth });
+        expect(result).toMatchObject({ ok: false, error: { code: 'NUCLEUS_FIELDS_TOO_LONG' } });
+        expect(result.ok === false && result.error.message).toBe(
+            `Too long for Nucleus (max 50 characters): Sender Address 1 is 51: '${'y'.repeat(51)}'; Receiver Address 2 is 63: '${'x'.repeat(63)}'`,
+        );
+        expect(sendRequest.mock.calls.some(([req]) => String(req.url).endsWith('CreateWaybillImportHeader'))).toBe(false);
+    });
+
+    test('a field of exactly 50 characters is sent', async () => {
+        sendRequest.mockResolvedValueOnce({ body: { access_token: 'TOK', expires_in: 3599 } });
+        sendRequest.mockResolvedValueOnce({ body: 'OK' });
+        await createWaybillImportHeader.run({ ...createMockActionContext({ propsValue: { ...headerProps, destAddress1: 'z'.repeat(50) } }), auth });
+        expect(lastRequest().queryParams.Dest_Address01).toBe('z'.repeat(50));
+    });
+
+    test('findTooLong keeps only fields over 50 characters, in order', () => {
+        const fields = [{ label: 'A', value: 'a'.repeat(50) }, { label: 'B', value: 'b'.repeat(51) }, { label: 'C', value: '' }];
+        expect(nucleusFieldLengths.findTooLong({ fields })).toEqual([{ label: 'B', length: 51, value: 'b'.repeat(51) }]);
     });
 });
 
@@ -106,7 +136,7 @@ describe('JRNY webhook inputs', () => {
     test('header converts a YYYY-MM-DD waybill date to YYYY/MM/DD', async () => {
         sendRequest.mockResolvedValueOnce({ body: { access_token: 'TOK', expires_in: 3599 } });
         sendRequest.mockResolvedValueOnce({ body: 'OK' });
-        const ctx = { ...createMockActionContext({ propsValue: { waybillNo: 'W1', waybillDate: '2026-09-28', noParcels: 1, weight: 1 } }), auth };
+        const ctx = { ...createMockActionContext({ propsValue: { ...headerProps, waybillDate: '2026-09-28' } }), auth };
         await createWaybillImportHeader.run(ctx);
         expect(lastRequest().queryParams.WaybillNoDate).toBe('2026/09/28');
     });
