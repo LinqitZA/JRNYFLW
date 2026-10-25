@@ -1,0 +1,727 @@
+{
+  "name": "JRNY Dispatch → Nucleus Booking",
+  "type": "SHARED",
+  "summary": "",
+  "description": "Books a JRNY dispatch with Nucleus when JRNY says it is ready for the courier, and reports the outcome to JRNY: booked (with a warning when it needs a look) or failed with the step and reason.",
+  "tags": [],
+  "blogUrl": "",
+  "metadata": {
+    "externalId": "nucleusBookingV1xxxxxxxx"
+  },
+  "author": "JRNYFLW Admin",
+  "categories": [],
+  "pieces": [
+    "@activepieces/piece-webhook",
+    "@jrnyflw/nucleus",
+    "@jrnyflw/jrny"
+  ],
+  "status": "PUBLISHED",
+  "flows": [
+    {
+      "displayName": "JRNY Dispatch → Nucleus Booking",
+      "valid": false,
+      "schemaVersion": "20",
+      "notes": [],
+      "trigger": {
+        "name": "trigger",
+        "displayName": "JRNY: ready for courier",
+        "type": "PIECE_TRIGGER",
+        "valid": false,
+        "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+        "settings": {
+          "pieceName": "@activepieces/piece-webhook",
+          "pieceVersion": "0.1.33",
+          "triggerName": "catch_webhook",
+          "input": {
+            "authType": "hmac",
+            "authFields": {
+              "hmacHeaderName": "x-webhook-signature",
+              "hmacSecret": "",
+              "hmacAlgorithm": "sha256",
+              "hmacEncoding": "hex",
+              "hmacSignaturePrefix": ""
+            }
+          },
+          "propertySettings": {
+            "authType": {
+              "type": "MANUAL"
+            },
+            "authFields": {
+              "type": "MANUAL"
+            }
+          },
+          "sampleData": {}
+        },
+        "nextAction": {
+          "name": "step_4",
+          "displayName": "Sender hub",
+          "type": "PIECE",
+          "valid": false,
+          "skip": false,
+          "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+          "settings": {
+            "pieceName": "@jrnyflw/nucleus",
+            "pieceVersion": "0.1.0",
+            "actionName": "find_hub_code_for_address",
+            "input": {
+              "auth": "{{connections['pick-the-nucleus-connection']}}",
+              "city": "{{trigger['body']['data']['sender']['city']}}",
+              "suburb": "{{trigger['body']['data']['sender']['suburb']}}",
+              "province": "{{trigger['body']['data']['sender']['province']}}",
+              "postalCode": "{{trigger['body']['data']['sender']['postalCode']}}",
+              "ifNotFound": "unknown",
+              "onFailure": "continue"
+            },
+            "propertySettings": {
+              "city": {
+                "type": "MANUAL"
+              },
+              "suburb": {
+                "type": "MANUAL"
+              },
+              "province": {
+                "type": "MANUAL"
+              },
+              "postalCode": {
+                "type": "MANUAL"
+              },
+              "ifNotFound": {
+                "type": "MANUAL"
+              },
+              "onFailure": {
+                "type": "MANUAL"
+              }
+            },
+            "sampleData": {},
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": true
+              }
+            }
+          },
+          "nextAction": {
+            "name": "step_1",
+            "displayName": "Delivery hub",
+            "type": "PIECE",
+            "valid": false,
+            "skip": false,
+            "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+            "settings": {
+              "pieceName": "@jrnyflw/nucleus",
+              "pieceVersion": "0.1.0",
+              "actionName": "find_hub_code_for_address",
+              "input": {
+                "auth": "{{connections['pick-the-nucleus-connection']}}",
+                "city": "{{trigger['body']['data']['deliveryAddress']['city']}}",
+                "suburb": "{{trigger['body']['data']['deliveryAddress']['suburb']}}",
+                "province": "{{trigger['body']['data']['deliveryAddress']['province']}}",
+                "postalCode": "{{trigger['body']['data']['deliveryAddress']['postalCode']}}",
+                "ifNotFound": "unknown",
+                "onFailure": "continue"
+              },
+              "propertySettings": {
+                "city": {
+                  "type": "MANUAL"
+                },
+                "suburb": {
+                  "type": "MANUAL"
+                },
+                "province": {
+                  "type": "MANUAL"
+                },
+                "postalCode": {
+                  "type": "MANUAL"
+                },
+                "ifNotFound": {
+                  "type": "MANUAL"
+                },
+                "onFailure": {
+                  "type": "MANUAL"
+                }
+              },
+              "sampleData": {},
+              "errorHandlingOptions": {
+                "retryOnFailure": {
+                  "value": false
+                },
+                "continueOnFailure": {
+                  "value": true
+                }
+              }
+            },
+            "nextAction": {
+              "name": "step_6",
+              "displayName": "Ready to book?",
+              "type": "ROUTER",
+              "valid": true,
+              "skip": false,
+              "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+              "settings": {
+                "executionType": "EXECUTE_FIRST_MATCH",
+                "branches": [
+                  {
+                    "branchType": "CONDITION",
+                    "branchName": "Book it",
+                    "conditions": [
+                      [
+                        {
+                          "operator": "BOOLEAN_IS_TRUE",
+                          "firstValue": "{{step_4?.ok === true && step_1?.ok === true && String(trigger['body']['data']['courierAccountNumber'] ?? '').trim() !== ''}}"
+                        }
+                      ]
+                    ]
+                  },
+                  {
+                    "branchType": "FALLBACK",
+                    "branchName": "Otherwise"
+                  }
+                ]
+              },
+              "children": [
+                {
+                  "name": "step_2",
+                  "displayName": "Create waybill",
+                  "type": "PIECE",
+                  "valid": false,
+                  "skip": false,
+                  "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                  "settings": {
+                    "pieceName": "@jrnyflw/nucleus",
+                    "pieceVersion": "0.1.0",
+                    "actionName": "create_waybill_import_header",
+                    "input": {
+                      "auth": "{{connections['pick-the-nucleus-connection']}}",
+                      "waybillNo": "{{trigger['body']['data']['waybillNumber']}}",
+                      "waybillDate": "{{trigger['body']['data']['waybillDate']}}",
+                      "servCode": "{{trigger['body']['data']['serviceCode']}}",
+                      "noParcels": "{{trigger['body']['data']['totalCartons']}}",
+                      "weight": "{{trigger['body']['data']['totalGrossWeightKg']}}",
+                      "accNum": "{{trigger['body']['data']['courierAccountNumber']}}",
+                      "accName": "{{trigger['body']['data']['sender']['name']}}",
+                      "accTelNo": "{{trigger['body']['data']['sender']['telephone']}}",
+                      "accAddress1": "{{String(trigger['body']['data']['sender']['address2'] ?? '').trim() || trigger['body']['data']['sender']['suburb']}}",
+                      "accAddress2": "{{trigger['body']['data']['sender']['address1']}}",
+                      "accAddress3": "{{trigger['body']['data']['sender']['suburb']}}",
+                      "accAddress4": "{{trigger['body']['data']['sender']['city']}}",
+                      "accPostalCode": "{{trigger['body']['data']['sender']['postalCode']}}",
+                      "origCode": "{{step_4['output']['hubCode']}}",
+                      "destCode": "{{step_1['output']['hubCode']}}",
+                      "destName": "{{trigger['body']['data']['customerName']}}",
+                      "contactName": "{{trigger['body']['data']['deliveryAddress']['contactName']}}",
+                      "contactTelNo": "{{trigger['body']['data']['deliveryAddress']['contactPhone']}}",
+                      "destAccNum": "{{trigger['body']['data']['deliveryAddress']['addressCode']}}",
+                      "destAddress1": "{{trigger['body']['data']['deliveryAddress']['line1']}}",
+                      "destAddress2": "{{String(trigger['body']['data']['deliveryAddress']['line2'] ?? '').trim() || trigger['body']['data']['deliveryAddress']['suburb']}}",
+                      "destAddress3": "{{trigger['body']['data']['deliveryAddress']['suburb']}}",
+                      "destAddress4": "{{trigger['body']['data']['deliveryAddress']['city']}}",
+                      "destPostalCode": "{{trigger['body']['data']['deliveryAddress']['postalCode']}}",
+                      "reference": "{{trigger['body']['data']['customerPONumber']}}",
+                      "customerPONumber": "{{trigger['body']['data']['customerPONumber']}}",
+                      "onFailure": "continue"
+                    },
+                    "propertySettings": {
+                      "waybillNo": {
+                        "type": "MANUAL"
+                      },
+                      "waybillDate": {
+                        "type": "MANUAL"
+                      },
+                      "servCode": {
+                        "type": "MANUAL"
+                      },
+                      "noParcels": {
+                        "type": "MANUAL"
+                      },
+                      "weight": {
+                        "type": "MANUAL"
+                      },
+                      "accNum": {
+                        "type": "MANUAL"
+                      },
+                      "accName": {
+                        "type": "MANUAL"
+                      },
+                      "accTelNo": {
+                        "type": "MANUAL"
+                      },
+                      "accAddress1": {
+                        "type": "MANUAL"
+                      },
+                      "accAddress2": {
+                        "type": "MANUAL"
+                      },
+                      "accAddress3": {
+                        "type": "MANUAL"
+                      },
+                      "accAddress4": {
+                        "type": "MANUAL"
+                      },
+                      "accPostalCode": {
+                        "type": "MANUAL"
+                      },
+                      "origCode": {
+                        "type": "MANUAL"
+                      },
+                      "destCode": {
+                        "type": "MANUAL"
+                      },
+                      "destName": {
+                        "type": "MANUAL"
+                      },
+                      "contactName": {
+                        "type": "MANUAL"
+                      },
+                      "contactTelNo": {
+                        "type": "MANUAL"
+                      },
+                      "destAccNum": {
+                        "type": "MANUAL"
+                      },
+                      "destAddress1": {
+                        "type": "MANUAL"
+                      },
+                      "destAddress2": {
+                        "type": "MANUAL"
+                      },
+                      "destAddress3": {
+                        "type": "MANUAL"
+                      },
+                      "destAddress4": {
+                        "type": "MANUAL"
+                      },
+                      "destPostalCode": {
+                        "type": "MANUAL"
+                      },
+                      "reference": {
+                        "type": "MANUAL"
+                      },
+                      "customerPONumber": {
+                        "type": "MANUAL"
+                      },
+                      "onFailure": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "sampleData": {},
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": false
+                      },
+                      "continueOnFailure": {
+                        "value": true
+                      }
+                    }
+                  },
+                  "nextAction": {
+                    "name": "step_8",
+                    "displayName": "Header created?",
+                    "type": "ROUTER",
+                    "valid": true,
+                    "skip": false,
+                    "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                    "settings": {
+                      "executionType": "EXECUTE_FIRST_MATCH",
+                      "branches": [
+                        {
+                          "branchType": "CONDITION",
+                          "branchName": "Add parcels",
+                          "conditions": [
+                            [
+                              {
+                                "operator": "BOOLEAN_IS_TRUE",
+                                "firstValue": "{{step_2['ok']}}"
+                              }
+                            ]
+                          ]
+                        },
+                        {
+                          "branchType": "FALLBACK",
+                          "branchName": "Otherwise"
+                        }
+                      ]
+                    },
+                    "children": [
+                      {
+                        "name": "step_3",
+                        "displayName": "Add parcels",
+                        "type": "PIECE",
+                        "valid": false,
+                        "skip": false,
+                        "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                        "settings": {
+                          "pieceName": "@jrnyflw/nucleus",
+                          "pieceVersion": "0.1.0",
+                          "actionName": "create_waybill_import_dims_and_detail",
+                          "input": {
+                            "auth": "{{connections['pick-the-nucleus-connection']}}",
+                            "waybillNo": "{{trigger['body']['data']['waybillNumber']}}",
+                            "itemsField": "one",
+                            "cartonsJson": "{{trigger['body']['data']['cartons']}}",
+                            "parcels": [],
+                            "onFailure": "continue"
+                          },
+                          "propertySettings": {
+                            "waybillNo": {
+                              "type": "MANUAL"
+                            },
+                            "itemsField": {
+                              "type": "MANUAL"
+                            },
+                            "cartonsJson": {
+                              "type": "MANUAL"
+                            },
+                            "parcels": {
+                              "type": "MANUAL"
+                            },
+                            "onFailure": {
+                              "type": "MANUAL"
+                            }
+                          },
+                          "sampleData": {},
+                          "errorHandlingOptions": {
+                            "retryOnFailure": {
+                              "value": false
+                            },
+                            "continueOnFailure": {
+                              "value": true
+                            }
+                          }
+                        },
+                        "nextAction": {
+                          "name": "step_9",
+                          "displayName": "Parcels added?",
+                          "type": "ROUTER",
+                          "valid": true,
+                          "skip": false,
+                          "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                          "settings": {
+                            "executionType": "EXECUTE_FIRST_MATCH",
+                            "branches": [
+                              {
+                                "branchType": "CONDITION",
+                                "branchName": "Booked",
+                                "conditions": [
+                                  [
+                                    {
+                                      "operator": "BOOLEAN_IS_TRUE",
+                                      "firstValue": "{{step_3['ok']}}"
+                                    }
+                                  ]
+                                ]
+                              },
+                              {
+                                "branchType": "FALLBACK",
+                                "branchName": "Otherwise"
+                              }
+                            ]
+                          },
+                          "children": [
+                            {
+                              "name": "step_10",
+                              "displayName": "Booked",
+                              "type": "PIECE",
+                              "valid": false,
+                              "skip": false,
+                              "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                              "settings": {
+                                "pieceName": "@jrnyflw/jrny",
+                                "pieceVersion": "0.1.0",
+                                "actionName": "courier_response",
+                                "input": {
+                                  "auth": "{{connections['pick-the-jrny-connection']}}",
+                                  "dispatchNumber": "{{trigger['body']['data']['dispatchNumber']}}",
+                                  "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
+                                  "courierStatus": "booked",
+                                  "hubCode": "{{step_1['output']['hubCode']}}",
+                                  "trackingUrl": "{{step_2['output']['trackingUrl']}}",
+                                  "courierWarning": "{{[step_4?.output?.matchedOn === 'fallback' ? 'Sender hub not found, booked with hub UNK: ' + step_4.output.reason : '', step_1?.output?.matchedOn === 'fallback' ? 'Delivery hub not found, booked with hub UNK: ' + step_1.output.reason : ''].filter(Boolean).join(' ')}}",
+                                  "onFailure": "stop"
+                                },
+                                "propertySettings": {
+                                  "dispatchNumber": {
+                                    "type": "MANUAL"
+                                  },
+                                  "waybillNumber": {
+                                    "type": "MANUAL"
+                                  },
+                                  "courierStatus": {
+                                    "type": "MANUAL"
+                                  },
+                                  "hubCode": {
+                                    "type": "MANUAL"
+                                  },
+                                  "trackingUrl": {
+                                    "type": "MANUAL"
+                                  },
+                                  "courierWarning": {
+                                    "type": "MANUAL"
+                                  },
+                                  "onFailure": {
+                                    "type": "MANUAL"
+                                  }
+                                },
+                                "sampleData": {},
+                                "errorHandlingOptions": {
+                                  "retryOnFailure": {
+                                    "value": false
+                                  },
+                                  "continueOnFailure": {
+                                    "value": false
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "name": "step_11",
+                              "displayName": "Failed: parcels",
+                              "type": "PIECE",
+                              "valid": false,
+                              "skip": false,
+                              "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                              "settings": {
+                                "pieceName": "@jrnyflw/jrny",
+                                "pieceVersion": "0.1.0",
+                                "actionName": "courier_response",
+                                "input": {
+                                  "auth": "{{connections['pick-the-jrny-connection']}}",
+                                  "dispatchNumber": "{{trigger['body']['data']['dispatchNumber']}}",
+                                  "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
+                                  "courierStatus": "failed",
+                                  "failedStep": "Add parcels",
+                                  "errorMessage": "{{'Add parcels: ' + (step_3?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW').replace(/\\.$/, '') + '. The waybill was created in Nucleus but its parcels were not: add them in Nucleus by hand, because a resend will mark this booked without adding them.'}}",
+                                  "onFailure": "stop"
+                                },
+                                "propertySettings": {
+                                  "dispatchNumber": {
+                                    "type": "MANUAL"
+                                  },
+                                  "waybillNumber": {
+                                    "type": "MANUAL"
+                                  },
+                                  "courierStatus": {
+                                    "type": "MANUAL"
+                                  },
+                                  "failedStep": {
+                                    "type": "MANUAL"
+                                  },
+                                  "errorMessage": {
+                                    "type": "MANUAL"
+                                  },
+                                  "onFailure": {
+                                    "type": "MANUAL"
+                                  }
+                                },
+                                "sampleData": {},
+                                "errorHandlingOptions": {
+                                  "retryOnFailure": {
+                                    "value": false
+                                  },
+                                  "continueOnFailure": {
+                                    "value": false
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "name": "step_12",
+                        "displayName": "Already in Nucleus?",
+                        "type": "ROUTER",
+                        "valid": true,
+                        "skip": false,
+                        "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                        "settings": {
+                          "executionType": "EXECUTE_FIRST_MATCH",
+                          "branches": [
+                            {
+                              "branchType": "CONDITION",
+                              "branchName": "Booked anyway",
+                              "conditions": [
+                                [
+                                  {
+                                    "operator": "TEXT_CONTAINS",
+                                    "firstValue": "{{step_2['error']['message']}}",
+                                    "secondValue": "already exists",
+                                    "caseSensitive": false
+                                  }
+                                ]
+                              ]
+                            },
+                            {
+                              "branchType": "FALLBACK",
+                              "branchName": "Otherwise"
+                            }
+                          ]
+                        },
+                        "children": [
+                          {
+                            "name": "step_13",
+                            "displayName": "Booked (already in Nucleus)",
+                            "type": "PIECE",
+                            "valid": false,
+                            "skip": false,
+                            "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                            "settings": {
+                              "pieceName": "@jrnyflw/jrny",
+                              "pieceVersion": "0.1.0",
+                              "actionName": "courier_response",
+                              "input": {
+                                "auth": "{{connections['pick-the-jrny-connection']}}",
+                                "dispatchNumber": "{{trigger['body']['data']['dispatchNumber']}}",
+                                "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
+                                "courierStatus": "booked",
+                                "hubCode": "{{step_1['output']['hubCode']}}",
+                                "courierWarning": "{{['Waybill already existed in Nucleus, parcels not checked.', step_4?.output?.matchedOn === 'fallback' ? 'Sender hub not found, booked with hub UNK: ' + step_4.output.reason : '', step_1?.output?.matchedOn === 'fallback' ? 'Delivery hub not found, booked with hub UNK: ' + step_1.output.reason : ''].filter(Boolean).join(' ')}}",
+                                "onFailure": "stop"
+                              },
+                              "propertySettings": {
+                                "dispatchNumber": {
+                                  "type": "MANUAL"
+                                },
+                                "waybillNumber": {
+                                  "type": "MANUAL"
+                                },
+                                "courierStatus": {
+                                  "type": "MANUAL"
+                                },
+                                "hubCode": {
+                                  "type": "MANUAL"
+                                },
+                                "courierWarning": {
+                                  "type": "MANUAL"
+                                },
+                                "onFailure": {
+                                  "type": "MANUAL"
+                                }
+                              },
+                              "sampleData": {},
+                              "errorHandlingOptions": {
+                                "retryOnFailure": {
+                                  "value": false
+                                },
+                                "continueOnFailure": {
+                                  "value": false
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "step_14",
+                            "displayName": "Failed: waybill",
+                            "type": "PIECE",
+                            "valid": false,
+                            "skip": false,
+                            "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                            "settings": {
+                              "pieceName": "@jrnyflw/jrny",
+                              "pieceVersion": "0.1.0",
+                              "actionName": "courier_response",
+                              "input": {
+                                "auth": "{{connections['pick-the-jrny-connection']}}",
+                                "dispatchNumber": "{{trigger['body']['data']['dispatchNumber']}}",
+                                "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
+                                "courierStatus": "failed",
+                                "failedStep": "Create waybill",
+                                "errorMessage": "{{'Create waybill: ' + (step_2?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') + (step_2?.error?.code === 'NUCLEUS_FIELDS_TOO_LONG' ? ' Fix the address in JRNY: Sender Address 1 to 4 = warehouse address line 2 (or suburb), address line 1, suburb, city; Receiver Address 1 to 4 = delivery line 1, line 2 (or suburb), suburb, city.' : '')}}",
+                                "onFailure": "stop"
+                              },
+                              "propertySettings": {
+                                "dispatchNumber": {
+                                  "type": "MANUAL"
+                                },
+                                "waybillNumber": {
+                                  "type": "MANUAL"
+                                },
+                                "courierStatus": {
+                                  "type": "MANUAL"
+                                },
+                                "failedStep": {
+                                  "type": "MANUAL"
+                                },
+                                "errorMessage": {
+                                  "type": "MANUAL"
+                                },
+                                "onFailure": {
+                                  "type": "MANUAL"
+                                }
+                              },
+                              "sampleData": {},
+                              "errorHandlingOptions": {
+                                "retryOnFailure": {
+                                  "value": false
+                                },
+                                "continueOnFailure": {
+                                  "value": false
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "step_7",
+                  "displayName": "Failed: not booked",
+                  "type": "PIECE",
+                  "valid": false,
+                  "skip": false,
+                  "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                  "settings": {
+                    "pieceName": "@jrnyflw/jrny",
+                    "pieceVersion": "0.1.0",
+                    "actionName": "courier_response",
+                    "input": {
+                      "auth": "{{connections['pick-the-jrny-connection']}}",
+                      "dispatchNumber": "{{trigger['body']['data']['dispatchNumber']}}",
+                      "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
+                      "courierStatus": "failed",
+                      "failedStep": "{{step_4?.ok === true && step_1?.ok === true ? 'Create waybill' : 'Find hub code'}}",
+                      "errorMessage": "{{step_4?.ok !== true ? 'Find hub code: sender address: ' + (step_4?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') : step_1?.ok !== true ? 'Find hub code: delivery address: ' + (step_1?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') : 'Create waybill: the courier account number is missing in JRNY'}}",
+                      "onFailure": "stop"
+                    },
+                    "propertySettings": {
+                      "dispatchNumber": {
+                        "type": "MANUAL"
+                      },
+                      "waybillNumber": {
+                        "type": "MANUAL"
+                      },
+                      "courierStatus": {
+                        "type": "MANUAL"
+                      },
+                      "failedStep": {
+                        "type": "MANUAL"
+                      },
+                      "errorMessage": {
+                        "type": "MANUAL"
+                      },
+                      "onFailure": {
+                        "type": "MANUAL"
+                      }
+                    },
+                    "sampleData": {},
+                    "errorHandlingOptions": {
+                      "retryOnFailure": {
+                        "value": false
+                      },
+                      "continueOnFailure": {
+                        "value": false
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}
