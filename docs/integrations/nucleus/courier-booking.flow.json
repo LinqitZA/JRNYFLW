@@ -27,7 +27,7 @@
         "displayName": "JRNY: ready for courier",
         "type": "PIECE_TRIGGER",
         "valid": false,
-        "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+        "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
         "settings": {
           "pieceName": "@activepieces/piece-webhook",
           "pieceVersion": "0.1.33",
@@ -58,7 +58,7 @@
           "type": "PIECE",
           "valid": false,
           "skip": false,
-          "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+          "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
           "settings": {
             "pieceName": "@jrnyflw/nucleus",
             "pieceVersion": "0.1.0",
@@ -108,7 +108,7 @@
             "type": "PIECE",
             "valid": false,
             "skip": false,
-            "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+            "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
             "settings": {
               "pieceName": "@jrnyflw/nucleus",
               "pieceVersion": "0.1.0",
@@ -158,7 +158,7 @@
               "type": "ROUTER",
               "valid": true,
               "skip": false,
-              "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+              "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
               "settings": {
                 "executionType": "EXECUTE_FIRST_MATCH",
                 "branches": [
@@ -169,7 +169,7 @@
                       [
                         {
                           "operator": "BOOLEAN_IS_TRUE",
-                          "firstValue": "{{step_4?.ok === true && step_1?.ok === true && String(trigger['body']['data']['courierAccountNumber'] ?? '').trim() !== ''}}"
+                          "firstValue": "{{(typeof step_4 === 'object' && step_4 !== null ? step_4 : undefined)?.ok === true && (typeof step_1 === 'object' && step_1 !== null ? step_1 : undefined)?.ok === true && String(trigger['body']['data']['courierAccountNumber'] ?? '').trim() !== ''}}"
                         }
                       ]
                     ]
@@ -187,7 +187,7 @@
                   "type": "PIECE",
                   "valid": false,
                   "skip": false,
-                  "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                  "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                   "settings": {
                     "pieceName": "@jrnyflw/nucleus",
                     "pieceVersion": "0.1.0",
@@ -321,7 +321,7 @@
                     "type": "ROUTER",
                     "valid": true,
                     "skip": false,
-                    "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                    "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                     "settings": {
                       "executionType": "EXECUTE_FIRST_MATCH",
                       "branches": [
@@ -350,7 +350,7 @@
                         "type": "PIECE",
                         "valid": false,
                         "skip": false,
-                        "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                        "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                         "settings": {
                           "pieceName": "@jrnyflw/nucleus",
                           "pieceVersion": "0.1.0",
@@ -396,7 +396,7 @@
                           "type": "ROUTER",
                           "valid": true,
                           "skip": false,
-                          "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                          "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                           "settings": {
                             "executionType": "EXECUTE_FIRST_MATCH",
                             "branches": [
@@ -425,7 +425,7 @@
                               "type": "PIECE",
                               "valid": false,
                               "skip": false,
-                              "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                              "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                               "settings": {
                                 "pieceName": "@jrnyflw/jrny",
                                 "pieceVersion": "0.1.0",
@@ -437,7 +437,7 @@
                                   "courierStatus": "booked",
                                   "hubCode": "{{step_1['output']['hubCode']}}",
                                   "trackingUrl": "{{step_2['output']['trackingUrl']}}",
-                                  "courierWarning": "{{[step_4?.output?.matchedOn === 'fallback' ? 'Sender hub not found, booked with hub UNK: ' + step_4.output.reason : '', step_1?.output?.matchedOn === 'fallback' ? 'Delivery hub not found, booked with hub UNK: ' + step_1.output.reason : ''].filter(Boolean).join(' ')}}",
+                                  "courierWarning": "{{[(typeof step_4 === 'object' && step_4 !== null ? step_4 : undefined)?.output?.matchedOn === 'fallback' ? 'Sender hub not found, booked with hub UNK: ' + step_4.output.reason : '', (typeof step_1 === 'object' && step_1 !== null ? step_1 : undefined)?.output?.matchedOn === 'fallback' ? 'Delivery hub not found, booked with hub UNK: ' + step_1.output.reason : ''].filter(Boolean).join(' ')}}",
                                   "onFailure": "stop"
                                 },
                                 "propertySettings": {
@@ -480,7 +480,7 @@
                               "type": "PIECE",
                               "valid": false,
                               "skip": false,
-                              "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                              "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                               "settings": {
                                 "pieceName": "@jrnyflw/jrny",
                                 "pieceVersion": "0.1.0",
@@ -491,7 +491,7 @@
                                   "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
                                   "courierStatus": "failed",
                                   "failedStep": "Add parcels",
-                                  "errorMessage": "{{'Add parcels: ' + (step_3?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW').replace(/\\.$/, '') + '. The waybill was created in Nucleus but its parcels were not: add them in Nucleus by hand, because a resend will mark this booked without adding them.'}}",
+                                  "errorMessage": "{{'Add parcels: ' + ((typeof step_3 === 'object' && step_3 !== null ? step_3 : undefined)?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW').replace(/\\.$/, '') + '. The waybill was created in Nucleus but its parcels were not: add them in Nucleus by hand, because a resend will mark this booked without adding them.'}}",
                                   "onFailure": "stop"
                                 },
                                 "propertySettings": {
@@ -534,7 +534,7 @@
                         "type": "ROUTER",
                         "valid": true,
                         "skip": false,
-                        "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                        "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                         "settings": {
                           "executionType": "EXECUTE_FIRST_MATCH",
                           "branches": [
@@ -565,7 +565,7 @@
                             "type": "PIECE",
                             "valid": false,
                             "skip": false,
-                            "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                            "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                             "settings": {
                               "pieceName": "@jrnyflw/jrny",
                               "pieceVersion": "0.1.0",
@@ -576,7 +576,7 @@
                                 "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
                                 "courierStatus": "booked",
                                 "hubCode": "{{step_1['output']['hubCode']}}",
-                                "courierWarning": "{{['Waybill already existed in Nucleus, parcels not checked.', step_4?.output?.matchedOn === 'fallback' ? 'Sender hub not found, booked with hub UNK: ' + step_4.output.reason : '', step_1?.output?.matchedOn === 'fallback' ? 'Delivery hub not found, booked with hub UNK: ' + step_1.output.reason : ''].filter(Boolean).join(' ')}}",
+                                "courierWarning": "{{['Waybill already existed in Nucleus, parcels not checked.', (typeof step_4 === 'object' && step_4 !== null ? step_4 : undefined)?.output?.matchedOn === 'fallback' ? 'Sender hub not found, booked with hub UNK: ' + step_4.output.reason : '', (typeof step_1 === 'object' && step_1 !== null ? step_1 : undefined)?.output?.matchedOn === 'fallback' ? 'Delivery hub not found, booked with hub UNK: ' + step_1.output.reason : ''].filter(Boolean).join(' ')}}",
                                 "onFailure": "stop"
                               },
                               "propertySettings": {
@@ -616,7 +616,7 @@
                             "type": "PIECE",
                             "valid": false,
                             "skip": false,
-                            "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                            "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                             "settings": {
                               "pieceName": "@jrnyflw/jrny",
                               "pieceVersion": "0.1.0",
@@ -627,7 +627,7 @@
                                 "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
                                 "courierStatus": "failed",
                                 "failedStep": "Create waybill",
-                                "errorMessage": "{{'Create waybill: ' + (step_2?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') + (step_2?.error?.code === 'NUCLEUS_FIELDS_TOO_LONG' ? ' Fix the address in JRNY: Sender Address 1 to 4 = warehouse address line 2 (or suburb), address line 1, suburb, city; Receiver Address 1 to 4 = delivery line 1, line 2 (or suburb), suburb, city.' : '')}}",
+                                "errorMessage": "{{'Create waybill: ' + ((typeof step_2 === 'object' && step_2 !== null ? step_2 : undefined)?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') + ((typeof step_2 === 'object' && step_2 !== null ? step_2 : undefined)?.error?.code === 'NUCLEUS_FIELDS_TOO_LONG' ? ' Fix the address in JRNY: Sender Address 1 to 4 = warehouse address line 2 (or suburb), address line 1, suburb, city; Receiver Address 1 to 4 = delivery line 1, line 2 (or suburb), suburb, city.' : '')}}",
                                 "onFailure": "stop"
                               },
                               "propertySettings": {
@@ -672,7 +672,7 @@
                   "type": "PIECE",
                   "valid": false,
                   "skip": false,
-                  "lastUpdatedDate": "2026-10-25T15:38:16.946Z",
+                  "lastUpdatedDate": "2026-10-25T15:49:47.747Z",
                   "settings": {
                     "pieceName": "@jrnyflw/jrny",
                     "pieceVersion": "0.1.0",
@@ -682,8 +682,8 @@
                       "dispatchNumber": "{{trigger['body']['data']['dispatchNumber']}}",
                       "waybillNumber": "{{trigger['body']['data']['waybillNumber']}}",
                       "courierStatus": "failed",
-                      "failedStep": "{{step_4?.ok === true && step_1?.ok === true ? 'Create waybill' : 'Find hub code'}}",
-                      "errorMessage": "{{step_4?.ok !== true ? 'Find hub code: sender address: ' + (step_4?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') : step_1?.ok !== true ? 'Find hub code: delivery address: ' + (step_1?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') : 'Create waybill: the courier account number is missing in JRNY'}}",
+                      "failedStep": "{{(typeof step_4 === 'object' && step_4 !== null ? step_4 : undefined)?.ok === true && (typeof step_1 === 'object' && step_1 !== null ? step_1 : undefined)?.ok === true ? 'Create waybill' : 'Find hub code'}}",
+                      "errorMessage": "{{(typeof step_4 === 'object' && step_4 !== null ? step_4 : undefined)?.ok !== true ? 'Find hub code: sender address: ' + ((typeof step_4 === 'object' && step_4 !== null ? step_4 : undefined)?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') : (typeof step_1 === 'object' && step_1 !== null ? step_1 : undefined)?.ok !== true ? 'Find hub code: delivery address: ' + ((typeof step_1 === 'object' && step_1 !== null ? step_1 : undefined)?.error?.message || 'the step failed before calling Nucleus; see this run in JRNYFLW') : 'Create waybill: the courier account number is missing in JRNY'}}",
                       "onFailure": "stop"
                     },
                     "propertySettings": {

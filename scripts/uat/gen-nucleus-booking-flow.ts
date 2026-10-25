@@ -20,17 +20,19 @@ const FALLBACK_REASON = 'the step failed before calling Nucleus; see this run in
 const orSuburb = (side: string, field: string) => `{{String(${D}['${side}']['${field}'] ?? '').trim() || ${D}['${side}']['suburb']}}`
 const SENDER_ADDRESS_1 = orSuburb('sender', 'address2')
 const DEST_ADDRESS_2 = orSuburb('deliveryAddress', 'line2')
-const HUBS_OK = 'step_4?.ok === true && step_1?.ok === true'
+// typeof never throws on a missing name, and the sandboxed engine leaves a step out of scope when its output is undefined.
+const stepOf = (name: string) => `(typeof ${name} === 'object' && ${name} !== null ? ${name} : undefined)`
+const HUBS_OK = `${stepOf('step_4')}?.ok === true && ${stepOf('step_1')}?.ok === true`
 const READY = `{{${HUBS_OK} && String(${D}['courierAccountNumber'] ?? '').trim() !== ''}}`
 const NOT_READY_STEP = `{{${HUBS_OK} ? 'Create waybill' : 'Find hub code'}}`
-const reasonOf = (step: string) => `(${step}?.error?.message || '${FALLBACK_REASON}')`
-const NOT_READY_MESSAGE = `{{step_4?.ok !== true ? 'Find hub code: sender address: ' + ${reasonOf('step_4')} : step_1?.ok !== true ? 'Find hub code: delivery address: ' + ${reasonOf('step_1')} : 'Create waybill: the courier account number is missing in JRNY'}}`
-const hubWarning = ({ step, side }: { step: string; side: string }) => `${step}?.output?.matchedOn === 'fallback' ? '${side} hub not found, booked with hub UNK: ' + ${step}.output.reason : ''`
+const reasonOf = (step: string) => `(${stepOf(step)}?.error?.message || '${FALLBACK_REASON}')`
+const NOT_READY_MESSAGE = `{{${stepOf('step_4')}?.ok !== true ? 'Find hub code: sender address: ' + ${reasonOf('step_4')} : ${stepOf('step_1')}?.ok !== true ? 'Find hub code: delivery address: ' + ${reasonOf('step_1')} : 'Create waybill: the courier account number is missing in JRNY'}}`
+const hubWarning = ({ step, side }: { step: string; side: string }) => `${stepOf(step)}?.output?.matchedOn === 'fallback' ? '${side} hub not found, booked with hub UNK: ' + ${step}.output.reason : ''`
 const HUB_WARNING_LIST = `${hubWarning({ step: 'step_4', side: 'Sender' })}, ${hubWarning({ step: 'step_1', side: 'Delivery' })}`
 const HUB_WARNINGS = `{{[${HUB_WARNING_LIST}].filter(Boolean).join(' ')}}`
 const EXISTS_WARNINGS = `{{['Waybill already existed in Nucleus, parcels not checked.', ${HUB_WARNING_LIST}].filter(Boolean).join(' ')}}`
 const ADDRESS_HINT = ' Fix the address in JRNY: Sender Address 1 to 4 = warehouse address line 2 (or suburb), address line 1, suburb, city; Receiver Address 1 to 4 = delivery line 1, line 2 (or suburb), suburb, city.'
-const HEADER_FAILED = `{{'Create waybill: ' + ${reasonOf('step_2')} + (step_2?.error?.code === 'NUCLEUS_FIELDS_TOO_LONG' ? '${ADDRESS_HINT}' : '')}}`
+const HEADER_FAILED = `{{'Create waybill: ' + ${reasonOf('step_2')} + (${stepOf('step_2')}?.error?.code === 'NUCLEUS_FIELDS_TOO_LONG' ? '${ADDRESS_HINT}' : '')}}`
 const PARCELS_FAILED = `{{'Add parcels: ' + ${reasonOf('step_3')}.replace(/\\.$/, '') + '. The waybill was created in Nucleus but its parcels were not: add them in Nucleus by hand, because a resend will mark this booked without adding them.'}}`
 
 function piece({ name, displayName, pieceName, actionName, input, continueOnFailure }: { name: string; displayName: string; pieceName: string; actionName: string; input: Record<string, unknown>; continueOnFailure: boolean }) {
@@ -181,9 +183,14 @@ const cases: { name: string; expression: string; scope: Record<string, unknown>;
     { name: 'header refused by Nucleus', expression: HEADER_FAILED, scope: run({ step_2: { ok: false, error: { message: 'Nucleus error: ERROR - bad' } } }), expected: 'Create waybill: Nucleus error: ERROR - bad' },
     { name: 'parcels refused', expression: PARCELS_FAILED, scope: run({ step_3: { ok: false, error: { message: 'Nucleus error: ERROR - bad.' } } }), expected: 'Add parcels: Nucleus error: ERROR - bad. The waybill was created in Nucleus but its parcels were not: add them in Nucleus by hand, because a resend will mark this booked without adding them.' },
 ]
+// The v8-isolate sandbox copies the scope through JSON, which drops a step whose output is undefined; both modes must agree.
+const sandboxed = (scope: Record<string, unknown>): Record<string, unknown> => JSON.parse(JSON.stringify(scope))
 for (const c of cases) {
-    const actual = evaluate({ expression: c.expression, scope: c.scope })
-    if (actual !== c.expected) problems.push(`expression check "${c.name}": expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(actual)}`)
+    const modes: { mode: string; scope: Record<string, unknown> }[] = [{ mode: 'unsandboxed', scope: c.scope }, { mode: 'sandboxed', scope: sandboxed(c.scope) }]
+    for (const { mode, scope } of modes) {
+        const actual = evaluate({ expression: c.expression, scope })
+        if (actual !== c.expected) problems.push(`expression check "${c.name}" (${mode}): expected ${JSON.stringify(c.expected)}, got ${JSON.stringify(actual)}`)
+    }
 }
 const tooLong = String(evaluate({ expression: HEADER_FAILED, scope: run({ step_2: { ok: false, error: { message: 'Too long for Nucleus', code: 'NUCLEUS_FIELDS_TOO_LONG' } } }) }))
 if (!tooLong.startsWith('Create waybill: Too long for Nucleus') || !tooLong.includes('Fix the address in JRNY')) problems.push(`expression check "address too long": got ${JSON.stringify(tooLong)}`)
