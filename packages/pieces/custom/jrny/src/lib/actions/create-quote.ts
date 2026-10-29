@@ -43,6 +43,19 @@ export const createQuote = createAction({
         }),
       },
     }),
+    pricingMode: Property.StaticDropdown<'supplied' | 'engine'>({
+      displayName: 'Pricing Mode',
+      description:
+        'Supplied (default): a line Unit Price overrides JRNY\'s price, and lines without one get JRNY\'s price. Engine: JRNY prices every line and ignores any Unit Price sent; the reply lists each ignored price in `warnings` (code SUPPLIED_PRICE_IGNORED; engineUnitPrice 0 means the product has no selling price and the line was created at R0.00). In Engine mode a line JRNY cannot price refuses the whole quote (400 PRICE_NOT_FOUND).',
+      required: false,
+      defaultValue: 'supplied',
+      options: {
+        options: [
+          { label: 'Supplied — use the prices sent', value: 'supplied' },
+          { label: 'Engine — JRNY prices every line', value: 'engine' },
+        ],
+      },
+    }),
     notes: Property.LongText({
       displayName: 'Notes',
       required: false,
@@ -150,6 +163,7 @@ export const createQuote = createAction({
         if (autoConfirm && deliveryDate === '') {
           throw new Error('Auto-confirm needs a Delivery Date');
         }
+        const pricingMode = readPricingMode(p.pricingMode);
         const lines = (p.lines ?? []) as Array<{
           stockCode: string;
           qty: number;
@@ -174,6 +188,8 @@ export const createQuote = createAction({
         if (autoConvert) body['autoConvert'] = true;
         if (autoConfirm) body['autoConfirm'] = true;
         if (deliveryDate !== '') body['deliveryDate'] = deliveryDate;
+        // "supplied" is JRNY's default, and JRNY builds before 29 Oct 2026 may refuse the field, so only engine is sent.
+        if (pricingMode === 'engine') body['pricingMode'] = 'engine';
 
         const deliveryAddress = buildDeliveryAddress(p);
         if (deliveryAddress) body['deliveryAddress'] = deliveryAddress;
@@ -221,6 +237,14 @@ const buildDeliveryAddress = (
   }
   return inline;
 };
+
+// A dropdown set from an expression can arrive as any text, so check it before JRNY sees it.
+function readPricingMode(value: unknown): 'supplied' | 'engine' {
+  const mode = typeof value === 'string' ? value.trim() : '';
+  if (mode === '' || mode === 'supplied') return 'supplied';
+  if (mode === 'engine') return 'engine';
+  throw new Error(`Pricing Mode must be supplied or engine, got ${JSON.stringify(value)}`);
+}
 
 // A checkbox set from an expression arrives as the text "true" or "false".
 function isOn(value: unknown): boolean {

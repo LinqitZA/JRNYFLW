@@ -67,4 +67,20 @@ describe('createQuote', () => {
         await run({ portalCode: '   ' });
         expect(sent().body).not.toHaveProperty('portalCode');
     });
+
+    test('engine pricing sends pricingMode engine and keeps the supplied prices', async () => {
+        await run({ pricingMode: 'engine' });
+        expect(sent().body).toMatchObject({ pricingMode: 'engine', lines: [{ stockCode: 'CSL1388', qty: 1, unitPrice: 30 }] });
+    });
+
+    test.each([['supplied'], [undefined], ['']])('pricing mode %j sends no pricingMode, so JRNY keeps its default', async (pricingMode) => {
+        await run({ pricingMode });
+        expect(sent().body).not.toHaveProperty('pricingMode');
+    });
+
+    test('an unknown pricing mode from an expression is refused before calling JRNY', async () => {
+        const result = await run({ pricingMode: 'ENGINE', onFailure: 'continue' });
+        expect(result).toMatchObject({ ok: false, error: { message: 'Pricing Mode must be supplied or engine, got "ENGINE"' } });
+        expect(sendRequest).not.toHaveBeenCalled();
+    });
 });

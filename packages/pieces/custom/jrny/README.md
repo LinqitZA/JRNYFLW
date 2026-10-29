@@ -23,6 +23,8 @@ POSTs to `${baseUrl}/v1/integration/entities/${entityId}/quotations` with `Autho
 
 See `docs/audits/JRNY-SIDE-INTEGRATION-SPEC-V0.md` and the addendum for the full request/response contract.
 
+**Pricing Mode** (JRNY builds from 29 Oct 2026). *Supplied*, the default, sends no `pricingMode`: a line Unit Price overrides JRNY's price, and lines without one get JRNY's price. *Engine* sends `pricingMode: "engine"`: JRNY prices every line and ignores any Unit Price. The reply then carries `warnings[]`, one `SUPPLIED_PRICE_IGNORED` entry per ignored price. `engineUnitPrice: 0` means the product has no selling price and the line was created at R0.00, so alert on it. A line JRNY can't price refuses the whole quote (400, `PRICE_NOT_FOUND`). The generated `create_sales_order` takes the same field in its JSON body.
+
 ## Build
 
 ```
